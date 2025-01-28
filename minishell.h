@@ -145,6 +145,13 @@ typedef struct s_chain
 	struct s_chain	*back;
 } t_chain;
 
+typedef struct s_env
+{
+    char    *key;
+    char    *value;
+    char    *full;
+    struct s_env *next;
+} t_env;
 
 // list utilities
 t_chain	*lstnew(char *content);
@@ -153,6 +160,9 @@ void	lstadd_back(t_chain **lst, t_chain *new);
 void	move_item(t_chain **src, t_chain **dst, int f);
 void	delete_one(t_chain **list);
 
-int	counter(int f);
+//env
+t_env	*handle_env(char **envp);
+char **generate_env_var_arr(t_env *env);
+void   add_env_var(t_env *head, char *line);
 
 #endif

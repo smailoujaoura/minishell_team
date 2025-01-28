@@ -319,8 +319,33 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	(void)argc;
 	(void)argv;
-	(void)envp;
+	t_env *env;
+	char **mini_envp;
+	int i;
+
 	// initalize structures and envirnoment
+	env = handle_env(envp);
+	add_env_var(env, "NAME2=kol");
+	mini_envp = generate_env_var_arr(env);
+	add_env_var(env, "NAME2=ani");
+	i = -1;
+	while (mini_envp[++i])
+		free(mini_envp[i]);
+	free(mini_envp);
+	mini_envp = generate_env_var_arr(env);
+	// while (env)
+	// {
+	// 	printf("%s\n", env->full);
+	// 	env = env->next;
+	// }
+
+	i = -1;
+	while (mini_envp[++i])
+		printf("%s\n", mini_envp[i]);
+	i = -1;
+	while (mini_envp[++i])
+		free(mini_envp[i]);
+	free(mini_envp);
 	// handle signals:
 	// handle_signals();
 	loop_minishell();
