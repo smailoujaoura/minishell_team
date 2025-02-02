@@ -7,10 +7,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-
 # include <signal.h>
-
-// include for readline & history functionality
 # include <readline/readline.h>
 # include <readline/history.h>
 
@@ -27,123 +24,47 @@
 # define DOLLAR 1011
 # define WILDCARD 1012
 # define QUOTES 1013
-# define SINGLES 1014
-
-// # define L_PAREN "("
-// # define R_PAREN ")"
-// # define OR "||"
-// # define PIPE "|"
-// # define AND "&&"
-// # define REDIR_APPEND ">>"
-// # define REDIR_OUT ">"
-// # define HEREDOC "<<"
-// # define REDIR_IN "<"
-// # define WORD "Word"
-// # define DOLLAR "$"
-// # define WILDCARD "*"
-// # define QUOTES "\""
-// # define SINGLES "'"
-
-// # define L_PAREN '('
-// # define R_PAREN ')'
-// # define OR 1001
-// # define PIPE '|'
-// # define AND '&'
-// # define REDIR_APPEND '+'
-// # define REDIR_OUT '>'
-// # define HEREDOC 1002
-// # define REDIR_IN '<'
-// # define WORD 1003
-// # define DOLLAR '$'
-// # define WILDCARD '*'
-// # define QUOTES '"'
-// # define SINGLES '\''
-
-// # define L_PAREN 1001
-// # define R_PAREN 1002
-// # define WORD 1003
-// # define PIPE 1005
-// # define REDIR_OUT 1005
-// # define REDIR_APPEND 1006
-// # define REDIR_IN 1007
-// # define HEREDOC 1008
-// # define AND 1009
-// # define OR 10010
-// # define WILDCARD 10011
-// # define DOLLAR 10012
+# define REMOVE 1015
 
 # define WHITESPACE "\t\n\v\f\r "
 # define SYMBOLS "<>|)"
 
-typedef struct s_nodes
-{
-	int	type;
-}	t_nodes;
-
-# define MAXARGS 10
-typedef struct s_exec
-{
-    int		type;
-    char	*argv[MAXARGS];
-    char	*eargv[MAXARGS];
-}	t_exec;
-
-typedef struct s_redir
-{
-	int		type;
-	t_nodes	*cmd;
-	char	*file;
-	char	*efile;
-	int		mode;
-	int		fd;
-}	t_redir;
-
-typedef struct s_pipe
-{
-	int		type;
-	t_nodes	*left;
-	t_nodes	*right;
-}	t_pipe;
-
-typedef struct s_heredoc
-{
-	int		type;
-	t_nodes	*left;
-	t_nodes	*right;
-	t_nodes *cmd;
-} t_heredoc;
-
-typedef struct s_and
-{
-	int		type;
-	t_nodes	*left;
-	t_nodes	*right;
-	char	exit;
-} t_and;
-
-typedef struct s_or
-{
-	int		type;
-	t_nodes	*left;
-	t_nodes	*right;
-	char	exit;
-} t_or;
-
 # define VIP 9
 # define NAN 0
-# define LVL1 1
-# define LVL2 2
+# define LVL1 2
+# define LVL2 1
 
+# define IN 0
+# define OUT 1
+
+// Linked list of tokens and their data
 typedef struct s_chain
 {
 	int				type;
 	char			*content;
 	int				dollar;
 	int				quote;
+	int				depth;
 	int				lvl;
+	int				argc;
+	char			**argv;
+	char			*file;
+	char			*delim;
 	struct s_chain	*next;
 	struct s_chain	*back;
-} t_chain;
+	int				set;
+	struct s_chain	*adj_f;
+	struct s_chain	*blk_f;
+}	t_chain;
+
+// Abstract Syntax Tree to represent the the parsed line
+typedef struct s_ast
+{
+	int	type;
+	struct s_chain	*data;
+	struct s_ast	*left;
+	struct s_ast	*right;
+}	t_ast;
 
 typedef struct s_env
 {
@@ -158,11 +79,17 @@ t_chain	*lstnew(char *content);
 t_chain	*lstlast(t_chain *lst);
 void	lstadd_back(t_chain **lst, t_chain *new);
 void	move_item(t_chain **src, t_chain **dst, int f);
-void	delete_one(t_chain **list);
+void	delete_one(t_chain **list, int i);
 
 //env
 t_env	*handle_env(char **envp);
 char **generate_env_var_arr(t_env *env);
 void   add_env_var(t_env *head, char *line);
+
+t_chain	*assign_inputs_edges(t_chain *list);
+t_chain	*create_redirs_chain(t_chain *list);
+
+// convert Post to AST
+t_ast	*build_tree(t_chain *post);
 
 #endif

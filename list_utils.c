@@ -29,7 +29,7 @@ void	move_item(t_chain **src, t_chain **dst, int f)
 	*dst = tmp;
 }
 
-void	delete_one(t_chain **list)
+void	delete_one(t_chain **list, int i)
 {
 	t_chain	*tmp;
 
@@ -41,7 +41,8 @@ void	delete_one(t_chain **list)
 	if (*list)
 		(*list)->back = NULL;
 	// remove the content in the node and the node itself
-	free(tmp->content);
+	if (i)
+		free(tmp->content);
 	free(tmp);
 }
 
@@ -57,20 +58,19 @@ t_chain	*lstnew(char *content)
 	new->dollar = -1;
 	new->quote = -1;
 	new->lvl = -1;
+	new->depth = 0;
 	new->next = NULL;
 	new->back = NULL;
+	new->delim = NULL;
+	new->argv = NULL;
+	new->argc = 0;
+	new->file = NULL;
+	new->adj_f = NULL;
+	new->blk_f = NULL;
+	new->set = 0;
 	return (new);
 }
 
-// void here_doc()
-// {
-// 	char *li
-// 	while (1)
-// 	{
-// 		write(1, "here_doc>", 9);
-// 		getline();
-// 	}
-// }
 t_chain	*lstlast(t_chain *lst)
 {
 	if (!lst)
