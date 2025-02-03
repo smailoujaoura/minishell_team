@@ -349,6 +349,7 @@ t_chain	*join_redirs(t_chain *list)
 		{
 			list->file = list->next->content;
 			delete_any(list->next, 0);
+			// handle ambiguous syntax when given * if it expands to more than it should.
 		}
 		if (list->type == HEREDOC)
 		{
@@ -373,32 +374,29 @@ void	remove_if(t_chain *list)
 	}
 }
 
-t_chain	*join_commands(t_chain *list, char **argv, int argc, t_chain *ptr)
+t_chain	*join_commands(t_chain *list)
 {
-	int	i;
+	t_argv	*argv;
+	t_argv	*new;
+	t_chain	*ptr;
 
-	i = 1;
+	argv = NULL;
 	while (list)
 	{
 		if (list->type == WORD)
 		{
 			ptr = list->next;
-			while (ptr && ptr->type == WORD && ++argc)
-				ptr = ptr->next;
-			if (argc > 0)
+			while (ptr && (ptr->type == WORD || ptr->type == WILDCARD || is_redir(ptr, IN + OR + OUT) ))
 			{
-				list->argc = argc;
-				argv = malloc(sizeof(char*) * (argc + 2));
-				argv[argc + 1] = NULL;
-				ptr = list->next;
-				while (ptr && ptr->type == WORD && i++)
+				if (ptr->type == WORD || ptr->type == WILDCARD)
 				{
-					argv[i] = ptr->content;
+					new = lstnew_arg(ptr->content);
+					new->type = ptr->type;
+					lstadd_back_arg(&argv, new);
 					ptr->type = REMOVE;
-					ptr = ptr->next;
 				}
+				ptr = ptr->next;
 			}
-			list->argv = argv;
 			remove_if(list);
 		}
 		list = list->next;
@@ -667,12 +665,12 @@ t_ast	*parse_line(char *line)
 	prioritize_list(list);
 	assign_depth(list);
 	strip_words(list);
-	join_redirs(list);
-	join_commands(list, NULL, 0, NULL);
+	join_redirs(list); // probably not needed 
+	join_commands(list);
 
 	list = assign_inputs(list, NULL);
 	list = assign_inputs_edges(list);
-	severe_redirs(list); // this should more or less delete the severe and free redirections
+	severe_redirs(list); // this should more osr less delete the severe and free redirections
 	post = convert_infix(list);
 	print_with_files(list);
 	root = build_tree(post);

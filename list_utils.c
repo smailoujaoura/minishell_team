@@ -62,8 +62,6 @@ t_chain	*lstnew(char *content)
 	new->next = NULL;
 	new->back = NULL;
 	new->delim = NULL;
-	new->argv = NULL;
-	new->argc = 0;
 	new->file = NULL;
 	new->adj_f = NULL;
 	new->blk_f = NULL;
@@ -91,6 +89,50 @@ void	lstadd_back(t_chain **lst, t_chain *new)
 	if (*lst)
 	{
 		last = lstlast(*lst);
+		last->next = new;
+		new->back = last;
+	}
+	else
+	{
+		new->back = NULL;
+		*lst = new;
+	}
+}
+
+t_argv	*lstnew_arg(char *content)
+{
+	t_argv	*new;
+
+	new = malloc(sizeof(t_argv));
+	if (!new)
+		return (NULL); // DON'T return just panic and exit.
+	new->back = NULL;
+	new->next = NULL;
+	new->type = -1;
+	new->content = ft_strdup(content); // should it be strdup or not? s
+	return (new);
+}
+
+t_argv	*lstlast_arg(t_argv *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next)
+	{
+		lst = lst->next;
+	}
+	return (lst);
+}
+
+void	lstadd_back_arg(t_argv **lst, t_argv *new)
+{
+	t_argv	*last;
+
+	if (!lst || !new)
+		return ;
+	if (*lst)
+	{
+		last = lstlast_arg(*lst);
 		last->next = new;
 		new->back = last;
 	}

@@ -37,6 +37,14 @@
 # define IN 0
 # define OUT 1
 
+typedef struct s_argv
+{
+	int				type;
+	char			*content;
+	struct s_argv	*next;
+	struct s_argv	*back;
+}	t_argv;
+
 // Linked list of tokens and their data
 typedef struct s_chain
 {
@@ -46,8 +54,7 @@ typedef struct s_chain
 	int				quote;
 	int				depth;
 	int				lvl;
-	int				argc;
-	char			**argv;
+	t_argv			*argv;
 	char			*file;
 	char			*delim;
 	struct s_chain	*next;
@@ -80,6 +87,9 @@ t_chain	*lstlast(t_chain *lst);
 void	lstadd_back(t_chain **lst, t_chain *new);
 void	move_item(t_chain **src, t_chain **dst, int f);
 void	delete_one(t_chain **list, int i);
+void	lstadd_back_arg(t_argv **lst, t_argv *new);
+t_argv	*lstlast_arg(t_argv *lst);
+t_argv	*lstnew_arg(char *content);
 
 //env
 t_env	*handle_env(char **envp);
@@ -91,5 +101,9 @@ t_chain	*create_redirs_chain(t_chain *list);
 
 // convert Post to AST
 t_ast	*build_tree(t_chain *post);
+
+// redir utils
+int	is_redir(t_chain *ptr, int f);
+
 
 #endif
