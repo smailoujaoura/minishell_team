@@ -10,6 +10,7 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <errno.h>
 
 # define L_PAREN 1001
 # define R_PAREN 1002
@@ -59,7 +60,7 @@ typedef struct s_chain
 	char			*delim;
 	struct s_chain	*next;
 	struct s_chain	*back;
-	int				set;
+	int				set; // delete
 	struct s_chain	*adj_f;
 	struct s_chain	*blk_f;
 }	t_chain;
@@ -67,7 +68,7 @@ typedef struct s_chain
 // Abstract Syntax Tree to represent the the parsed line
 typedef struct s_ast
 {
-	int	type;
+	int				type;
 	struct s_chain	*data;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -91,19 +92,24 @@ void	lstadd_back_arg(t_argv **lst, t_argv *new);
 t_argv	*lstlast_arg(t_argv *lst);
 t_argv	*lstnew_arg(char *content);
 
-//env
-t_env	*handle_env(char **envp);
-char **generate_env_var_arr(t_env *env);
-void   add_env_var(t_env *head, char *line);
-
+// convert Post to AST
+t_ast	*build_tree(t_chain *post);
+// redir utils
+int	is_redir(t_chain *ptr, int f);
 t_chain	*assign_inputs_edges(t_chain *list);
 t_chain	*create_redirs_chain(t_chain *list);
 
-// convert Post to AST
-t_ast	*build_tree(t_chain *post);
+//env
+t_env	*handle_env(char **envp);
+void print_env_vars(t_env *env);
+void   export_env_var(t_env *head, char *line);
+void export_with_no_args(t_env *env);
+void    unset_env_var(t_env *env, const char *key);
+t_env *get_env_var(t_env *env, const char *key);
 
-// redir utils
-int	is_redir(t_chain *ptr, int f);
-
+// Builtins
+void    pwd(void);
+void    cd(t_env *env, const char *dir);
+// void    echo(const char *cmd, const char *str);
 
 #endif

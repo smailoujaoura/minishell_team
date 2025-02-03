@@ -69,20 +69,6 @@ t_env *create_new_env(char *line)
     return (new_env);
 }
 
-
-
-// Function to free env var linked list; Is it useful ?
-void free_env(t_env *env)
-{
-    t_env *free_tmp;
-	while (env)
-	{
-		free_tmp = env;
-		env = env->next;
-		free(free_tmp);
-	}
-}
-
 // Function to convert every line of envp as env node
 t_env *handle_env(char **envp)
 {
@@ -101,7 +87,7 @@ t_env *handle_env(char **envp)
 
 // Function to add a new env var to the env linked list
 
-t_env *get_env_var(t_env *env, char *key)
+t_env *get_env_var(t_env *env, const char *key)
 {
     while (env)
     {
@@ -112,110 +98,235 @@ t_env *get_env_var(t_env *env, char *key)
     return (NULL);
 }
 
+// Function to check if an env var is valid
+int    check_env_str(const char *line, char **str_tab)
+{
+    int i;
+    int j;
+
+    i = -1;
+    if (!str_tab[0])
+        return (1);
+    while (str_tab[0][++i])
+    {
+        if (((str_tab[0][0] >= '0' && str_tab[0][0] <= '9')
+            && str_tab[0][ft_strlen(str_tab[0]) - 1] )
+            || (!(str_tab[0][i] >= 'a' && str_tab[0][i] <= 'z')
+            && !(str_tab[0][i] >= 'A' && str_tab[0][i] <= 'Z')
+            && !(str_tab[0][i] >= '0' && str_tab[0][i] <= '9')
+            && str_tab[0][i] != '_' && !str_tab[1]))
+        {
+            printf("Minishell: export: `%s': not a valid identifier\n", line);
+            j = -1;
+            while (str_tab[++j])
+                free(str_tab[j]);
+            free(str_tab);
+            return (1);
+        }
+    }
+    return (0);
+}
+
+// Add a new env var without plus op
+void    add_new_env(t_env *env, t_env *new_env, const char *line, char *str)
+{
+    if (!str)
+        new_env->value = ft_strdup("");
+    else
+        new_env->value = ft_strdup(str);  
+    new_env->full = ft_strdup(line);
+    new_env->next = NULL;
+    ft_lstadd_back_env(&env, new_env);
+}
+
+// Add a new env var with plus op
+void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str)
+{
+    char *new_full;
+
+    new_full = ft_strjoin(new_env->key, "=");
+    if (!str)
+        new_env->full = ft_strdup(new_full);
+    else
+    {
+        new_env->value = ft_strdup(str);
+        new_env->full = ft_strjoin(new_full, new_env->value);
+    }
+    new_env->next = NULL;
+    free(new_full);
+    ft_lstadd_back_env(&env, new_env);
+}
+
+// Concat or append the new value at the end of the old one; if in the input 
+// we found the plus op;
+void    update_env_concat(t_env *env, t_env *new_env, const char *str)
+{
+    char *new_full;
+    t_env *temp = NULL;
+
+    temp = get_env_var(env, new_env->key);
+    free(temp->value);
+    free(temp->full);
+    temp->full = NULL;
+    temp->value = NULL;
+    if  (!str)
+    {
+        new_full = ft_strjoin(new_env->key, "=");
+        temp->full = ft_strdup(new_full);
+    }
+    else
+    {
+        temp->value = ft_strjoin(temp->value, str);
+        new_full = ft_strjoin(new_env->key, "=");
+        temp->full = ft_strjoin(new_full, temp->value);
+    }
+    free(new_env->key);
+    free(new_env);
+    free(new_full);
+}
+
+// Trunc or overwrite the value of an env var if it exists
+void    update_env_trunc(t_env *env, t_env *new_env, const char *line, const char *str)
+{
+    t_env *temp = NULL;
+
+    temp = get_env_var(env, new_env->key);
+    free(temp->value);
+    free(temp->full);
+    temp->value = NULL;
+    temp->full = NULL;
+    if (!str)
+        temp->value = ft_strdup("");
+    else
+        temp->value = ft_strdup(str);
+    temp->full = ft_strdup(line);
+    free(new_env->key);
+    free(new_env);
+}
+
+// For each case use the rigth function
+void    process_env_var(t_env *env, t_env *new_env, char **str_tab, const char *line)
+{
+    if (str_tab[0][ft_strlen(str_tab[0]) - 1] == '+')
+        new_env->key = ft_substr(str_tab[0], 0, ft_strlen(str_tab[0])- 1);
+    else
+        new_env->key = ft_strdup(str_tab[0]);
+    if (check_env(env, new_env->key) && str_tab[0][ft_strlen(str_tab[0]) - 1] == '+')
+        update_env_concat(env, new_env, str_tab[1]);
+    else if (check_env(env, new_env->key) && str_tab[0][ft_strlen(str_tab[0]) - 1] != '+')
+        update_env_trunc(env, new_env, line, str_tab[1]);
+    else if (!check_env(env, new_env->key) && str_tab[0][ft_strlen(str_tab[0]) - 1] == '+')
+        add_new_env_with_plus(env, new_env, str_tab[1]);
+    else
+        add_new_env(env, new_env, line, str_tab[1]);
+}
+
+// The main function to add an env var
 // Create a new env var received from the user input and add it
 // to the env var linked list
-// This function need to be optimized and handle memory leaks
-void   add_env_var(t_env *env, char *line)
+void   export_env_var(t_env *env, char *line)
 {
     char **splited_line;
     t_env *new_env;
     int i;
-    t_env *temp = NULL;
-    char *new_full;
 
-    // Make the verification here if an env already exited and just 
-    // modified the value if it is else just add it to the linked list
+    if (!ft_strchr(line, '=') && line[ft_strlen(line) -1] == '+')
+    {
+        printf("export: not valid in this context: %s\n", line);
+        return ;
+    }
+    else if (!ft_strchr(line, '='))
+        return ;
     new_env = malloc(sizeof(t_env));
     if (!new_env)
         return ;
     splited_line = ft_split(line, '=');
     if (!splited_line)
         return ;
-    if (splited_line[0][ft_strlen(splited_line[0]) - 1] == '+')
-        new_env->key = ft_substr(splited_line[0], 0, ft_strlen(splited_line[0])- 1);
-    else
-        new_env->key = ft_strdup(splited_line[0]);
-    if (check_env(env, new_env->key) && splited_line[0][ft_strlen(splited_line[0]) - 1] == '+')
-    {
-        temp = get_env_var(env, new_env->key);
-        temp->value = ft_strjoin(temp->value, splited_line[1]);
-        printf("%s\n", temp->value);
-        new_full = ft_strjoin(new_env->key, "=");
-        printf("%s\n", new_full);
-        temp->full = ft_strjoin(new_full, temp->value);
-        printf("%s\n", temp->full);
-        free(new_env->key);
+    if (check_env_str(line, splited_line))
+    {     
         free(new_env);
-        free(new_full);
-        i = -1;
-        while (splited_line[++i])
-            free(splited_line[i]);
-        free(splited_line);
         return ;
     }
-    else if (check_env(env, new_env->key) && splited_line[0][ft_strlen(splited_line[0]) - 1] != '+')
-    {
-        temp = get_env_var(env, new_env->key);
-        temp->value = ft_strdup(splited_line[1]);
-        printf("%s\n", temp->value);
-        temp->full = ft_strdup(line);
-        printf("%s\n", temp->full);
-        free(new_env->key);
-        free(new_env);
-        i = -1;
-        while (splited_line[++i])
-            free(splited_line[i]);
-        free(splited_line);
-        return ;
-    }
-    new_env->value = ft_strdup(splited_line[1]);
-    new_env->full = ft_strdup(line);
-    new_env->next = NULL;
+    process_env_var(env, new_env, splited_line, line);
     i = -1;
     while (splited_line[++i])
         free(splited_line[i]);
     free(splited_line);
-    ft_lstadd_back_env(&env, new_env);
 }
 
-// Function to create an array using our env var linked list
-static int	ft_lstsize_env(t_env *env)
+// Print env vars
+void    print_env_vars(t_env *env)
 {
-	int	size;
-
-	size = 0;
-	while (env)
-	{
-		size++;
-		env = env->next;
-	}
-	return (size);
-}
-
-char **generate_env_var_arr(t_env *env)
-{
-    int  env_size;
-    char **envp;
-    int    i;
-
-    env_size = ft_lstsize_env(env);
-    envp = malloc((env_size + 1) * sizeof(char *));
-    if (!envp)
-        return (NULL);
-    i = 0;
-    while (env && i < env_size)
+    while (env)
     {
-        envp[i] = ft_strdup(env->full);
-        if (!envp[i])
+        printf("%s\n", env->full);
+        env = env->next;
+    }
+}
+
+// Handle export command without args
+void    export_with_no_args(t_env *env)
+{
+    while (env)
+    {
+        printf("declare -x %s\n", env->full);
+        env = env->next;
+    }
+}
+
+// Unset an env var
+// Function to free env var linked list; Is it useful ?
+void free_env(t_env *env_to_unset)
+{
+    free(env_to_unset->key);
+    free(env_to_unset->value);
+    free(env_to_unset->full);
+    free(env_to_unset);
+}
+
+void    unset_env_var(t_env *env, const char *key)
+{
+    int i;
+    t_env *temp;
+    t_env *env_var_to_unset;
+
+    i = -1;
+    while (key[++i])
+    {
+        if ((!(key[0] >= 'a' && key[0] <= 'z')
+            && !(key[0] >= 'A' && key[0] <= 'Z')
+            && key[0] != '_')
+            || (!(key[ft_strlen(key) - 1] >= 'a' && key[ft_strlen(key) - 1] <= 'z')
+            && !(key[ft_strlen(key) - 1] >= 'A' && key[ft_strlen(key) - 1] <= 'Z')
+            && key[ft_strlen(key) - 1] != '_'
+            && !(key[ft_strlen(key) - 1] >= '0' && key[ft_strlen(key) - 1] <= '9'))
+            || (!(key[i] >= 'a' && key[i] <= 'z')
+            && !(key[i] >= 'A' && key[i] <= 'Z')
+            && key[i] != '_'
+            && !(key[i] >= '0' && key[i] <= '9')))
         {
-            while (envp[--i])
-                free(envp[i]);
-            free(envp);
+            printf("unset: %s: invalid parameter name\n", key);
+            return ;
+        }
+    }
+    temp = NULL;
+    env_var_to_unset = get_env_var(env, key);
+    while (env)
+    {
+        if (ft_strncmp(env->next->key, env_var_to_unset->key, ft_strlen(key)) == 0)
+        {
+            temp = env_var_to_unset->next;
+            if (temp)
+                env->next = temp;
+            else if (!temp)
+                env->next = NULL;
+            break ;
         }
         env = env->next;
-        i++;
     }
-    envp[i] = NULL;
-    return (envp);
+    free(env_var_to_unset->value);
+    free(env_var_to_unset->full);
+    free(env_var_to_unset->key);
+    free(env_var_to_unset);
 }
-

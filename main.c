@@ -331,6 +331,7 @@ void	delete_any(t_chain *ptr, int i)
 {
 	t_chain	*prev;
 
+	prev = NULL;
 	if (ptr->back != NULL)
 		prev = ptr->back;
 	prev->next = ptr->next;
@@ -714,43 +715,37 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	(void)argc;
 	(void)argv;
-	(void)envp;
+	t_env *env;
 
+	// initalize structures and envirnoment
+	env = handle_env(envp);
+	// export_env_var(env, "NAME2=kol");
 
-	// There is a SEGFAULT in this code. s
-
-	// t_env *env;
-	// char **mini_envp;
-	// int i;
-
-	// // initalize structures and envirnoment
-	// env = handle_env(envp);
-	// add_env_var(env, "NAME2=kol");
-	// mini_envp = generate_env_var_arr(env);
-	// add_env_var(env, "NAME2=ani");
-	// i = -1;
-	// while (mini_envp[++i])
-	// 	free(mini_envp[i]);
-	// free(mini_envp);
-	// mini_envp = generate_env_var_arr(env);
-	// // while (env)
-	// // {
-	// // 	printf("%s\n", env->full);
-	// // 	env = env->next;
-	// // }
-
-	// i = -1;
-	// while (mini_envp[++i])
-	// 	printf("%s\n", mini_envp[i]);
-	// i = -1;
-	// while (mini_envp[++i])
-	// 	free(mini_envp[i]);
-	// free(mini_envp);
+	// export_env_var(env, "NAME2+=ani");
+	// export_env_var(env, "NAME5=kol");
+	// export_env_var(env, "NAME6=kol");
+	// export_env_var(env, "NAME7=kol");
+	// export_env_var(env, "NAME3=ani");
+	// print_env_vars(env);
+	// unset_env_var(env, "NAME5");
+	// print_env_vars(env);
+	// while (env)
+	// {
+	// 	free(env->full);
+	// 	free(env->key);
+	// 	free(env->value);
+	// 	free(env);
+	// 	env = env->next;
+	// }
+	// export_with_no_args(env);
 	// handle signals:
 	// handle_signals();
-
-
-
-
+	// cd(env, NULL);
+	cd(env, "..");
+	pwd();
+	cd(env, "mfjdjhd");
+	pwd();
+	// print_env_vars(env);
+	// echo("echo -nnnnn -nnnnnnnn", "Hello");
 	loop_minishell();
 }

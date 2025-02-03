@@ -1,5 +1,5 @@
 NAME = minishell
-SRCS = main.c list_utils.c env_handler.c tree.c
+SRCS = main.c list_utils.c env_handler.c tree.c ./executor/builtins.c
 OBJS =  $(SRCS:.c=.o)
 COMP = cc -Wall -Wextra -Werror -g -fsanitize=address
 FLAGS = -lreadline
