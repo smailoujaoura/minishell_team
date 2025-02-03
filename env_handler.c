@@ -162,9 +162,11 @@ void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str)
 void    update_env_concat(t_env *env, t_env *new_env, const char *str)
 {
     char *new_full;
-    t_env *temp = NULL;
+    t_env *temp;
+    char    *value;
 
     temp = get_env_var(env, new_env->key);
+    value = ft_strdup(temp->value);
     free(temp->value);
     free(temp->full);
     temp->full = NULL;
@@ -176,12 +178,13 @@ void    update_env_concat(t_env *env, t_env *new_env, const char *str)
     }
     else
     {
-        temp->value = ft_strjoin(temp->value, str);
+        temp->value = ft_strjoin(value, str);
         new_full = ft_strjoin(new_env->key, "=");
         temp->full = ft_strjoin(new_full, temp->value);
     }
     free(new_env->key);
     free(new_env);
+    free(value);
     free(new_full);
 }
 

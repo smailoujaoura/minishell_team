@@ -720,8 +720,7 @@ int	main(int argc, char *argv[], char *envp[])
 	// initalize structures and envirnoment
 	env = handle_env(envp);
 	// export_env_var(env, "NAME2=kol");
-
-	// export_env_var(env, "NAME2+=ani");
+	// export_env_var(env, "NAME2=ani");
 	// export_env_var(env, "NAME5=kol");
 	// export_env_var(env, "NAME6=kol");
 	// export_env_var(env, "NAME7=kol");
@@ -741,10 +740,10 @@ int	main(int argc, char *argv[], char *envp[])
 	// handle signals:
 	// handle_signals();
 	// cd(env, NULL);
-	cd(env, "..");
-	pwd();
-	cd(env, "mfjdjhd");
-	pwd();
+	// cd(env, "..");
+	// pwd();
+	// cd(env, "mfjdjhd");
+	// pwd();
 	// print_env_vars(env);
 	// echo("echo -nnnnn -nnnnnnnn", "Hello");
 	loop_minishell();
