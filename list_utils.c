@@ -65,6 +65,7 @@ t_chain	*lstnew(char *content)
 	new->file = NULL;
 	new->adj_f = NULL;
 	new->blk_f = NULL;
+	new->argv = NULL;
 	new->set = 0;
 	return (new);
 }

@@ -399,6 +399,7 @@ t_chain	*join_commands(t_chain *list)
 			}
 			remove_if(list);
 		}
+		list->argv = argv;
 		list = list->next;
 	}
 	return (list);
@@ -627,6 +628,12 @@ void	print_with_files(t_chain *ptr)
 				printf("\t{%s}\t{%s}\n", ptr->blk_f->file, ptr->blk_f->delim);
 				ptr->blk_f = ptr->blk_f->next;
 			}
+			t_argv *args = ptr->argv;
+			while (args)
+			{
+				printf("\targ:[%s]\n", args->content);
+				args = args->next;
+			}
 		}
 		ptr = ptr->next;
 	}
@@ -654,25 +661,30 @@ t_chain	*assign_inputs_edges(t_chain *list)
 	return (list);
 }
 
+// TO DO:
+// - handle orphan redirections by creating an empty word adjacent to them that executes nothing
+// - handle wildcard
+// - SEGFAULT: (>f0 ls >f1 >f2)>f3 >f4, actually no segfault you just printed list rather than post
+// - The beast:
+// 		- Syntax errors. 
 t_ast	*parse_line(char *line)
 {
 	t_chain	*list;
 	t_chain	*post;
 	t_ast	*root;
 
-	list = convert_str(line);
-	tokenize_list(list);
-	prioritize_list(list);
-	assign_depth(list);
-	strip_words(list);
-	join_redirs(list); // probably not needed 
-	join_commands(list);
+	list = convert_str(line); // convert line into linked list of seperated symbols
+	tokenize_list(list); // assign types to those symbols 
+	prioritize_list(list); // give priority to | over && ||, NAN to (), VIP to words or COMMANDS, priority does not matter for other things redirs etc... this function can go just above convert to postfix
+	assign_depth(list); // assign depth of each block, commands inside NO () get depth 0, inside one pair of () get 1, inside (()()) pairs get 2
+	strip_words(list); // remove single/double quotes where applicable
+	join_redirs(list); // join redirections as in convert_str hands us back ">, file1" from ">file1", as we join the two nodes into ">file1", 
+	join_commands(list); // pick up all args of a command into linked list t_argv
 
-	list = assign_inputs(list, NULL);
-	list = assign_inputs_edges(list);
-	severe_redirs(list); // this should more osr less delete the severe and free redirections
-	post = convert_infix(list);
-	print_with_files(list);
+	list = assign_inputs(list, NULL); // assign inputs of each command, edges cases, adjacent, block as well.
+	severe_redirs(list); // this should more or less delete the severe and free redirections THIS MIGHT NOT BE NEEDED
+	post = convert_infix(list); // remove the redirections so that algo for post won't have more types than expected
+	print_with_files(post);
 	root = build_tree(post);
 	// collect_garbage(post);
 	return (root);
