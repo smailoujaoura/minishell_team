@@ -704,6 +704,10 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argc;
 	(void)argv;
 	(void)envp;
+
+
+	// There is a SEGFAULT in this code. s
+
 	// t_env *env;
 	// char **mini_envp;
 	// int i;
@@ -733,5 +737,9 @@ int	main(int argc, char *argv[], char *envp[])
 	// free(mini_envp);
 	// handle signals:
 	// handle_signals();
+
+
+
+
 	loop_minishell();
 }
