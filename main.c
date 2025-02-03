@@ -674,7 +674,7 @@ t_ast	*parse_line(char *line)
 	list = assign_inputs_edges(list);
 	severe_redirs(list); // this should more or less delete the severe and free redirections
 	post = convert_infix(list);
-	// print_with_files(list);
+	print_with_files(list);
 	root = build_tree(post);
 	// collect_garbage(post);
 	return (root);
