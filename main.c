@@ -662,11 +662,12 @@ t_chain	*assign_inputs_edges(t_chain *list)
 }
 
 // TO DO:
-// - handle orphan redirections by creating an empty word adjacent to them that executes nothing
-// - handle wildcard
-// - SEGFAULT: (>f0 ls >f1 >f2)>f3 >f4, actually no segfault you just printed list rather than post
-// - The beast:
-// 		- Syntax errors. 
+// - Today:
+// 		- handle orphan redirections by creating an empty word adjacent to them that executes nothing
+// 		- handle wildcard * 
+// 		- start execution of the tree
+// Tomorrow:
+// 	- The beast: Syntax errors handling; unexpected tokens etc. 
 t_ast	*parse_line(char *line)
 {
 	t_chain	*list;
