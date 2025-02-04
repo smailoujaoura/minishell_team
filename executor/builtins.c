@@ -2,7 +2,7 @@
 
 void echo(t_argv *argv)
 {
-
+    (void)argv;
 }
 // void    echo()
 // {
