@@ -116,7 +116,7 @@ t_env *get_env_var(t_env *env, const char *key);
 
 // Builtins
 void    pwd(void);
-void    cd(t_env *env, const char *dir);
-// void    echo(const char *cmd, const char *str);
+void    cd(t_env *env, t_argv *argv);
+void    echo(t_argv *argv);
 
 #endif

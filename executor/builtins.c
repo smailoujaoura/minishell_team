@@ -1,5 +1,9 @@
 #include "../minishell.h"
 
+void echo(t_argv *argv)
+{
+
+}
 // void    echo()
 // {
 //     int i;
@@ -150,7 +154,7 @@
 //         free(new_str);
 // }
 
-void    cd(t_env *env, const char *dir)
+void    cd(t_env *env, t_argv *argv)
 {
     t_env   *home;
     char    *new_pwd;
@@ -158,15 +162,24 @@ void    cd(t_env *env, const char *dir)
     char    *path;
     
     home = NULL;
-    if (dir == NULL)
+    while (argv)
+    {
+        if (argv->next)
+        {
+            printf("Minishell: cd: too many arguments\n");
+            exit(1);
+        }
+        argv = argv->next;
+    }
+    if (argv->content == NULL)
     {
         home = get_env_var(env, "HOME");
-        dir = home->value;
+        argv->content = home->value;
     }
     path = getcwd(NULL, 0);
     new_oldpwd = ft_strjoin("OLDPWD=", path);
     export_env_var(env, new_oldpwd);
-    if (chdir(dir) == -1)
+    if (chdir(argv->content) == -1)
     {  
         free(new_oldpwd);
         free(path);
