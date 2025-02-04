@@ -27,6 +27,7 @@
 # define QUOTES 1013
 # define REMOVE 1015
 
+
 # define WHITESPACE "\t\n\v\f\r "
 # define SYMBOLS "<>|)"
 
@@ -92,12 +93,18 @@ void	lstadd_back_arg(t_argv **lst, t_argv *new);
 t_argv	*lstlast_arg(t_argv *lst);
 t_argv	*lstnew_arg(char *content);
 
-// convert Post to AST
-t_ast	*build_tree(t_chain *post);
+// Syntax Validator
+int	check_syntax(t_chain *list);
+
 // redir utils
 int	is_redir(t_chain *ptr, int f);
 t_chain	*assign_inputs_edges(t_chain *list);
 t_chain	*create_redirs_chain(t_chain *list);
+
+// convert Post to AST
+t_ast	*build_tree(t_chain *post);
+
+
 
 //env
 t_env	*handle_env(char **envp);

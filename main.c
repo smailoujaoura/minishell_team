@@ -124,12 +124,6 @@ t_chain	*convert_str(char *str)
 	return (list);
 }
 
-t_chain	*check_syntax(t_chain *list)
-{
-	(void)list;
-	return (0);
-}
-
 void	find_type(t_chain *list)
 {
 	if (list->content[0] == '*')
@@ -694,10 +688,17 @@ t_chain	*assign_inputs_edges(t_chain *list)
 	return (list);
 }
 
+t_ast	*free_list(t_chain *list)
+{
+	// return
+	(void)list;
+	return (NULL);
+}
+
 // TO DO:
 // - Today:
 // 		- handle orphan redirections by creating an empty word adjacent to them that executes nothing
-// 		- handle wildcard *, ls *$*, and how to expand
+// 		- handle wildcard *, ls *$*, and how to expand, remove "" from wildcards and other stuff. 
 // 		- start execution of the tree
 // Tomorrow:
 // 	- The beast: Syntax errors handling; unexpected tokens etc. 
@@ -712,6 +713,8 @@ t_ast	*parse_line(char *line)
 	prioritize_list(list); // give priority to | over && ||, NAN to (), VIP to words or COMMANDS, priority does not matter for other things redirs etc... this function can go just above convert to postfix
 	assign_depth(list); // assign depth of each block, commands inside NO () get depth 0, inside one pair of () get 1, inside (()()) pairs get 2
 	strip_words(list); // remove single/double quotes where applicable
+	if (check_syntax(list))
+		return (free_list(list));
 	join_redirs(list); // join redirections as in convert_str hands us back ">, file1" from ">file1", as we join the two nodes into ">file1", 
 	join_commands(list); // pick up all args of a command into linked list t_argv
 
@@ -737,8 +740,9 @@ void	loop_minishell(void)
 		if (line == NULL)
 			exit_shell();
 		root = parse_line(line);
+		if (root)
+			// execute tree
 		// free line
-		// execute tree
 		// free tree and other stuff
 		(void)root;
 	}
@@ -783,14 +787,15 @@ int	main(int argc, char *argv[], char *envp[])
 	// 	env = env->next;
 	// }
 	// export_with_no_args(env);
+
 	// handle signals:
-	// handle_signals();
-	// cd(env, NULL);
+	handle_signals();
+	cd(env, NULL);
 	// cd(env, "..");
-	// pwd();
+	pwd();
 	// cd(env, "mfjdjhd");
-	// pwd();
-	// print_env_vars(env);
+	pwd();
+	print_env_vars(env);
 	// echo("echo -nnnnn -nnnnnnnn", "Hello");
 	loop_minishell();
 }

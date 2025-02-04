@@ -1,9 +1,16 @@
 #include "../minishell.h"
 
+<<<<<<< HEAD
 // void echo(t_argv *argv)
 // {
 
 // }
+=======
+void echo(t_argv *argv)
+{
+    (void)argv;
+}
+>>>>>>> c809016a825b619f69a3e553cbf94a1274fe2783
 // void    echo()
 // {
 //     int i;
