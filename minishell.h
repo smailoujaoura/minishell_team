@@ -60,9 +60,9 @@ typedef struct s_chain
 	char			*delim;
 	struct s_chain	*next;
 	struct s_chain	*back;
-	int				set; // delete
 	struct s_chain	*adj_f;
 	struct s_chain	*blk_f;
+	int				empty;
 }	t_chain;
 
 // Abstract Syntax Tree to represent the the parsed line

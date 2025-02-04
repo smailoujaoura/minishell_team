@@ -218,6 +218,7 @@ t_chain	*convert_infix(t_chain *infix)
 {
 	t_chain	*post;
 	t_chain	*ops;
+	t_chain	*strain;
 
 	post = NULL;
 	ops = NULL;
@@ -245,7 +246,10 @@ t_chain	*convert_infix(t_chain *infix)
 			else if (ops->type == L_PAREN)
 				move_item(&infix, &ops, 1);
 			else
+			{
 				printf("handle this shit ls unclosed parenthesis *\n");
+				move_item(&infix, &strain, 1);
+			}
 		}
 	}
 	while (ops)
@@ -589,9 +593,33 @@ t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
 	return (list);
 }
 
-void	severe_redirs(t_chain *list)
+// void	severe_redirs(t_chain *list)
+// {
+// 	t_chain	*ptr;
+
+// 	while (list)
+// 	{
+// 		ptr = list;
+// 		while (ptr && (is_redir(ptr, IN + OR + OUT)))
+// 			ptr = ptr->next;
+// 		if (ptr != list)
+// 		{
+// 			list = list->back;
+// 			list->next = ptr;
+// 			if (ptr)
+// 			{
+// 				ptr->back->next = NULL;
+// 				ptr->back = list;
+// 			}
+// 		}
+// 		list = list->next;
+// 	}
+// }
+
+void	pick_left_redirs(t_chain *list)
 {
 	t_chain	*ptr;
+	t_chain	*new;
 
 	while (list)
 	{
@@ -600,13 +628,17 @@ void	severe_redirs(t_chain *list)
 			ptr = ptr->next;
 		if (ptr != list)
 		{
-			list = list->back;
-			list->next = ptr;
-			if (ptr)
-			{
-				ptr->back->next = NULL;
-				ptr->back = list;
-			}
+			new = ft_calloc(1, sizeof(t_chain));
+			new->type = WORD;
+			// GIVE CONTENT "empty for now"
+			new->content = "Empty CMD";
+			new->empty = 1;
+			new->next = ptr;
+			new->back = list->back;
+			list->back = NULL;
+			new->adj_f = list;
+			new->back->next = new;
+			list = new;
 		}
 		list = list->next;
 	}
@@ -665,14 +697,14 @@ t_chain	*assign_inputs_edges(t_chain *list)
 // TO DO:
 // - Today:
 // 		- handle orphan redirections by creating an empty word adjacent to them that executes nothing
-// 		- handle wildcard * 
+// 		- handle wildcard *, ls *$*, and how to expand
 // 		- start execution of the tree
 // Tomorrow:
 // 	- The beast: Syntax errors handling; unexpected tokens etc. 
 t_ast	*parse_line(char *line)
 {
 	t_chain	*list;
-	t_chain	*post;
+	// t_chain	*post;
 	t_ast	*root;
 
 	list = convert_str(line); // convert line into linked list of seperated symbols
@@ -684,11 +716,13 @@ t_ast	*parse_line(char *line)
 	join_commands(list); // pick up all args of a command into linked list t_argv
 
 	list = assign_inputs(list, NULL); // assign inputs of each command, edges cases, adjacent, block as well.
-	severe_redirs(list); // this should more or less delete the severe and free redirections THIS MIGHT NOT BE NEEDED
-	post = convert_infix(list); // remove the redirections so that algo for post won't have more types than expected
-	print_with_files(post);
-	root = build_tree(post);
+	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
+	pick_left_redirs(list); // this should more or less delete the severe and free redirections THIS MIGHT NOT BE NEEDED
+	print_with_files(list);
+	// post = convert_infix(list); // remove the redirections so that algo for post won't have more types than expected
+	// root = build_tree(post);
 	// collect_garbage(post);
+	root = NULL;
 	return (root);
 }
 
@@ -715,10 +749,12 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	(void)argc;
 	(void)argv;
-	t_env *env;
+
+	(void)envp;
+	// t_env *env;
 
 	// initalize structures and envirnoment
-	env = handle_env(envp);
+	// env = handle_env(envp);
 	// export_env_var(env, "NAME2=kol");
 	// export_env_var(env, "NAME2=ani");
 	// export_env_var(env, "NAME5=kol");

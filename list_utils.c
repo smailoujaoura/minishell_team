@@ -59,6 +59,7 @@ t_chain	*lstnew(char *content)
 	new->quote = -1;
 	new->lvl = -1;
 	new->depth = 0;
+	new->empty = 0;
 	new->next = NULL;
 	new->back = NULL;
 	new->delim = NULL;
@@ -66,7 +67,6 @@ t_chain	*lstnew(char *content)
 	new->adj_f = NULL;
 	new->blk_f = NULL;
 	new->argv = NULL;
-	new->set = 0;
 	return (new);
 }
 

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/02 22:20:19 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/04 09:06:56 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_ast	*make_tree_node(t_chain **node, int flag)
 
 t_ast	*construct_tree(t_chain **node)
 {
-	if (!node)
+	if (!node || !*node)
 		return (NULL);
 	else if ((*node)->type == WORD)
 		return (make_tree_node(node,  WORD));
