@@ -89,10 +89,14 @@ t_env *handle_env(char **envp)
 
 t_env *get_env_var(t_env *env, const char *key)
 {
+    printf("Key: %s\n", key);
     while (env)
     {
         if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
+        {
+            printf("Get env var: %s\n", env->full);
             return (env);
+        }
         env = env->next;
     }
     return (NULL);
@@ -227,35 +231,41 @@ void    process_env_var(t_env *env, t_env *new_env, char **str_tab, const char *
 // The main function to add an env var
 // Create a new env var received from the user input and add it
 // to the env var linked list
-void   export_env_var(t_env *env, char *line)
+void   export_env_var(t_env *env, t_argv *args)
 {
     char **splited_line;
     t_env *new_env;
     int i;
+    char *line;
 
-    if (!ft_strchr(line, '=') && line[ft_strlen(line) -1] == '+')
+    while (args)
     {
-        printf("export: not valid in this context: %s\n", line);
-        return ;
+        line = args->content;
+        if (!ft_strchr(line, '=') && line[ft_strlen(line) -1] == '+')
+        {
+            printf("export: not valid in this context: %s\n", line);
+            return ;
+        }
+        else if (!ft_strchr(line, '='))
+            return ;
+        new_env = malloc(sizeof(t_env));
+        if (!new_env)
+            return ;
+        splited_line = ft_split(line, '=');
+        if (!splited_line)
+            return ;
+        if (check_env_str(line, splited_line))
+        {     
+            free(new_env);
+            return ;
+        }
+        process_env_var(env, new_env, splited_line, line);
+        args = args->next;
+        i = -1;
+        while (splited_line[++i])
+            free(splited_line[i]);
+        free(splited_line);
     }
-    else if (!ft_strchr(line, '='))
-        return ;
-    new_env = malloc(sizeof(t_env));
-    if (!new_env)
-        return ;
-    splited_line = ft_split(line, '=');
-    if (!splited_line)
-        return ;
-    if (check_env_str(line, splited_line))
-    {     
-        free(new_env);
-        return ;
-    }
-    process_env_var(env, new_env, splited_line, line);
-    i = -1;
-    while (splited_line[++i])
-        free(splited_line[i]);
-    free(splited_line);
 }
 
 // Print env vars
@@ -288,36 +298,64 @@ void free_env(t_env *env_to_unset)
     free(env_to_unset);
 }
 
-void    unset_env_var(t_env *env, const char *key)
+void    unset_env_var(t_env *env, t_argv *args)
 {
     int i;
     t_env *temp;
     t_env *env_var_to_unset;
+    t_argv *args_temp;
 
-    i = -1;
-    while (key[++i])
+    i = 0;
+    args_temp = args;
+    while (args_temp)
     {
-        if ((!(key[0] >= 'a' && key[0] <= 'z')
-            && !(key[0] >= 'A' && key[0] <= 'Z')
-            && key[0] != '_')
-            || (!(key[ft_strlen(key) - 1] >= 'a' && key[ft_strlen(key) - 1] <= 'z')
-            && !(key[ft_strlen(key) - 1] >= 'A' && key[ft_strlen(key) - 1] <= 'Z')
-            && key[ft_strlen(key) - 1] != '_'
-            && !(key[ft_strlen(key) - 1] >= '0' && key[ft_strlen(key) - 1] <= '9'))
-            || (!(key[i] >= 'a' && key[i] <= 'z')
-            && !(key[i] >= 'A' && key[i] <= 'Z')
-            && key[i] != '_'
-            && !(key[i] >= '0' && key[i] <= '9')))
+        if ((!(args_temp->content[0] >= 'a' && args_temp->content[1] <= 'z')
+            && !(args_temp->content[0] >= 'A' && args_temp->content[0] <= 'Z')
+            && args_temp->content[0] != '_')
+            || (!(args_temp->content[ft_strlen(args_temp->content) - 1] >= 'a' && args_temp->content[ft_strlen(args_temp->content) - 1] <= 'z')
+            && !(args_temp->content[ft_strlen(args_temp->content) - 1] >= 'A' && args_temp->content[ft_strlen(args_temp->content) - 1] <= 'Z')
+            && args_temp->content[ft_strlen(args_temp->content) - 1] != '_'
+            && !(args_temp->content[ft_strlen(args_temp->content) - 1] >= '0' && args_temp->content[ft_strlen(args_temp->content) - 1] <= '9'))
+            || (!(args_temp->content[i] >= 'a' && args_temp->content[i] <= 'z')
+            && !(args_temp->content[i] >= 'A' && args_temp->content[i] <= 'Z')
+            && args_temp->content[i] != '_'
+            && !(args_temp->content[i] >= '0' && args_temp->content[i] <= '9')))
         {
-            printf("unset: %s: invalid parameter name\n", key);
+            printf("unset: %s: invalid parameter name\n", args_temp->content);
             return ;
         }
+        args_temp = args_temp->next;
+        i++;
+    }
+    args_temp = args;
+    i = 0;
+    while (args_temp)
+    {
+        if ((!(args_temp->content[0] >= 'a' && args_temp->content[0] <= 'z')
+            && !(args_temp->content[0] >= 'A' && args_temp->content[0] <= 'Z')
+            && args_temp->content[0] != '_')
+            || (!(args_temp->content[ft_strlen(args_temp->content) - 1] >= 'a' && args_temp->content[ft_strlen(args_temp->content) - 1] <= 'z')
+            && !(args_temp->content[ft_strlen(args_temp->content) - 1] >= 'A' && args_temp->content[ft_strlen(args_temp->content) - 1] <= 'Z')
+            && args_temp->content[ft_strlen(args_temp->content) - 1] != '_'
+            && !(args_temp->content[ft_strlen(args_temp->content) - 1] >= '0' && args_temp->content[ft_strlen(args_temp->content) - 1] <= '9'))
+            || (!(args_temp->content[i] >= 'a' && args_temp->content[i] <= 'z')
+            && !(args_temp->content[i] >= 'A' && args_temp->content[i] <= 'Z')
+            && args_temp->content[i] != '_'
+            && !(args_temp->content[i] >= '0' && args_temp->content[i] <= '9')))
+        {
+            printf("unset: %s: invalid parameter name\n", args_temp->content);
+            return ;
+        }
+        args_temp = args_temp->next;
+        i++;
     }
     temp = NULL;
-    env_var_to_unset = get_env_var(env, key);
-    while (env)
+    env_var_to_unset = NULL;
+    while (env && args)
     {
-        if (ft_strncmp(env->next->key, env_var_to_unset->key, ft_strlen(key)) == 0)
+        env_var_to_unset = get_env_var(env, args->content);
+        printf("Ici: %s\n", args->content);
+        if (ft_strncmp(env->next->key, env_var_to_unset->key, ft_strlen(args->content)) == 0)
         {
             temp = env_var_to_unset->next;
             if (temp)
@@ -326,10 +364,11 @@ void    unset_env_var(t_env *env, const char *key)
                 env->next = NULL;
             break ;
         }
+        // free(env_var_to_unset->value);
+        // free(env_var_to_unset->full);
+        // free(env_var_to_unset->key);
+        // free(env_var_to_unset);
         env = env->next;
+        args = args->next;
     }
-    free(env_var_to_unset->value);
-    free(env_var_to_unset->full);
-    free(env_var_to_unset->key);
-    free(env_var_to_unset);
 }

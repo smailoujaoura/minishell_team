@@ -102,9 +102,9 @@ t_chain	*create_redirs_chain(t_chain *list);
 //env
 t_env	*handle_env(char **envp);
 void print_env_vars(t_env *env);
-void   export_env_var(t_env *head, char *line);
+void   export_env_var(t_env *head, t_argv *args);
 void export_with_no_args(t_env *env);
-void    unset_env_var(t_env *env, const char *key);
+void    unset_env_var(t_env *env, t_argv *args);
 t_env *get_env_var(t_env *env, const char *key);
 
 // Builtins

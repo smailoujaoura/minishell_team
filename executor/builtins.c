@@ -1,9 +1,9 @@
 #include "../minishell.h"
 
-void echo(t_argv *argv)
-{
+// void echo(t_argv *argv)
+// {
 
-}
+// }
 // void    echo()
 // {
 //     int i;
@@ -157,11 +157,16 @@ void echo(t_argv *argv)
 void    cd(t_env *env, t_argv *argv)
 {
     t_env   *home;
-    char    *new_pwd;
-    char    *new_oldpwd;
+    // char    *new_pwd;
+    // char    *new_oldpwd;
     char    *path;
-    
+    t_argv *updated_oldpwd;
+    t_argv *updated_pwd;
+
+
     home = NULL;
+    updated_oldpwd = malloc(sizeof(argv));
+    updated_pwd = malloc(sizeof(argv));
     while (argv)
     {
         if (argv->next)
@@ -177,11 +182,13 @@ void    cd(t_env *env, t_argv *argv)
         argv->content = home->value;
     }
     path = getcwd(NULL, 0);
-    new_oldpwd = ft_strjoin("OLDPWD=", path);
-    export_env_var(env, new_oldpwd);
+    // new_oldpwd = ft_strjoin("OLDPWD=", path);
+    updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
+    export_env_var(env, updated_oldpwd);
     if (chdir(argv->content) == -1)
     {  
-        free(new_oldpwd);
+        free(updated_oldpwd->content);
+        free(updated_oldpwd);
         free(path);
         printf("%s\n", strerror(errno));
         return ;
@@ -189,10 +196,15 @@ void    cd(t_env *env, t_argv *argv)
     free(path);
     path = NULL;
     path = getcwd(NULL, 0);
-    new_pwd = ft_strjoin("PWD=", path);
-    export_env_var(env, new_pwd);
-    free(new_oldpwd);
-    free(new_pwd);
+    // new_pwd = ft_strjoin("PWD=", path);
+    updated_pwd->content = ft_strjoin("PWD=", path);
+    export_env_var(env, updated_pwd);
+    free(updated_oldpwd->content);
+    free(updated_pwd->content);
+    free(updated_oldpwd);
+    free(updated_pwd);
+    // free(new_oldpwd);
+    // free(new_pwd);
     free(path);
 }
 
