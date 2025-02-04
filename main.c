@@ -756,8 +756,7 @@ int	main(int argc, char *argv[], char *envp[])
 	// initalize structures and envirnoment
 	// env = handle_env(envp);
 	// export_env_var(env, "NAME2=kol");
-
-	// export_env_var(env, "NAME2+=ani");
+	// export_env_var(env, "NAME2=ani");
 	// export_env_var(env, "NAME5=kol");
 	// export_env_var(env, "NAME6=kol");
 	// export_env_var(env, "NAME7=kol");
