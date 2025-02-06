@@ -238,6 +238,7 @@ void   export_env_var(t_env *env, t_argv *args)
     int i;
     char *line;
 
+    line = NULL;
     while (args)
     {
         line = args->content;
@@ -260,11 +261,11 @@ void   export_env_var(t_env *env, t_argv *args)
             return ;
         }
         process_env_var(env, new_env, splited_line, line);
-        args = args->next;
         i = -1;
         while (splited_line[++i])
             free(splited_line[i]);
         free(splited_line);
+        args = args->next;
     }
 }
 

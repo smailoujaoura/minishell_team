@@ -154,35 +154,40 @@ void echo(t_argv *argv)
 //         free(new_str);
 // }
 
-void    cd(t_env *env, t_argv *argv)
+void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updated_pwd)
 {
     t_env   *home;
-    // char    *new_pwd;
-    // char    *new_oldpwd;
     char    *path;
-    t_argv *updated_oldpwd;
-    t_argv *updated_pwd;
 
-
-    home = NULL;
-    updated_oldpwd = malloc(sizeof(argv));
-    updated_pwd = malloc(sizeof(argv));
-    while (argv)
-    {
-        if (argv->next)
-        {
-            printf("Minishell: cd: too many arguments\n");
-            exit(1);
-        }
-        argv = argv->next;
-    }
-    if (argv->content == NULL)
-    {
-        home = get_env_var(env, "HOME");
-        argv->content = home->value;
-    }
+    updated_oldpwd->next = NULL;
+    updated_pwd->next = NULL;
+    home = get_env_var(env, "HOME");
     path = getcwd(NULL, 0);
-    // new_oldpwd = ft_strjoin("OLDPWD=", path);
+    updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
+    export_env_var(env, updated_oldpwd);
+    if (chdir(home->value) == -1)
+    {  
+        free(updated_oldpwd->content);
+        free(updated_oldpwd);
+        free(path);
+        printf("%s\n", strerror(errno));
+        return ;
+    }
+    free(path);
+    path = NULL;
+    path = getcwd(NULL, 0);
+    updated_pwd->content = ft_strjoin("PWD=", path);
+    export_env_var(env, updated_pwd);
+    free(path);
+}
+
+void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_argv *updated_pwd)
+{
+    char    *path;
+
+    updated_oldpwd->next = NULL;
+    updated_pwd->next = NULL;
+    path = getcwd(NULL, 0);
     updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
     export_env_var(env, updated_oldpwd);
     if (chdir(argv->content) == -1)
@@ -196,16 +201,39 @@ void    cd(t_env *env, t_argv *argv)
     free(path);
     path = NULL;
     path = getcwd(NULL, 0);
-    // new_pwd = ft_strjoin("PWD=", path);
     updated_pwd->content = ft_strjoin("PWD=", path);
     export_env_var(env, updated_pwd);
+    free(path);
+}
+
+void    cd(t_env *env, t_argv *argv)
+{
+    t_argv *updated_oldpwd;
+    t_argv *updated_pwd;
+    t_argv  *temp;
+
+    updated_oldpwd = malloc(sizeof(t_argv));
+    updated_pwd = malloc(sizeof(t_argv));
+    if (argv == NULL)
+        cd_with_no_args(env, updated_oldpwd, updated_pwd);
+    else
+    {
+        temp = argv;
+        while (temp)
+        {
+            if (temp->next)
+            {
+                printf("Minishell: cd: too many arguments\n");
+                exit(1);
+            }
+            temp = temp->next;
+        }
+        cd_with_args(env, argv, updated_oldpwd, updated_pwd);
+    }
     free(updated_oldpwd->content);
     free(updated_pwd->content);
     free(updated_oldpwd);
     free(updated_pwd);
-    // free(new_oldpwd);
-    // free(new_pwd);
-    free(path);
 }
 
 void    pwd(void)
