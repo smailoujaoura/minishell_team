@@ -57,7 +57,6 @@ typedef struct s_argv
 	struct s_argv	*back;
 }	t_argv;
 
-// Linked list of tokens and their data
 typedef struct s_chain
 {
 	int				type;
@@ -76,8 +75,8 @@ typedef struct s_chain
 	int				wildcard;
 	int				dollar;
 }	t_chain;
-// ls "  * ''" || " '' *" && " "*"k" && *
-// ls $PWD ""'$HOME"'"" "$_"
+
+
 // Abstract Syntax Tree to represent the the parsed line
 typedef struct s_ast
 {
@@ -94,6 +93,38 @@ typedef struct s_env
     char    *full;
     struct s_env *next;
 } t_env;
+
+
+void	print_with_files(t_chain *ptr);
+
+// Lexing
+t_chain	*convert_str(char *str);
+void	tokenize_list(t_chain *list);
+
+void	find_type(t_chain *list);
+void	handle_quotes(char **start, char target, char opposite);
+
+// PARSER
+void	prioritize_list(t_chain *list);
+void	assign_depth(t_chain *list);
+void	strip_words(t_chain *list);
+t_chain	*join_redirs(t_chain *list);
+t_chain	*join_commands(t_chain *list);
+t_chain	*assign_inputs(t_chain *list, t_chain *ptr);
+void	pick_left_redirs(t_chain *list);
+t_chain	*convert_infix(t_chain *infix);
+void	handle_redirs(char **start);
+int	is_redir(t_chain *ptr, int f);
+void	assign_block_redirs(t_chain *list);
+void	assign_adjacent_redirs(t_chain *list, t_chain *ptr);
+t_chain	*assign_inputs_edges(t_chain *list);
+void	remove_if(t_chain *list);
+void	delete_any(t_chain *ptr, int i);
+char	*remove_occurences(char *str, int i, int singles, int doubles);
+void	create_all_redirs(t_chain *list, t_chain *ptr, int f);
+void	add_files(t_chain *list, t_chain *new);
+void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f);
+
 
 // list utilities
 t_chain	*lstnew(char *content);
@@ -112,9 +143,21 @@ int	check_syntax(t_chain *list);
 int	is_redir(t_chain *ptr, int f);
 t_chain	*assign_inputs_edges(t_chain *list);
 t_chain	*create_redirs_chain(t_chain *list);
+t_ast	*free_list(t_chain *list);
+
+
 
 // convert Post to AST
 t_ast	*build_tree(t_chain *post);
+
+
+
+
+
+
+
+
+
 
 
 

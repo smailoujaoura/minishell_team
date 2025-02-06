@@ -6,11 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/04 19:43:49 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/06 11:06:24 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../minishell.h"
 
 # define SYNTAXERR "Minishell: syntax error near unexpected token"
 # define ERR "Minishell: syntax error near unexpected token '%s'\n"

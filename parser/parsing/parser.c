@@ -1,0 +1,192 @@
+#include "../../minishell.h"
+
+
+// void	severe_redirs(t_chain *list)
+// {
+// 	t_chain	*ptr;
+
+// 	while (list)
+// 	{
+// 		ptr = list;
+// 		while (ptr && (is_redir(ptr, IN + OR + OUT)))
+// 			ptr = ptr->next;
+// 		if (ptr != list)
+// 		{
+// 			list = list->back;
+// 			list->next = ptr;
+// 			if (ptr)
+// 			{
+// 				ptr->back->next = NULL;
+// 				ptr->back = list;
+// 			}
+// 		}
+// 		list = list->next;
+// 	}
+// }
+
+void	print_with_files(t_chain *ptr)
+{
+	while (ptr)
+	{
+		printf("CONTENT:[%s]\n", ptr->content);
+		if (ptr->type == WORD)
+		{
+			while (ptr->adj_f)
+			{
+				printf("\t[%s]\t[%s]\n", ptr->adj_f->file, ptr->adj_f->delim);
+				ptr->adj_f = ptr->adj_f->next;
+			}
+			while (ptr->blk_f)
+			{
+				printf("\t{%s}\t{%s}\n", ptr->blk_f->file, ptr->blk_f->delim);
+				ptr->blk_f = ptr->blk_f->next;
+			}
+			t_argv *args = ptr->argv;
+			while (args)
+			{
+				printf("\targ:[%s]\t\t\tDollar$:[%d]\t\t\tWild*:[%d]\n", args->content, args->dollar, args->wildcard);
+				args = args->next;
+			}
+		}
+		ptr = ptr->next;
+	}
+}
+
+void	pick_left_redirs(t_chain *list)
+{
+	t_chain	*ptr;
+	t_chain	*new;
+
+	while (list)
+	{
+		ptr = list;
+		while (ptr && (is_redir(ptr, IN + OR + OUT)))
+			ptr = ptr->next;
+		if (ptr != list)
+		{
+			new = ft_calloc(1, sizeof(t_chain));
+			new->type = WORD;
+			// GIVE CONTENT "empty for now"
+			new->content = "Empty CMD";
+			new->empty = 1;
+			new->next = ptr;
+			new->back = list->back;
+			list->back = NULL;
+			new->adj_f = list;
+			new->back->next = new;
+			list = new;
+		}
+		list = list->next;
+	}
+}
+
+t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
+{
+	list = assign_inputs_edges(list);
+	assign_adjacent_redirs(list, ptr);
+	assign_block_redirs(list);
+	remove_if(list);
+	return (list);
+}
+
+t_chain	*join_commands(t_chain *list)
+{
+	t_argv	*argv;
+	t_argv	*new;
+	t_chain	*ptr;
+
+	while (list)
+	{
+		argv = NULL;
+		if (list->type == WORD)
+		{
+			ptr = list->next;
+			while (ptr && (ptr->type == WORD || ptr->type == WILDCARD || is_redir(ptr, IN + OR + OUT) ))
+			{
+				if (ptr->type == WORD || ptr->type == WILDCARD)
+				{
+					new = lstnew_arg(ptr);
+					new->type = ptr->type;
+					lstadd_back_arg(&argv, new);
+					ptr->type = REMOVE;
+				}
+				ptr = ptr->next;
+			}
+			remove_if(list);
+			list->argv = argv;
+		}
+		list = list->next;
+	}
+	return (list);
+}
+
+
+t_chain	*join_redirs(t_chain *list)
+{
+	while (list)
+	{
+		if (list->type == REDIR_IN || list->type == REDIR_OUT || list->type == REDIR_APPEND)
+		{
+			list->file = list->next->content;
+			delete_any(list->next, 0);
+			// handle ambiguous syntax when given * if it expands to more than it should.
+		}
+		if (list->type == HEREDOC)
+		{
+			list->delim = list->next->content;
+			delete_any(list->next, 0);
+		}
+		list = list->next;
+	}
+	return (list);
+}
+
+void	strip_words(t_chain *list)
+{
+	while (list)
+	{
+		if (list->type == WORD)
+			list->content = remove_occurences(list->content, 0, 0, 0);
+		list = list->next;
+	}
+}
+
+void	assign_depth(t_chain *list)
+{
+	int	depth;
+
+	depth = 0;
+	while (list)
+	{
+		if (list->type == L_PAREN)
+		{
+			depth++;
+			list->depth = depth;
+		}
+		else if (list->type == R_PAREN)
+		{
+			list->depth = depth;
+			depth--;
+		}
+		else
+			list->depth = depth;
+		list = list->next;
+	}
+}
+
+void	prioritize_list(t_chain *list)
+{
+	while (list)
+	{
+		if (list->type == L_PAREN || list->type == R_PAREN)
+			list->lvl = NAN;
+		else if (list->type == WORD || list->type == REDIR_APPEND || list->type
+			== REDIR_IN || list->type == REDIR_OUT || list->type == HEREDOC) // HEREDOC REDIRS
+			list->lvl = VIP;
+		else if (list->type == PIPE)
+			list->lvl = LVL1;
+		else if (list->type == OR || list->type == AND)
+			list->lvl = LVL2;
+		list = list->next;
+	}
+}

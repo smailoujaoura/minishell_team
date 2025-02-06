@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 // we need stack behaviour sometimes so we specify that with f(flag) = 1,
 // otherwise f = 0, meaning adding the new node to the back of the list
@@ -145,4 +145,11 @@ void	lstadd_back_arg(t_argv **lst, t_argv *new)
 		new->back = NULL;
 		*lst = new;
 	}
+}
+
+t_ast	*free_list(t_chain *list)
+{
+	// return
+	(void)list;
+	return (NULL);
 }

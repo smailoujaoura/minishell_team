@@ -1,0 +1,82 @@
+#include "minishell.h"
+
+
+
+t_ast	*parse_line(char *line)
+{
+	t_chain	*list;
+	t_chain	*post;
+	t_ast	*root;
+
+// lexer
+	list = convert_str(line);
+	tokenize_list(list);
+
+// parser
+	if (check_syntax(list))
+		return (free_list(list));
+	prioritize_list(list);
+	assign_depth(list);
+	strip_words(list);
+
+	join_redirs(list);
+	join_commands(list);
+	list = assign_inputs(list, NULL);
+	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
+	pick_left_redirs(list);
+	print_with_files(list);
+
+	post = convert_infix(list);
+	root = build_tree(post);
+	// collect_garbage(post);
+	root = NULL;
+	return (root);
+}
+
+void	handle_interrupt(int signum)
+{
+	(void)signum;
+	write(2, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+void	handle_signals(void)
+{
+	signal(SIGINT, handle_interrupt);
+}
+
+void	exit_shell(void)
+{
+	exit(0);
+}
+
+char	*get_line(void)
+{
+	char    *line;
+
+	line = readline("Minishell:$ ");
+	if (line)
+		add_history(line);
+	return (line);
+}
+
+void	loop_minishell(void)
+{
+	char	*line;
+	t_ast	*root;
+	
+	while (1337)
+	{
+		line = get_line();
+		if (line == NULL)
+			exit_shell();
+		root = parse_line(line);
+		if (root)
+			// execute tree
+		// free line
+		// free tree and other stuff
+		(void)root;
+	}
+}
