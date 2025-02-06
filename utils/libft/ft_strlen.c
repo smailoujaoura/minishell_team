@@ -3,15 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 10:20:52 by soujaour          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/02/05 10:11:04 by soujaour         ###   ########.fr       */
-=======
-/*   Updated: 2025/02/04 18:28:59 by bkolani          ###   ########.fr       */
->>>>>>> c42d50caca06aee4b13ec718a1dcfe164a4aa2d9
-/*                                                                            */
+/*   Updated: 2025/02/06 09:51:50 by soujaour         ###   ########.fr       */
+/*              s                                                              */
 /* ************************************************************************** */
 
 #include "libft.h"
