@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/06 11:06:24 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/06 11:47:41 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,41 +55,77 @@ int	check_word(t_chain *prev, t_chain *next)
 
 int	check_out_redir(t_chain *prev, t_chain *next)
 {
-	(void)next;
+	// or we in otherwords anything else after redir must be a word. 
+	if (!next || next->type != WORD)
+	{
+		if (!next)
+			printf("%s `%s'\n", SYNTAXERR, "newline");
+		else
+			printf("%s `%s'\n", SYNTAXERR, next->content);
+		return (1);
+	}
 	(void)prev;
 	return (0);
 }
 
 int	check_heredoc(t_chain *prev, t_chain *next)
 {
-	(void)next;
+	// or we in otherwords anything else after redir must be a word. 
+	if (!next || next->type != WORD)
+	{
+		if (!next)
+			printf("%s `%s'\n", SYNTAXERR, "newline");
+		else
+			printf("%s `%s'\n", SYNTAXERR, next->content);
+		return (1);
+	}
 	(void)prev;
 	return (0);
 }
 
 int	check_in_redir(t_chain *prev, t_chain *next)
 {
-	(void)next;
+	// or we in otherwords anything else after redir must be a word. 
+	if (!next || next->type == PIPE || next->type == AND || next->type == OR || next->type == L_PAREN || next->type == R_PAREN)
+	{
+		if (!next)
+			printf("%s `%s'\n", SYNTAXERR, "newline");
+		else
+			printf("%s `%s'\n", SYNTAXERR, next->content);
+		return (1);
+	}
 	(void)prev;
 	return (0);
 }
 
 int	check_lparen(t_chain *prev, t_chain *next)
 {
-	(void)next;
+	// need to check if we don't have closed paren.
+	if (next->type == R_PAREN || next->type == AND || next->type == OR || next->type == PIPE)
+	{
+		printf("%s `%s'\n", SYNTAXERR, next->content);
+		return (1);
+	}
 	(void)prev;
+	return (0);
 	return (0);
 }
 
 int	check_rparen(t_chain *prev, t_chain *next)
 {
-	(void)next;
+	// need to check if we don't have opened parenthesis. 
+	if (next->type == L_PAREN)
+	{
+		printf("%s `%s'\n", SYNTAXERR, next->content);
+		return (1);
+	}
 	(void)prev;
 	return (0);
 }
 
 int	check_wildcard(t_chain *prev, t_chain *next)
 {
+	// wild card for now can come anywhere.
 	(void)next;
 	(void)prev;
 	return (0);
@@ -107,7 +143,7 @@ int	multiple_tokens(t_chain *prev, t_chain *token, t_chain *next)
 		return (check_out_redir(prev, next));
 	if (token->type == HEREDOC)
 		return (check_heredoc(prev, next));
-	if (token->type == IN)
+	if (is_redir(token, IN))
 		return (check_in_redir(prev, next));
 	if (token->type == L_PAREN)
 		return (check_lparen(prev, next));
