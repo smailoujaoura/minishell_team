@@ -45,45 +45,41 @@ int	peek(char *s, char *tokens)
 	return (0);
 }
 
+// """"''ls" ' ' "          " "*' '
+void	handle_quotes(char **start, char target, char opposite)
+{
+	int i;
+
+	i = 0;
+	while (**start)
+	{
+		if (i && **start == target)
+			i = 0;
+		else if (!i && **start == target)
+			i = 1;
+		else if (!i && (ft_strchr(WHITESPACE, **start) || ft_strchr(SYMBOLS, **start) || **start == opposite))
+			break ;
+		(*start)++;
+	}
+}
+
 void	handle_words(char **start)
 {
-	if (**start == '\0' ||
-		ft_strchr(WHITESPACE, **start) || peek(*start, "|<>)"))
+	if (**start == '\0' || ft_strchr(WHITESPACE, **start) || peek(*start, "|<>()") || (**start == '&' && *(*start + 1) == '&'))
 		return ;
 	else if (**start == '"')
-	{
-		(*start)++;
-		while (**start != '"')
-			(*start)++;
-		(*start)++;
-	}
+		handle_quotes(start, '"', '\'');
 	else if (**start == '\'')
-	{
-		(*start)++;
-		while (**start != '\'')
-			(*start)++;
-		(*start)++;
-	}
+		handle_quotes(start, '\'', '"');
 	else
-	{
-		while (!ft_strchr(SYMBOLS, **start) && !(ft_strchr(WHITESPACE, **start))
-			&& !(**start == '&' && *(*start + 1) == '&'))
-				(*start)++;
-	}
+		while (!ft_strchr(WHITESPACE, **start) && !ft_strchr(SYMBOLS, **start) && !(**start == '&' && *(*start + 1) == '&'))
+			(*start)++;
 	handle_words(start);
 }
 
-int	get_token(char **start, char **tok_start, char **tok_end)
+void	handle_redirs(char **start)
 {
-	while (**start && ft_strchr(WHITESPACE, **start))
-		(*start)++;
-	if (tok_start)
-		*tok_start = *start;
-	if (**start == '\0')
-		return (0);
-	else if (**start == '(' || **start == ')')
-		(*start)++;
-	else if (**start == '<')
+	if (**start == '<') 
 	{
 		(*start)++;
 		if (**start == '<')
@@ -95,6 +91,19 @@ int	get_token(char **start, char **tok_start, char **tok_end)
 		if (**start == '>')
 			(*start)++;
 	}
+}
+
+int	get_token(char **start, char **tok_start, char **tok_end)
+{
+	while (**start && ft_strchr(WHITESPACE, **start))
+		(*start)++;
+	*tok_start = *start;
+	if (**start == '\0')
+		return (0);
+	else if (**start == '(' || **start == ')')
+		(*start)++;
+	else if (**start == '<' || **start == '>')
+		handle_redirs(start);
 	else if (**start == '|')
 	{
 		(*start)++;
@@ -105,10 +114,7 @@ int	get_token(char **start, char **tok_start, char **tok_end)
 		(*start) += 2;
 	else
 		handle_words(start);
-	// while (**start && !ft_strchr(WHITESPACE, **start) && !ft_strchr(SYMBOLS, **start))
-	// 	(*start)++; why would we skip the WHITESPACES TWICE, at the beginning is ennough
-	if (tok_end)
-		*tok_end = *start;
+	*tok_end = *start;
 	return (1);
 }
 
@@ -124,18 +130,83 @@ t_chain	*convert_str(char *str)
 	return (list);
 }
 
+int	is_wildcard(char *str)
+{
+	int	i;
+	int	d;
+	int	s;
+
+	i = 0;
+	d = 0;
+	s = 0;
+	while (str[i])
+	{
+		if (d && str[i] == '"' && !s)
+			d = 0;
+		else if (!d && str[i] == '"' && !s)
+			d = 1;
+		if (s && str[i] == '\'' && !d)
+			s = 0;
+		else if (!s && str[i] == '\'' && !d)
+			s = 1;
+		if (!s && !d && str[i] == '*')
+			return (i + 1);
+		i++;
+	}
+	return (0);
+}
+
+int	handle_dollar(char *str)
+{
+	int	i;
+	int	d;
+	int	s;
+	int	n;
+
+	i = 0;
+	d = 0;
+	s = 0;
+	n = 0;
+	while (str[i])
+	{
+		if (d && str[i] == '"' && !s)
+			d = 0;
+		else if (!d && str[i] == '"' && !s)
+			d = 1;
+		if (s && str[i] == '\'' && !d)
+			s = 0;
+		else if (!s && str[i] == '\'' && !d)
+			s = 1;
+		if (!s && !d && str[i] == '$')
+			n++;
+		else if (!s && d && str[i] == '$')
+			n++;
+		i++;
+	}
+	if (n)
+		return (n);
+	return (0);
+}
+
 void	find_type(t_chain *list)
 {
-	if (list->content[0] == '*')
-		list->type = WILDCARD;
-	else if (ft_strchr(list->content, '"') || ft_strchr(list->content, '\'')) // maybe just check the biggning instead of seaching the whole string
+	list->type = WORD;
+	if (ft_strchr(list->content, '*') && is_wildcard(list->content))
+	{
+		list->wildcard = is_wildcard(list->content);
+		list->type = WORD;
+	}
+	else if (*list->content == '"' || *list->content == '\'')
 	{
 		list->type = WORD;
-		if (ft_strchr(list->content, '$') && ft_strchr(list->content, '"'))
+		if (handle_dollar(list->content))
 			list->dollar = DOLLAR;
 	}
 	else if (list->content[0] == '$')
-		list->type = DOLLAR;
+	{
+		list->type = WORD;
+		list->dollar = DOLLAR;
+	}
 	else
 		list->type = WORD;
 }
@@ -368,7 +439,7 @@ void	remove_if(t_chain *list)
 	{
 		tmp = list;
 		list = list->next;
-		if (tmp->type == REMOVE)
+		if (tmp->type == REMOVE || tmp->removable == REMOVE)
 			delete_any(tmp, 0);
 	}
 }
@@ -379,9 +450,9 @@ t_chain	*join_commands(t_chain *list)
 	t_argv	*new;
 	t_chain	*ptr;
 
-	argv = NULL;
 	while (list)
 	{
+		argv = NULL;
 		if (list->type == WORD)
 		{
 			ptr = list->next;
@@ -389,7 +460,7 @@ t_chain	*join_commands(t_chain *list)
 			{
 				if (ptr->type == WORD || ptr->type == WILDCARD)
 				{
-					new = lstnew_arg(ptr->content);
+					new = lstnew_arg(ptr);
 					new->type = ptr->type;
 					lstadd_back_arg(&argv, new);
 					ptr->type = REMOVE;
@@ -397,8 +468,8 @@ t_chain	*join_commands(t_chain *list)
 				ptr = ptr->next;
 			}
 			remove_if(list);
+			list->argv = argv;
 		}
-		list->argv = argv;
 		list = list->next;
 	}
 	return (list);
@@ -501,6 +572,7 @@ t_chain	*create_redirs_chain(t_chain *list)
 	redirs = NULL;
 	while (list && is_redir(list, IN + OR + OUT))
 	{
+		list->removable = REMOVE;
 		new = ft_calloc(1, sizeof(t_chain));
 		ft_memcpy(new, list, sizeof(t_chain));
 		new->next = NULL;
@@ -584,6 +656,7 @@ t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
 	list = assign_inputs_edges(list);
 	assign_adjacent_redirs(list, ptr);
 	assign_block_redirs(list);
+	remove_if(list);
 	return (list);
 }
 
@@ -642,7 +715,7 @@ void	print_with_files(t_chain *ptr)
 {
 	while (ptr)
 	{
-		printf("CONTENT:[%s]\t\t\t\t[%d]\n", ptr->content, ptr->depth);
+		printf("CONTENT:[%s]\n", ptr->content);
 		if (ptr->type == WORD)
 		{
 			while (ptr->adj_f)
@@ -658,7 +731,7 @@ void	print_with_files(t_chain *ptr)
 			t_argv *args = ptr->argv;
 			while (args)
 			{
-				printf("\targ:[%s]\n", args->content);
+				printf("\targ:[%s]\t\t\tDollar$:[%d]\t\t\tWild*:[%d]\n", args->content, args->dollar, args->wildcard);
 				args = args->next;
 			}
 		}
@@ -705,7 +778,7 @@ t_ast	*free_list(t_chain *list)
 t_ast	*parse_line(char *line)
 {
 	t_chain	*list;
-	// t_chain	*post;
+	t_chain	*post;
 	t_ast	*root;
 
 	list = convert_str(line); // convert line into linked list of seperated symbols
@@ -722,8 +795,8 @@ t_ast	*parse_line(char *line)
 	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
 	pick_left_redirs(list); // this should more or less delete the severe and free redirections THIS MIGHT NOT BE NEEDED
 	print_with_files(list);
-	// post = convert_infix(list); // remove the redirections so that algo for post won't have more types than expected
-	// root = build_tree(post);
+	post = convert_infix(list); // remove the redirections so that algo for post won't have more types than expected
+	root = build_tree(post);
 	// collect_garbage(post);
 	root = NULL;
 	return (root);
@@ -753,49 +826,49 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	(void)argc;
 	(void)argv;
-
 	(void)envp;
-	t_env *env;
-	t_argv *args = NULL;
 
-	// initalize structures and envirnoment
-	env = handle_env(envp);
-	t_argv *args1 = malloc(sizeof(t_argv));
-	t_argv *args2 = malloc(sizeof(t_argv));
-	args1->content = "NAME1=kol";
-	args1->next = args2;
-	args2->content = "NAME1+=ani";
-	args2->next = NULL;
-	args = args1;
-	export_env_var(env, args);
-	// unset_env_var(env, args);
-	print_env_vars(env);
-	// export_env_var(env, "NAME2=ani");
-	// export_env_var(env, "NAME5=kol");
-	// export_env_var(env, "NAME6=kol");
-	// export_env_var(env, "NAME7=kol");
-	// export_env_var(env, "NAME3=ani");
-	// print_env_vars(env);
-	// unset_env_var(env, "NAME5");
-	// print_env_vars(env);
-	// while (env)
-	// {
-	// 	free(env->full);
-	// 	free(env->key);
-	// 	free(env->value);
-	// 	free(env);
-	// 	env = env->next;
-	// }
-	// export_with_no_args(env);
+	// t_env *env;
+	// t_argv *args = NULL;
 
-	// handle signals:
-	handle_signals();
-	cd(env, NULL);
-	// cd(env, "..");
-	pwd();
-	// cd(env, "mfjdjhd");
-	pwd();
-	print_env_vars(env);
-	// echo("echo -nnnnn -nnnnnnnn", "Hello");
+	// // initalize structures and envirnoment
+	// env = handle_env(envp);
+	// t_argv *args1 = malloc(sizeof(t_argv));
+	// t_argv *args2 = malloc(sizeof(t_argv));
+	// args1->content = "NAME1=kol";
+	// args1->next = args2;
+	// args2->content = "NAME1+=ani";
+	// args2->next = NULL;
+	// args = args1;
+	// export_env_var(env, args);
+	// // unset_env_var(env, args);
+	// print_env_vars(env);
+	// // export_env_var(env, "NAME2=ani");
+	// // export_env_var(env, "NAME5=kol");
+	// // export_env_var(env, "NAME6=kol");
+	// // export_env_var(env, "NAME7=kol");
+	// // export_env_var(env, "NAME3=ani");
+	// // print_env_vars(env);
+	// // unset_env_var(env, "NAME5");
+	// // print_env_vars(env);
+	// // while (env)
+	// // {
+	// // 	free(env->full);
+	// // 	free(env->key);
+	// // 	free(env->value);
+	// // 	free(env);
+	// // 	env = env->next;
+	// // }
+	// // export_with_no_args(env);
+
+	// // handle signals:
+	// handle_signals();
+	// cd(env, NULL);
+	// // cd(env, "..");
+	// pwd();
+	// // cd(env, "mfjdjhd");
+	// pwd();
+	// print_env_vars(env);
+	// // echo("echo -nnnnn -nnnnnnnn", "Hello");
 	loop_minishell();
 }

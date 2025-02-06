@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/04 16:44:07 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/04 19:43:49 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	check_pipe(t_chain *prev, t_chain *next)
 		else if (!prev)
 			printf("%s `|'\n", SYNTAXERR);
 		else
-			printf("%s '%s'\n", SYNTAXERR, next->content);
+			printf("%s ```%s'\n", SYNTAXERR, next->content);
 		return (1);
 	}
 	return (0);
@@ -36,9 +36,9 @@ int	check_logicals(t_chain *prev, t_chain *next)
 	if (!next || next->type == PIPE || next->type == AND || next->type == OR)
 	{
 		if (!next)
-			printf("%s '%s'\n", SYNTAXERR, "newline");
+			printf("%s `%s'\n", SYNTAXERR, "newline");
 		else
-			printf("%s '%s'\n", SYNTAXERR, next->content);
+			printf("%s `%s'\n", SYNTAXERR, next->content);
 		return (1);
 	}
 	(void)prev;
@@ -48,15 +48,8 @@ int	check_logicals(t_chain *prev, t_chain *next)
 
 int	check_word(t_chain *prev, t_chain *next)
 {
-	if (!next || next->type == PIPE || next->type == AND || next->type == OR)
-	{
-		if (!next)
-			printf("%s '%s'\n", SYNTAXERR, "newline");
-		else
-			printf("%s '%s'\n", SYNTAXERR, next->content);
-		return (1);
-	}
 	(void)prev;
+	(void)next;
 	return (0);
 }
 
@@ -132,26 +125,29 @@ int	multiple_tokens(t_chain *prev, t_chain *token, t_chain *next)
 
 int	one_token(t_chain *list)
 {
-	(void)list;
+	if (!(list->type == WORD || list->type == WILDCARD))
+	{
+		printf("%s `%s'\n", SYNTAXERR, list->content);
+		return (1);
+	}
+	if (is_redir(list, IN + OR + OUT))
+	{
+		printf("%s '%s'\n", SYNTAXERR, "newline");
+		return (1);
+	}
 	return (0);
-}
-
-void	throw_error(t_chain *list)
-{
-	// free
-	(void)list;
 }
 
 int	check_syntax(t_chain *list)
 {
-	if (list && !list->next)
-		one_token(list);
-	else
+	if (list && !list->next && one_token(list))
+		return (1);
+	else if (!(list && !list->next))
 	{
-		while (list && list->next)
+		while (list)
 		{
-			if (multiple_tokens(list, list->next, list->back))
-				throw_error(list);
+			if (multiple_tokens(list->back, list, list->next))
+				return (1);
 			list = list->next;
 		}
 	}

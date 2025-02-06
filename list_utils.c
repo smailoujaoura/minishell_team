@@ -55,8 +55,6 @@ t_chain	*lstnew(char *content)
 		return (NULL); // DON'T return just panic and exit.
 	new->content = content;
 	new->type = -1;
-	new->dollar = -1;
-	new->quote = -1;
 	new->lvl = -1;
 	new->depth = 0;
 	new->empty = 0;
@@ -67,6 +65,9 @@ t_chain	*lstnew(char *content)
 	new->adj_f = NULL;
 	new->blk_f = NULL;
 	new->argv = NULL;
+	new->removable = 0;
+	new->wildcard = 0;
+	new->dollar = 0;
 	return (new);
 }
 
@@ -100,7 +101,7 @@ void	lstadd_back(t_chain **lst, t_chain *new)
 	}
 }
 
-t_argv	*lstnew_arg(char *content)
+t_argv	*lstnew_arg(t_chain *cmd)
 {
 	t_argv	*new;
 
@@ -110,7 +111,9 @@ t_argv	*lstnew_arg(char *content)
 	new->back = NULL;
 	new->next = NULL;
 	new->type = -1;
-	new->content = ft_strdup(content); // should it be strdup or not? s
+	new->wildcard = cmd->wildcard;
+	new->dollar = cmd->dollar;
+	new->content = ft_strdup(cmd->content); // should it be strdup or not? s
 	return (new);
 }
 

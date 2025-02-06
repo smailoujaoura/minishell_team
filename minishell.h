@@ -12,6 +12,9 @@
 # include <readline/history.h>
 # include <errno.h>
 
+
+extern int i;
+
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -27,9 +30,14 @@
 # define QUOTES 1013
 # define REMOVE 1015
 
+# define WILDCARDS 1020
+
 
 # define WHITESPACE "\t\n\v\f\r "
-# define SYMBOLS "<>|)"
+# define SYMBOLS "<>|()"
+
+# define SINGLES '\''
+# define DOUBLES '"'
 
 # define VIP 9
 # define NAN 0
@@ -43,6 +51,8 @@ typedef struct s_argv
 {
 	int				type;
 	char			*content;
+	int				wildcard;
+	int				dollar;
 	struct s_argv	*next;
 	struct s_argv	*back;
 }	t_argv;
@@ -52,8 +62,6 @@ typedef struct s_chain
 {
 	int				type;
 	char			*content;
-	int				dollar;
-	int				quote;
 	int				depth;
 	int				lvl;
 	t_argv			*argv;
@@ -64,8 +72,12 @@ typedef struct s_chain
 	struct s_chain	*adj_f;
 	struct s_chain	*blk_f;
 	int				empty;
+	int				removable;
+	int				wildcard;
+	int				dollar;
 }	t_chain;
-
+// ls "  * ''" || " '' *" && " "*"k" && *
+// ls $PWD ""'$HOME"'"" "$_"
 // Abstract Syntax Tree to represent the the parsed line
 typedef struct s_ast
 {
@@ -91,7 +103,7 @@ void	move_item(t_chain **src, t_chain **dst, int f);
 void	delete_one(t_chain **list, int i);
 void	lstadd_back_arg(t_argv **lst, t_argv *new);
 t_argv	*lstlast_arg(t_argv *lst);
-t_argv	*lstnew_arg(char *content);
+t_argv	*lstnew_arg(t_chain *cmd);
 
 // Syntax Validator
 int	check_syntax(t_chain *list);
