@@ -303,73 +303,41 @@ void    unset_env_var(t_env *env, t_argv *args)
 {
     int i;
     t_env *temp;
-    t_env *env_var_to_unset;
     t_argv *args_temp;
 
     i = 0;
     args_temp = args;
-    while (args_temp)
-    {
-        if ((!(args_temp->content[0] >= 'a' && args_temp->content[1] <= 'z')
-            && !(args_temp->content[0] >= 'A' && args_temp->content[0] <= 'Z')
-            && args_temp->content[0] != '_')
-            || (!(args_temp->content[ft_strlen(args_temp->content) - 1] >= 'a' && args_temp->content[ft_strlen(args_temp->content) - 1] <= 'z')
-            && !(args_temp->content[ft_strlen(args_temp->content) - 1] >= 'A' && args_temp->content[ft_strlen(args_temp->content) - 1] <= 'Z')
-            && args_temp->content[ft_strlen(args_temp->content) - 1] != '_'
-            && !(args_temp->content[ft_strlen(args_temp->content) - 1] >= '0' && args_temp->content[ft_strlen(args_temp->content) - 1] <= '9'))
-            || (!(args_temp->content[i] >= 'a' && args_temp->content[i] <= 'z')
-            && !(args_temp->content[i] >= 'A' && args_temp->content[i] <= 'Z')
-            && args_temp->content[i] != '_'
-            && !(args_temp->content[i] >= '0' && args_temp->content[i] <= '9')))
-        {
-            printf("unset: %s: invalid parameter name\n", args_temp->content);
-            return ;
-        }
-        args_temp = args_temp->next;
-        i++;
-    }
-    args_temp = args;
-    i = 0;
-    while (args_temp)
-    {
-        if ((!(args_temp->content[0] >= 'a' && args_temp->content[0] <= 'z')
-            && !(args_temp->content[0] >= 'A' && args_temp->content[0] <= 'Z')
-            && args_temp->content[0] != '_')
-            || (!(args_temp->content[ft_strlen(args_temp->content) - 1] >= 'a' && args_temp->content[ft_strlen(args_temp->content) - 1] <= 'z')
-            && !(args_temp->content[ft_strlen(args_temp->content) - 1] >= 'A' && args_temp->content[ft_strlen(args_temp->content) - 1] <= 'Z')
-            && args_temp->content[ft_strlen(args_temp->content) - 1] != '_'
-            && !(args_temp->content[ft_strlen(args_temp->content) - 1] >= '0' && args_temp->content[ft_strlen(args_temp->content) - 1] <= '9'))
-            || (!(args_temp->content[i] >= 'a' && args_temp->content[i] <= 'z')
-            && !(args_temp->content[i] >= 'A' && args_temp->content[i] <= 'Z')
-            && args_temp->content[i] != '_'
-            && !(args_temp->content[i] >= '0' && args_temp->content[i] <= '9')))
-        {
-            printf("unset: %s: invalid parameter name\n", args_temp->content);
-            return ;
-        }
-        args_temp = args_temp->next;
-        i++;
-    }
+    // while (args_temp)
+    // {
+    //     check_unset_args(args, i);
+    //     args_temp = args_temp->next;
+    //     i++;
+    // }
     temp = NULL;
-    env_var_to_unset = NULL;
-    while (env && args)
+    while (args)
     {
-        env_var_to_unset = get_env_var(env, args->content);
-        printf("Ici: %s\n", args->content);
-        if (ft_strncmp(env->next->key, env_var_to_unset->key, ft_strlen(args->content)) == 0)
+        if (!get_env_var(env, args->content))
+            return ;
+        while (env)
         {
-            temp = env_var_to_unset->next;
-            if (temp)
-                env->next = temp;
-            else if (!temp)
-                env->next = NULL;
-            break ;
+            temp = env->next;
+            if (ft_strncmp(env->key, args->content, ft_strlen(args->content)) == 0)
+            {
+                free_env(env);
+                env = temp;
+                break ;
+            }
+            else if (ft_strncmp(temp->key, args->content, ft_strlen(args->content)) == 0)
+            {
+                if (temp->next)
+                    env->next = temp->next;
+                else
+                    env->next = NULL;
+                free_env(temp);
+                break ;
+            }
+            env = env->next;
         }
-        // free(env_var_to_unset->value);
-        // free(env_var_to_unset->full);
-        // free(env_var_to_unset->key);
-        // free(env_var_to_unset);
-        env = env->next;
-        args = args->next;
+    args = args->next;
     }
 }
