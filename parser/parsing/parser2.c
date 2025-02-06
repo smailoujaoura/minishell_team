@@ -89,6 +89,7 @@ t_chain	*assign_inputs_edges(t_chain *list)
 {
 	t_chain	*redirs;
 	t_chain	*tmp;
+	t_chain	*new;
 
 	if (is_redir(list, IN + OR + OUT))
 	{
@@ -100,6 +101,23 @@ t_chain	*assign_inputs_edges(t_chain *list)
 		{
 			list->adj_f = redirs; // bastard redirections
 			remove_adjacent_redirs(list, tmp, 1);
+		}
+		else if (!list)
+		{
+			list = lstnew("EMPTY CMD");
+			list->type = WORD;
+			list->empty = 1;
+			list->adj_f = redirs;
+		}
+		else if (list)
+		{
+			new = lstnew("EMPTY CMD");
+			new->type = WORD;
+			new->empty = 1;
+			new->adj_f = redirs;
+			new->next = list;
+			new->next->back = new;
+			return (new);
 		}
 		else
 			printf("handle this very special case\n"); // there is nothing else just a bunch of redirs; bastard redirs are not adopted by any operator or command
