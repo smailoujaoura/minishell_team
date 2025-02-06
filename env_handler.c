@@ -301,12 +301,12 @@ void free_env(t_env *env_to_unset)
 
 void    unset_env_var(t_env *env, t_argv *args)
 {
-    int i;
+    // int i;
     t_env *temp;
-    t_argv *args_temp;
+    // t_argv *args_temp;
+    // args_temp = args;
 
-    i = 0;
-    args_temp = args;
+    // i = 0;
     // while (args_temp)
     // {
     //     check_unset_args(args, i);

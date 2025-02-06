@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/06 11:47:41 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/06 15:21:47 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	check_lparen(t_chain *prev, t_chain *next)
 int	check_rparen(t_chain *prev, t_chain *next)
 {
 	// need to check if we don't have opened parenthesis. 
-	if (next->type == L_PAREN)
+	if (next && next->type == L_PAREN)
 	{
 		printf("%s `%s'\n", SYNTAXERR, next->content);
 		return (1);

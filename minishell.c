@@ -1,6 +1,13 @@
 #include "minishell.h"
 
-
+void	print_tree(t_ast *root)
+{
+	if (root == NULL)
+		return ;
+	print_tree(root->left);
+	printf("[%s]\n", root->data->content);
+	print_tree(root->right);
+}
 
 t_ast	*parse_line(char *line)
 {
@@ -8,11 +15,9 @@ t_ast	*parse_line(char *line)
 	t_chain	*post;
 	t_ast	*root;
 
-// lexer
 	list = convert_str(line);
 	tokenize_list(list);
 
-// parser
 	if (check_syntax(list))
 		return (free_list(list));
 	prioritize_list(list);
@@ -28,6 +33,8 @@ t_ast	*parse_line(char *line)
 
 	post = convert_infix(list);
 	root = build_tree(post);
+	printf("\nTree: \n");
+	print_tree(root);
 	// collect_garbage(post);
 	root = NULL;
 	return (root);
