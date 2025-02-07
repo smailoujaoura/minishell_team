@@ -137,7 +137,7 @@ t_argv	*lstlast_arg(t_argv *lst);
 t_argv	*lstnew_arg(t_chain *cmd);
 
 // Syntax Validator
-int	check_syntax(t_chain *list);
+int	check_syntax(t_chain *list, char *line);
 
 // redir utils
 int	is_redir(t_chain *ptr, int f);

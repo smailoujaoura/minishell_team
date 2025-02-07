@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/06 15:21:47 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/07 10:33:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,8 +174,39 @@ int	one_token(t_chain *list)
 	return (0);
 }
 
-int	check_syntax(t_chain *list)
+int	check_quotes(char *line)
 {
+	int	i;
+	int	d;
+	int	s;
+
+	i = 0;
+	d = 0;
+	s = 0;
+	while (line[i])
+	{
+		if (d && line[i] == '"' && !s)
+			d = 0;
+		else if (!d && line[i] == '"' && !s)
+			d = 1;
+		if (s && line[i] == '\'' && !d)
+			s = 0;
+		else if (!s && line[i] == '\'' && !d)
+			s = 1;
+		i++;
+	}
+	if (d != 0 || s != 0)
+		return (1);
+	return (0);
+}
+
+int	check_syntax(t_chain *list, char *line)
+{
+	if (check_quotes(line))
+	{
+		printf("minishell: syntax error: unquoted string\n");
+		return (1);
+	}
 	if (list && !list->next && one_token(list))
 		return (1);
 	else if (!(list && !list->next))
