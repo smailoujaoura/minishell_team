@@ -68,6 +68,7 @@ t_chain	*lstnew(char *content)
 	new->removable = 0;
 	new->wildcard = 0;
 	new->dollar = 0;
+	new->delim_in_quotes = 0;
 	return (new);
 }
 

@@ -145,6 +145,11 @@ void	strip_words(t_chain *list)
 {
 	while (list)
 	{
+		if (list->type == HEREDOC && list->next->type == WORD)
+		{
+			if (ft_strchr(list->next->content, '"') || ft_strchr(list->next->content, '\''))
+				list->delim_in_quotes = 1;
+		}
 		if (list->type == WORD)
 			list->content = remove_occurences(list->content, 0, 0, 0);
 		list = list->next;

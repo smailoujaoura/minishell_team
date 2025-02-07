@@ -24,6 +24,8 @@ void    mini_exit(t_argv *argv)
         }
     }
     status = ft_atoi(argv->content);
+    status = status % 256;
+    exit(status);
 }
 
 // echo

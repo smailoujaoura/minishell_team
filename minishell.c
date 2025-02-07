@@ -18,7 +18,7 @@ t_ast	*parse_line(char *line)
 	list = convert_str(line);
 	tokenize_list(list);
 
-	if (check_syntax(list))
+	if (check_syntax(list, line, 0, 0))
 		return (free_list(list));
 	prioritize_list(list);
 	assign_depth(list);
