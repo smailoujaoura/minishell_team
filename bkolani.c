@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	loop_minishell(void);
+void	loop_minishell(t_env *env);
 
 void	bkolani(char *argv[], char *envp[])
 {
@@ -55,26 +55,34 @@ void	bkolani(char *argv[], char *envp[])
 
 	// handle signals:
 	// handle_signals();
-	// t_argv *cd_arg;
-	// cd_arg = malloc(sizeof(t_argv));
-	// cd_arg->content = "Desktop";
-	// cd_arg->next = NULL;
-	// cd(env, NULL);
+	t_argv *cd_arg;
+	cd_arg = malloc(sizeof(t_argv));
+	cd_arg->content = "..";
+	cd_arg->next = NULL;
+	cd(env, NULL);
 	// pwd();
 	// cd(env, cd_arg);
 	// cd(env, "mfjdjhd");
 	// pwd();
 	// print_env_vars(env);
-	t_argv *args1 = malloc(sizeof(t_argv));
-	t_argv *args2 = malloc(sizeof(t_argv));
-	t_argv *args3 = malloc(sizeof(t_argv));
-	args1->content = "-nnnnnnnnnnnnnnnnnnnn";
-	args1->next = args2;
-	args2->content = "-nnnnnnnnnnnnnn";
-	args2->next = args3;
-	args3->content = "Hello, World!";
-	args3->next = NULL;
-	t_argv *echo_args =  args1;
-	echo(echo_args);
-	loop_minishell();
+	// t_argv *args1 = malloc(sizeof(t_argv));
+	// t_argv *args2 = malloc(sizeof(t_argv));
+	// t_argv *args3 = malloc(sizeof(t_argv));
+	// args1->content = "-nnnnnnnnnnnnnnnnnnnn";
+	// args1->next = args2;
+	// args2->content = "-nnnnnnnnnnnnnn";
+	// args2->next = args3;
+	// args3->content = "Hello, World!";
+	// args3->next = NULL;
+	// t_argv *echo_args =  args1;
+	// echo(echo_args);
+	// t_argv *args1 = malloc(sizeof(t_argv));
+	// t_argv *args2 = malloc(sizeof(t_argv));
+	// args1->content = "42";
+	// args1->next = args2;
+	// args2->content = "-1337";
+	// args2->next = NULL;
+	// t_argv *exit_args =  args2;
+	// mini_exit(exit_args);
+	loop_minishell(env);
 }

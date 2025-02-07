@@ -1,5 +1,32 @@
 #include "../minishell.h"
 
+
+// exit
+void    mini_exit(t_argv *argv)
+{
+    int i;
+    int status;
+
+    if (!argv || !argv->content)
+        exit(0);
+    if (argv->next)
+    {
+        write(2, "exit: too many arguments\n", 25);
+        return ;
+    }
+    i = -1;
+    while (argv->content[++i])
+    {
+        if (argv->content[i] < '0' && argv->content[i] > 9)
+        {
+            printf("exit: %s: numeric argument required\n", argv->content);
+            exit(2);
+        }
+    }
+    status = ft_atoi(argv->content);
+}
+
+// echo
 void    check_option(t_argv **argv, int *option_n)
 {
     int i;
@@ -38,6 +65,7 @@ void echo(t_argv *argv)
         write(1, "\n", 1);
 }
 
+// cd
 void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updated_pwd)
 {
     t_env   *home;
@@ -68,9 +96,11 @@ void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updated_pwd)
 void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_argv *updated_pwd)
 {
     char    *path;
+    t_env   *home;
 
     updated_oldpwd->next = NULL;
     updated_pwd->next = NULL;
+    home = get_env_var(env, "HOME");
     path = getcwd(NULL, 0);
     updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
     export_env_var(env, updated_oldpwd);
@@ -80,7 +110,7 @@ void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_argv *u
         free(updated_oldpwd);
         free(path);
         printf("%s\n", strerror(errno));
-        return ;
+        exit(1) ;
     }
     free(path);
     path = NULL;
@@ -107,7 +137,7 @@ void    cd(t_env *env, t_argv *argv)
         {
             if (temp->next)
             {
-                printf("Minishell: cd: too many arguments\n");
+                write(2, "Minishell: cd: too many arguments\n", 34);
                 exit(1);
             }
             temp = temp->next;
@@ -120,6 +150,7 @@ void    cd(t_env *env, t_argv *argv)
     free(updated_pwd);
 }
 
+// pwd
 void    pwd(void)
 {
     char *path = getcwd(NULL, 0);

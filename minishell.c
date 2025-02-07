@@ -59,24 +59,34 @@ void	exit_shell(void)
 	exit(0);
 }
 
-char	*get_line(void)
+char	*get_line(t_env *env)
 {
 	char    *line;
+    t_env    *path;
+    t_env   *home;
+	char    *new_prompt;
 
-	line = readline("Minishell:$ ");
+	home = get_env_var(env, "HOME");
+	path = get_env_var(env, "PWD");
+	new_prompt = ft_strjoin("Minishell:$~", (path->value + ft_strlen(home->value)));
+	if (ft_strncmp(path->value, home->value, ft_strlen(path->value)) == 0)
+		line = readline("Minishell:$ ");
+	else
+		line = readline(new_prompt);
 	if (line)
 		add_history(line);
+	free(new_prompt);
 	return (line);
 }
 
-void	loop_minishell(void)
+void	loop_minishell(t_env *env)
 {
 	char	*line;
 	t_ast	*root;
 	
 	while (1337)
 	{
-		line = get_line();
+		line = get_line(env);
 		if (line == NULL)
 			exit_shell();
 		root = parse_line(line);

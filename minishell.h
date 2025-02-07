@@ -173,5 +173,6 @@ t_env *get_env_var(t_env *env, const char *key);
 void    pwd(void);
 void    cd(t_env *env, t_argv *argv);
 void    echo(t_argv *argv);
+void    mini_exit(t_argv *argv);
 
 #endif
