@@ -8,13 +8,13 @@ void	bkolani(char *argv[], char *envp[])
 	(void)envp;
 	(void)argv;
 	(void)envp;
-	t_env *env;
+	// t_env *env;
 	// t_argv *args_exp = NULL;
 	// t_argv *args_unset = NULL;
 
 
 	// initalize structures and envirnoment
-	env = handle_env(envp);
+	// env = handle_env(envp);
 
 	// t_argv *args1 = malloc(sizeof(t_argv));
 	// t_argv *args2 = malloc(sizeof(t_argv));

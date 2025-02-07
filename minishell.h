@@ -66,6 +66,7 @@ typedef struct s_chain
 	t_argv			*argv;
 	char			*file;
 	char			*delim;
+	int				delim_in_quotes;
 	struct s_chain	*next;
 	struct s_chain	*back;
 	struct s_chain	*adj_f;
@@ -137,7 +138,7 @@ t_argv	*lstlast_arg(t_argv *lst);
 t_argv	*lstnew_arg(t_chain *cmd);
 
 // Syntax Validator
-int	check_syntax(t_chain *list, char *line);
+int	check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
 
 // redir utils
 int	is_redir(t_chain *ptr, int f);

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/07 10:33:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/07 11:08:16 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,23 +200,30 @@ int	check_quotes(char *line)
 	return (0);
 }
 
-int	check_syntax(t_chain *list, char *line)
+int	check_syntax(t_chain *list, char *line, int l_paren, int r_paren)
 {
-	if (check_quotes(line))
-	{
-		printf("minishell: syntax error: unquoted string\n");
-		return (1);
-	}
 	if (list && !list->next && one_token(list))
 		return (1);
 	else if (!(list && !list->next))
 	{
 		while (list)
 		{
+			if (list->type == L_PAREN)
+				l_paren++;
+			else if (list->type == R_PAREN)
+				r_paren++;
 			if (multiple_tokens(list->back, list, list->next))
 				return (1);
 			list = list->next;
 		}
+	}
+	if (l_paren != r_paren || check_quotes(line))
+	{
+		if (l_paren != r_paren)
+			printf("minishell: syntax error: unclosed parenthesis\n");
+		else
+			printf("minishell: syntax error: unquoted string\n");
+		return (1);
 	}
 	return (0);
 }
