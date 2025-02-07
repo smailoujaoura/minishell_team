@@ -9,6 +9,6 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	(void)envp;
 
-	bkolani(argv, envp);
+	// bkolani(argv, envp);
 	loop_minishell();
 }
