@@ -1,5 +1,10 @@
 #include "../minishell.h"
 
+// int *buildin_redir()
+// {
+
+// }
+
 // exit
 void    mini_exit(t_argv *argv)
 {
