@@ -55,15 +55,31 @@ void	bkolani(char *argv[], char *envp[])
 
 	// handle signals:
 	// handle_signals();
-	t_argv *cd_arg;
-	cd_arg = malloc(sizeof(t_argv));
-	cd_arg->content = "..";
-	cd_arg->next = NULL;
-	cd(env, NULL);
+	// t_argv *cd_arg;
+	// cd_arg = malloc(sizeof(t_argv));
+	// cd_arg->content = "..";
+	// cd_arg->next = NULL;
+	// cd(env, NULL);
 	// pwd();
 	// cd(env, cd_arg);
 	// cd(env, "mfjdjhd");
-	// pwd();
+	t_chain *data = malloc(sizeof(t_chain));
+	t_chain *f1 = malloc(sizeof(t_chain));
+	t_chain *f2 = malloc(sizeof(t_chain));
+	t_chain *f3 = malloc(sizeof(t_chain));
+	f1->content = "f1";
+	f1->type = REDIR_OUT;
+	f1->next = f2;
+	f2->content = "f2";
+	f2->type = REDIR_OUT;
+	f2->next = f3;
+	f3->content = "f3";
+	f3->type = REDIR_OUT;
+	f3->next = NULL;
+	data->adj_f = f1;
+	data->argv = NULL;
+	data->next = NULL;
+	pwd(data);
 	// print_env_vars(env);
 	// t_argv *args1 = malloc(sizeof(t_argv));
 	// t_argv *args2 = malloc(sizeof(t_argv));

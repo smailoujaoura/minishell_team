@@ -89,14 +89,10 @@ t_env *handle_env(char **envp)
 
 t_env *get_env_var(t_env *env, const char *key)
 {
-    printf("Key: %s\n", key);
     while (env)
     {
         if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
-        {
-            printf("Get env var: %s\n", env->full);
             return (env);
-        }
         env = env->next;
     }
     return (NULL);
@@ -301,12 +297,8 @@ void free_env(t_env *env_to_unset)
 
 void    unset_env_var(t_env *env, t_argv *args)
 {
-    int i;
     t_env *temp;
-    t_argv *args_temp;
 
-    i = 0;
-    args_temp = args;
     // while (args_temp)
     // {
     //     check_unset_args(args, i);

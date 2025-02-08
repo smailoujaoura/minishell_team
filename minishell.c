@@ -72,7 +72,7 @@ char	*get_line(t_env *env)
 	if (ft_strncmp(path->value, home->value, ft_strlen(path->value)) == 0)
 		line = readline("Minishell:$ ");
 	else
-		line = readline(new_prompt);
+		line = readline(ft_strjoin(new_prompt, " "));
 	if (line)
 		add_history(line);
 	free(new_prompt);

@@ -1,9 +1,22 @@
 #include "../minishell.h"
 
-// int *buildin_redir()
-// {
+int buildin_redir(t_chain *file)
+{
+    int fd;
 
-// }
+    if (file->type == REDIR_IN)
+        fd = open(file->content, O_RDONLY, 0644);
+    if (file->type == REDIR_APPEND)
+        fd = open(file->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
+    else if (file->type == REDIR_OUT)
+        fd = open(file->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd == -1)
+    {
+        perror("open");
+        exit(EXIT_FAILURE);
+    }
+    return (fd);
+}
 
 // exit
 void    mini_exit(t_argv *argv)
@@ -159,15 +172,42 @@ void    cd(t_env *env, t_argv *argv)
 // pwd
 void    pwd(t_chain *data)
 {
+    int adj_f;
+    // int blk_f;
+
     if (data->argv)
     {
         write(2, "pwd: too many arguments\n", 24);
         exit(1);
     }
     char *path = getcwd(NULL, 0);
-    if (path)
-        printf("%s\n", path);
+    if (!path)
+    {
+        perror("getcwd");
+        exit(EXIT_FAILURE);
+    }
     else
-        printf("getcwd failed");
+    {
+        while (data->adj_f)
+        {
+            adj_f = buildin_redir(data->adj_f);
+            printf("File: %s\n", data->adj_f->content);
+            if (data->adj_f->type == REDIR_IN)
+            {
+                if (dup2(adj_f, STDIN_FILENO) == -1)
+                {
+                    perror("dup2");
+                    exit(EXIT_FAILURE);
+                }
+            }
+            else if (data->adj_f->type == REDIR_OUT 
+                || data->adj_f->type == REDIR_APPEND)
+                write(adj_f, path, ft_strlen(path));
+            close(adj_f);
+            data->adj_f = data->adj_f->next;
+        }
+    }
+    printf("Ici\n");
+    // printf("%s\n", path);
     free(path);
 }
