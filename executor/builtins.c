@@ -38,7 +38,7 @@ void    check_option(t_argv **argv, int *option_n)
         i++;
     if ((*argv)->content[i] == '\0')
     {
-        option_n++;
+        (*option_n)++;
         *argv = (*argv)->next;
     }
 }
