@@ -77,6 +77,8 @@ typedef struct s_chain
 	int				dollar;
 }	t_chain;
 
+# define LEFT -1
+# define RIGHT 1
 
 // Abstract Syntax Tree to represent the the parsed line
 typedef struct s_ast
@@ -85,6 +87,8 @@ typedef struct s_ast
 	struct s_chain	*data;
 	struct s_ast	*left;
 	struct s_ast	*right;
+	struct s_ast	*parent;
+	int				side;
 }	t_ast;
 
 typedef struct s_env
@@ -171,7 +175,7 @@ void    unset_env_var(t_env *env, t_argv *args);
 t_env *get_env_var(t_env *env, const char *key);
 
 // Builtins
-void    pwd(void);
+void    pwd(t_chain *data);
 void    cd(t_env *env, t_argv *argv);
 void    echo(t_argv *argv);
 void    mini_exit(t_argv *argv);

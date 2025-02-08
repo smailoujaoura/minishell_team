@@ -1,6 +1,5 @@
 #include "../minishell.h"
 
-
 // exit
 void    mini_exit(t_argv *argv)
 {
@@ -153,8 +152,13 @@ void    cd(t_env *env, t_argv *argv)
 }
 
 // pwd
-void    pwd(void)
+void    pwd(t_chain *data)
 {
+    if (data->argv)
+    {
+        write(2, "pwd: too many arguments\n", 24);
+        exit(1);
+    }
     char *path = getcwd(NULL, 0);
     if (path)
         printf("%s\n", path);

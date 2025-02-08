@@ -36,7 +36,7 @@ void    create_files(t_chain *data)
     }
 }
 
-void    left_pipe(t_ast *tree)
+void    create_pipe(t_ast *tree)
 {
     pid_t pid;
     int pipe_fd[2];
@@ -59,33 +59,6 @@ void    left_pipe(t_ast *tree)
         close(pipe_fd[WRITE_END]);
         // Exec
     }
-}
-
-void    right_pipe(t_ast *tree)
-{
-    pid_t pid;
-    int pipe_fd[2];
-    int status;
-
-    if (pipe(pipe_fd) == -1)
-    {
-        perror("pipe()");
-        exit(1);
-    }
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("fork()");
-        exit(1);
-    }
-    if (pid == 0)
-    {
-        close(pipe_fd[WRITE_END]);
-        dup2(pipe_fd[READ_END], STDIN_FILENO);
-        close(pipe_fd[READ_END]);
-        // Exec
-    }
-    waitpid(pid, &status, 0);
 }
 
 void	executor(t_ast *tree, int *pipe1, int *pipe2)
