@@ -115,11 +115,9 @@ void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updated_pwd)
 void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_argv *updated_pwd)
 {
     char    *path;
-    t_env   *home;
 
     updated_oldpwd->next = NULL;
     updated_pwd->next = NULL;
-    home = get_env_var(env, "HOME");
     path = getcwd(NULL, 0);
     updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
     export_env_var(env, updated_oldpwd);

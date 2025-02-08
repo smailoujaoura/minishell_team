@@ -65,17 +65,23 @@ char	*get_line(t_env *env)
     t_env    *path;
     t_env   *home;
 	char    *new_prompt;
+	char	*temp;
 
+	new_prompt = NULL;
 	home = get_env_var(env, "HOME");
 	path = get_env_var(env, "PWD");
-	new_prompt = ft_strjoin("Minishell:$~", (path->value + ft_strlen(home->value)));
+	temp = ft_strjoin("Minishell:$~", (path->value + ft_strlen(home->value)));
 	if (ft_strncmp(path->value, home->value, ft_strlen(path->value)) == 0)
 		line = readline("Minishell:$ ");
 	else
-		line = readline(ft_strjoin(new_prompt, " "));
+	{
+		new_prompt = ft_strjoin(temp, " ");
+		line = readline(new_prompt);
+	}
 	if (line)
-		add_history(line);
+		add_history(new_prompt);
 	free(new_prompt);
+	free(temp);
 	return (line);
 }
 

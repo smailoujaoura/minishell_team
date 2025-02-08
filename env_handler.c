@@ -59,7 +59,8 @@ t_env *create_new_env(char *line)
     if (!splited_line)
         return (NULL);
     new_env->key = ft_strdup(splited_line[0]);
-    new_env->value = ft_strdup(splited_line[1]);
+    if (splited_line[1])
+        new_env->value = ft_strdup(splited_line[1]);
     new_env->full = ft_strdup(line);
     new_env->next = NULL;
     i = -1;
