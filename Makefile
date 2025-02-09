@@ -38,4 +38,9 @@ fclean: clean
 	rm -rf $(NAME)
 	make -C utils/libft fclean
 
+run:
+	./minishell
+
+rer: re run
+
 re: fclean all
