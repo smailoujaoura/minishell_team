@@ -12,9 +12,6 @@
 # include <readline/history.h>
 # include <errno.h>
 
-
-extern int i;
-
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -102,6 +99,9 @@ typedef struct s_env
     char    *full;
     struct s_env *next;
 } t_env;
+
+// Garbage Collector
+void	*ft_malloc(size_t size, int flag);
 
 
 void	print_with_files(t_chain *ptr);

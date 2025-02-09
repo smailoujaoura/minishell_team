@@ -123,7 +123,7 @@ void	loop_minishell(t_env *env)
 		root = parse_line(line);
 		if (root)
 			// execute tree
-		collect_garbage();
+		ft_malloc(0, DEALLOCATE);
 		(void)root;
 	}
 }
