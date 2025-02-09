@@ -1,5 +1,15 @@
 #include "minishell.h"
 
+static void free_tab(char **tab)
+{
+    int i;
+
+    i = -1;
+    while (tab[++i])
+        free(tab[i]);
+    free(tab);
+}
+
 static t_env *ft_lstlast_env(t_env *env)
 {
 	t_env	*temp;
@@ -21,7 +31,7 @@ static void	ft_lstadd_back_env(t_env **lst, t_env *new)
 }
 
 // Function to check if an env_var already existed
-int check_env(t_env *env, char *key)
+static int check_env(t_env *env, char *key)
 {
     if (!env)
         return (0);
@@ -46,11 +56,10 @@ char *expand_env_var(t_env *env, char *exp_env)
 }
 
 // Create a new env var node
-t_env *create_new_env(char *line)
+static t_env *create_new_env(char *line)
 {
     char **splited_line;
     t_env *new_env;
-    int i;
 
     new_env = malloc(sizeof(t_env));
     if (!new_env)
@@ -59,13 +68,11 @@ t_env *create_new_env(char *line)
     if (!splited_line)
         return (NULL);
     new_env->key = ft_strdup(splited_line[0]);
-    new_env->value = ft_strdup(splited_line[1]);
+    if (splited_line[1])
+        new_env->value = ft_strdup(splited_line[1]);
     new_env->full = ft_strdup(line);
     new_env->next = NULL;
-    i = -1;
-    while (splited_line[++i])
-        free(splited_line[i]);
-    free(splited_line);
+    free_tab(splited_line);
     return (new_env);
 }
 
@@ -99,7 +106,7 @@ t_env *get_env_var(t_env *env, const char *key)
 }
 
 // Function to check if an env var is valid
-int    check_env_str(const char *line, char **str_tab)
+static int check_env_str(const char *line, char **str_tab)
 {
     int i;
     int j;
@@ -128,7 +135,7 @@ int    check_env_str(const char *line, char **str_tab)
 }
 
 // Add a new env var without plus op
-void    add_new_env(t_env *env, t_env *new_env, const char *line, char *str)
+static void    add_new_env(t_env *env, t_env *new_env, const char *line, char *str)
 {
     if (!str)
         new_env->value = ft_strdup("");
@@ -140,7 +147,7 @@ void    add_new_env(t_env *env, t_env *new_env, const char *line, char *str)
 }
 
 // Add a new env var with plus op
-void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str)
+static void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str)
 {
     char *new_full;
 
@@ -159,7 +166,7 @@ void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str)
 
 // Concat or append the new value at the end of the old one; if in the input 
 // we found the plus op;
-void    update_env_concat(t_env *env, t_env *new_env, const char *str)
+static void    update_env_concat(t_env *env, t_env *new_env, const char *str)
 {
     char *new_full;
     t_env *temp;
@@ -189,7 +196,7 @@ void    update_env_concat(t_env *env, t_env *new_env, const char *str)
 }
 
 // Trunc or overwrite the value of an env var if it exists
-void    update_env_trunc(t_env *env, t_env *new_env, const char *line, const char *str)
+static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, const char *str)
 {
     t_env *temp = NULL;
 
@@ -208,7 +215,7 @@ void    update_env_trunc(t_env *env, t_env *new_env, const char *line, const cha
 }
 
 // For each case use the rigth function
-void    process_env_var(t_env *env, t_env *new_env, char **str_tab, const char *line)
+static void    process_env_var(t_env *env, t_env *new_env, char **str_tab, const char *line)
 {
     if (str_tab[0][ft_strlen(str_tab[0]) - 1] == '+')
         new_env->key = ft_substr(str_tab[0], 0, ft_strlen(str_tab[0])- 1);
@@ -227,56 +234,9 @@ void    process_env_var(t_env *env, t_env *new_env, char **str_tab, const char *
 // The main function to add an env var
 // Create a new env var received from the user input and add it
 // to the env var linked list
-void   export_env_var(t_env *env, t_argv *args)
-{
-    char **splited_line;
-    t_env *new_env;
-    int i;
-    char *line;
-
-    line = NULL;
-    while (args)
-    {
-        line = args->content;
-        if (!ft_strchr(line, '=') && line[ft_strlen(line) -1] == '+')
-        {
-            printf("export: not valid in this context: %s\n", line);
-            return ;
-        }
-        else if (!ft_strchr(line, '='))
-            return ;
-        new_env = malloc(sizeof(t_env));
-        if (!new_env)
-            return ;
-        splited_line = ft_split(line, '=');
-        if (!splited_line)
-            return ;
-        if (check_env_str(line, splited_line))
-        {     
-            free(new_env);
-            return ;
-        }
-        process_env_var(env, new_env, splited_line, line);
-        i = -1;
-        while (splited_line[++i])
-            free(splited_line[i]);
-        free(splited_line);
-        args = args->next;
-    }
-}
-
-// Print env vars
-void    print_env_vars(t_env *env)
-{
-    while (env)
-    {
-        printf("%s\n", env->full);
-        env = env->next;
-    }
-}
 
 // Handle export command without args
-void    export_with_no_args(t_env *env)
+static void    export_with_no_args(t_env *env)
 {
     while (env)
     {
@@ -285,9 +245,75 @@ void    export_with_no_args(t_env *env)
     }
 }
 
+static void check_export_env(t_env *env, char *line)
+{
+    char **splited_line;
+    t_env *new_env;
+
+    if (!ft_strchr(line, '=') && line[ft_strlen(line) -1] == '+')
+    {
+        printf("export: not valid in this context: %s\n", line);
+        return ;
+    }
+    else if (!ft_strchr(line, '='))
+        return ;
+    new_env = malloc(sizeof(t_env));
+    if (!new_env)
+        return ;
+    splited_line = ft_split(line, '=');
+    if (!splited_line)
+        return ;
+    if (check_env_str(line, splited_line))
+    {     
+        free(new_env);
+        return ;
+    }
+    process_env_var(env, new_env, splited_line, line);
+    free_tab(splited_line);
+}
+
+void   export(t_env *env, t_chain *data)
+{
+    char *line;
+
+    line = NULL;
+    if (!data)
+        return ;
+    create_files_only(data);
+    if (!data->argv)
+    {
+        export_with_no_args(env);
+        return ;
+    }
+    while (data->argv)
+    {
+        line = data->argv->content;
+        check_export_env(env, line);
+        data->argv = data->argv->next;
+    }
+}
+
+// Print env vars
+void    env(t_env *env, t_chain *data)
+{
+    if (!env || !data)
+        return ;
+    if (data->argv)
+    {
+        create_files_only(data);
+        write(2, "pwd: too many arguments\n", 24);
+        exit(1);
+    }
+    while (env)
+    {
+        redir_output(data, env->full);
+        env = env->next;
+    }
+}
+
 // Unset an env var
 // Function to free env var linked list; Is it useful ?
-void free_env(t_env *env_to_unset)
+static void free_env(t_env *env_to_unset)
 {
     free(env_to_unset->key);
     free(env_to_unset->value);
@@ -295,41 +321,47 @@ void free_env(t_env *env_to_unset)
     free(env_to_unset);
 }
 
-void    unset_env_var(t_env *env, t_argv *args)
+static void remove_and_rebuilt(t_env *env, t_env *temp, t_chain *data)
+{
+    while (env)
+    {
+        temp = env->next;
+        if (ft_strncmp(temp->key, data->argv->content, ft_strlen(data->argv->content)) == 0)
+        {
+            free_env(env);
+            env = temp;
+            break ;
+        }
+        else if (ft_strncmp(temp->key, data->argv->content, ft_strlen(data->argv->content)) == 0)
+        {
+            if (temp->next)
+                env->next = temp->next;
+            else
+                env->next = NULL;
+            free_env(temp);
+            break ;
+        }
+        env = env->next;
+    }
+}
+
+void    unset(t_env *env, t_chain *data)
 {
     t_env *temp;
 
-    // while (args_temp)
-    // {
-    //     check_unset_args(args, i);
-    //     args_temp = args_temp->next;
-    //     i++;
-    // }
     temp = NULL;
-    while (args)
+    if (!data)
+        return ;
+    if (!data->argv)
     {
-        if (!get_env_var(env, args->content))
+        create_files_only(data);
+        return ;
+    }
+    while (data->argv)
+    {
+        if (!get_env_var(env, data->argv->content))
             return ;
-        while (env)
-        {
-            temp = env->next;
-            if (ft_strncmp(env->key, args->content, ft_strlen(args->content)) == 0)
-            {
-                free_env(env);
-                env = temp;
-                break ;
-            }
-            else if (ft_strncmp(temp->key, args->content, ft_strlen(args->content)) == 0)
-            {
-                if (temp->next)
-                    env->next = temp->next;
-                else
-                    env->next = NULL;
-                free_env(temp);
-                break ;
-            }
-            env = env->next;
-        }
-    args = args->next;
+        remove_and_rebuilt(env, temp, data);
+        data->argv = data->argv->next;
     }
 }

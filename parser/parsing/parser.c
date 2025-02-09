@@ -28,25 +28,27 @@ void	print_with_files(t_chain *ptr)
 {
 	while (ptr)
 	{
-		printf("CONTENT:[%s]\n", ptr->content);
+		printf("CONTENT:[%s]\t %d\n", ptr->content, ptr->depth);
 		if (ptr->type == WORD)
 		{
-			while (ptr->adj_f)
-			{
-				printf("\t[%s]\t[%s]\n", ptr->adj_f->file, ptr->adj_f->delim);
-				ptr->adj_f = ptr->adj_f->next;
-			}
-			while (ptr->blk_f)
-			{
-				printf("\t{%s}\t{%s}\n", ptr->blk_f->file, ptr->blk_f->delim);
-				ptr->blk_f = ptr->blk_f->next;
-			}
-			t_argv *args = ptr->argv;
-			while (args)
-			{
-				printf("\targ:[%s]\t\t\tDollar$:[%d]\t\t\tWild*:[%d]\n", args->content, args->dollar, args->wildcard);
-				args = args->next;
-			}
+			if (ptr->adj_f)
+				printf("%s \t %d\n", ptr->adj_f->file, ptr->adj_f->depth);
+			// while (ptr->adj_f)
+			// {
+			// 	printf("\t[%s]\t[%s]\n", ptr->adj_f->file, ptr->adj_f->delim);
+			// 	ptr->adj_f = ptr->adj_f->next;
+			// }
+			// while (ptr->blk_f)
+			// {
+			// 	printf("\t{%s}\t{%s}\n", ptr->blk_f->file, ptr->blk_f->delim);
+			// 	ptr->blk_f = ptr->blk_f->next;
+			// }
+			// t_argv *args = ptr->argv;
+			// while (args)
+			// {
+			// 	printf("\targ:[%s]\t\t\tDollar$:[%d]\t\t\tWild*:[%d]\n", args->content, args->dollar, args->wildcard);
+			// 	args = args->next;
+			// }
 		}
 		ptr = ptr->next;
 	}

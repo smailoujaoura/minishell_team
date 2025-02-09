@@ -168,16 +168,22 @@ t_ast	*build_tree(t_chain *post);
 
 //env
 t_env	*handle_env(char **envp);
-void print_env_vars(t_env *env);
-void   export_env_var(t_env *head, t_argv *args);
-void export_with_no_args(t_env *env);
-void    unset_env_var(t_env *env, t_argv *args);
 t_env *get_env_var(t_env *env, const char *key);
+char *expand_env_var(t_env *env, char *exp_env);
 
 // Builtins
 void    pwd(t_chain *data);
-void    cd(t_env *env, t_argv *argv);
-void    echo(t_argv *argv);
-void    mini_exit(t_argv *argv);
+void    cd(t_env *env, t_chain *data);
+void    echo(t_chain *data);
+void    mini_exit(t_chain *data);
+void	env(t_env *env, t_chain *data);
+void   	export(t_env *head, t_chain *data);
+void    unset(t_env *env, t_chain *data);
+
+// Builtins utils
+int		builtins_redir_fd(t_chain *file);
+void    builtins_redir(t_chain *redir_file, char *buff, int create_only);
+void    create_files_only(t_chain *data);
+void    redir_output(t_chain *data, char *output);
 
 #endif
