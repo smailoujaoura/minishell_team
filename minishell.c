@@ -9,6 +9,21 @@ void	print_tree(t_ast *root)
 	print_tree(root->right);
 }
 
+# define IS_ROOT 1
+# define IS_CHILD 0
+
+void	link_parent_child(t_ast *root, t_ast *parent, int type)
+{
+	if (root == NULL)
+		return ;
+	if (type)
+		root->parent = NULL;
+	else
+		root->parent = parent;
+	link_parent_child(root->left, root, IS_CHILD);
+	link_parent_child(root->right, root, IS_CHILD);
+}
+
 t_ast	*parse_line(char *line)
 {
 	t_chain	*list;
@@ -33,6 +48,7 @@ t_ast	*parse_line(char *line)
 
 	post = convert_infix(list);
 	root = build_tree(post);
+	link_parent_child(root, NULL, IS_ROOT);
 	printf("\nTree: \n");
 	print_tree(root);
 	// collect_garbage(post);
@@ -79,7 +95,7 @@ char	*get_line(t_env *env)
 		line = readline(new_prompt);
 	}
 	if (line)
-		add_history(line);
+		add_history(new_prompt);
 	free(new_prompt);
 	free(temp);
 	return (line);
