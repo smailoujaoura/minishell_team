@@ -16,29 +16,44 @@ int check_buildin(t_chain *data)
     return (0);
 }
 
-// void    buildin_excutor(t_chain *data, t_env *env)
-// {
-//     if (ft_strncmp("echo", data->content, ft_strlen(data->content)) == 0)
-//         echo(data->argv);
-//     if (ft_strncmp("cd", data->content, ft_strlen(data->content)) == 0)
-//     {
-//         if (!data->argv)
-//             cd(env, )
-//     }
-// }
-void    create_files(t_chain *data)
+void    buildin_excutor(t_chain *data, t_env *env_head)
 {
-    while (data->adj_f)
-    {
-        if (open(data->adj_f->content, O_CREAT, 0644) == -1)
-            printf("Frees and exit\n");
-        data->adj_f = data->adj_f->next;
-    }
+    if (ft_strncmp("echo", data->content, ft_strlen(data->content)) == 0)
+        echo(data);
+    if (ft_strncmp("cd", data->content, ft_strlen(data->content)) == 0)
+        cd(env_head, data);
+    if (ft_strncmp("pwd", data->content, ft_strlen(data->content)) == 0)
+        pwd(data);
+    if (ft_strncmp("export", data->content, ft_strlen(data->content)) == 0)
+        export(env_head, data);
+    if (ft_strncmp("unset", data->content, ft_strlen(data->content)) == 0)
+        unset(env_head, data);
+    if (ft_strncmp("env", data->content, ft_strlen(data->content)) == 0)
+        env(env_head, data);
+    if (ft_strncmp("exit", data->content, ft_strlen(data->content)) == 0)
+        mini_exit(data);
 }
 
-void    create_pipe(t_ast *tree)
+// void    create_files(t_chain *data)
+// {
+//     if (!data->adj_f  && !data->blk_f)
+//         return ;
+//     while (data->adj_f)
+//     {
+//         if (open(data->adj_f->file, O_CREAT, 0644) == -1)
+//             printf("Frees and exit\n");
+//         data->adj_f = data->adj_f->next;
+//     }
+//     while (data->blk_f)
+//     {
+//         if (open(data->adj_f->file, O_CREAT, 0644) == -1)
+//             printf("Frees and exit\n");
+//         data->adj_f = data->adj_f->next;
+//     }
+// }
+
+int   *create_pipe(void)
 {
-    pid_t pid;
     int pipe_fd[2];
 
     if (pipe(pipe_fd) == -1)
@@ -46,24 +61,35 @@ void    create_pipe(t_ast *tree)
         perror("pipe()");
         exit(1);
     }
-    pid = fork();
-    if (pid == -1)
-    {
-        perror("fork()");
-        exit(1);
-    }
-    if (pid == 0)
-    {
-        close(pipe_fd[READ_END]);
-        dup2(pipe_fd[WRITE_END], STDOUT_FILENO);
-        close(pipe_fd[WRITE_END]);
-        // Exec
-    }
+    return (pipe_fd);
 }
 
-void	executor(t_ast *tree, int *pipe1, int *pipe2)
+// void create_process(t_ast *tree)
+// {
+//     pid_t pid;
+
+//     pid = fork();
+//     if (pid == -1)
+//     {
+//         perror("fork()");
+//         exit(1);
+//     }
+//     if (pid == 0)
+//     {
+//         // close(pipe_fd[READ_END]);
+//         // dup2(pipe_fd[WRITE_END], STDOUT_FILENO);
+//         // close(pipe_fd[WRITE_END]);
+//         // Exec
+//     }
+// }
+
+void	executor(t_ast *tree, t_env *env)
 {
-    int pipe_fd[2];
+    int *pipe_fd;
+    pid_t pid;
+    t_ast   *temp;
+    int in;
+    int out;
 
     if (!tree)
         return ;
@@ -72,14 +98,13 @@ void	executor(t_ast *tree, int *pipe1, int *pipe2)
         if (tree->data->empty)
             create_files(tree->data);
         else
-            printf("Call another function to handle other cases");
-        
+        {
+            
+        }
     }
     else if (tree->type == PIPE)
     {
 
-        left_pipe(tree->left);
-        right_pipe(tree->right);
     }
     else if (tree->type == AND)
         run_and();
