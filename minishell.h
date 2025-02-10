@@ -29,6 +29,8 @@
 
 # define WILDCARDS 1020
 
+# define MEMORY_ERROR "Memory Error!"
+void	panic_exit(char *s);
 
 # define WHITESPACE "\t\n\v\f\r "
 # define SYMBOLS "<>|()"
@@ -162,7 +164,8 @@ t_ast	*build_tree(t_chain *post);
 
 
 
-
+// arbage collector
+void	*ft_malloc_bkol(size_t size, int flag);
 
 
 

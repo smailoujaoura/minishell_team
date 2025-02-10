@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-# define MEMORY_ERROR "Memory Error!"
-
 void	panic_exit(char *s)
 {
 	printf("%s\n", s);
