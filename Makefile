@@ -13,12 +13,8 @@ SRCS =	main.c \
 		executor/builtins.c \
 		bkolani.c \
 		garbage_collector.c \
-<<<<<<< HEAD
 		bkol_garb_coll.c \
 		utils/libft/allocator.c
-=======
-		bkol_garb_coll.c
->>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
 
 OBJS =  $(SRCS:.c=.o)
 COMP = cc -Wall -Wextra -Werror -g -fsanitize=address
