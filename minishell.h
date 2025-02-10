@@ -101,7 +101,7 @@ typedef struct s_env
 
 // Garbage Collector
 void	*ft_malloc(size_t size, int flag);
-
+void	garbage_collector(t_list *allocs, void *one, void *two);
 
 void	print_with_files(t_chain *ptr);
 

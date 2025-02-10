@@ -6,7 +6,11 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 17:39:12 by soujaour          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/02/10 15:40:13 by bkolani          ###   ########.fr       */
+=======
+/*   Updated: 2025/02/10 14:27:49 by soujaour         ###   ########.fr       */
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +55,7 @@ void	*ft_malloc(size_t size, int flag)
 		if (ptr == NULL || new == NULL)
 		{
 			garbage_collector(allocs, ptr, new);
+			ft_malloc_bkol(0, DEALLOCATE);
 			panic_exit(MEMORY_ERROR);
 		}
 		new->content = ptr;

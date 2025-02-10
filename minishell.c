@@ -129,7 +129,12 @@ void	loop_minishell(t_env *env)
 		// 	// execute tree
 		(void)root;
 		free(line);
+<<<<<<< HEAD
 		ft_malloc(0, DEALLOCATE);
 		ft_malloc_bkol(0, DEALLOCATE);
+=======
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
 	}
+	ft_malloc(0, DEALLOCATE);
+	ft_malloc_bkol(0, DEALLOCATE);
 }

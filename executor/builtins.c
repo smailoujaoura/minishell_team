@@ -157,14 +157,20 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     export(env, data);
     if (chdir(home->value) == -1)
     {  
+<<<<<<< HEAD
         // ft_malloc_bkol(0, DEALLOCATE);
         // free(updated_oldpwd->content);
         // free(updated_oldpwd);
         free(path);
+=======
+        // free(updated_oldpwd->content);
+        // free(updated_oldpwd);
+        // free(path);
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
         perror("cd");
         exit(EXIT_FAILURE);
     }
-    free(path);
+    // free(path);
     path = NULL;
     path = getcwd(NULL, 0);
     updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
@@ -173,7 +179,11 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     data->argv = updated_pwd;
     export(env, data);
     // free(data);
+<<<<<<< HEAD
     free(path);
+=======
+    // free(path);
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
 }
 
 static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_argv *updated_pwd)
@@ -196,15 +206,20 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     {  
         // free(updated_oldpwd->content);
         // free(updated_oldpwd);
+<<<<<<< HEAD
         // ft_malloc_bkol(0, DEALLOCATE);
         free(path);
+=======
+        // free(path);
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
         perror("cd");
         exit(EXIT_FAILURE) ;
     }
-    free(path);
+    // free(path);
     path = NULL;
     path = getcwd(NULL, 0);
     updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
+<<<<<<< HEAD
     free(data->argv);
     data->argv = NULL;
     data->argv = updated_pwd;
@@ -212,6 +227,14 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     // ft_malloc_bkol(0, DEALLOCATE);
     // free(data);
     free(path);
+=======
+    // free(data->argv);
+    data->argv = NULL;
+    data->argv = updated_pwd;
+    export(env, data);
+    // free(data);
+    // free(path);
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
 }
 
 void    cd(t_env *env, t_chain *data)
@@ -235,7 +258,10 @@ void    cd(t_env *env, t_chain *data)
         }
         cd_with_args(env, data->argv, updated_oldpwd, updated_pwd);
     }
+<<<<<<< HEAD
     // ft_malloc_bkol(0, DEALLOCATE);
+=======
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
     // free(updated_oldpwd->content);
     // free(updated_pwd->content);
     // free(updated_oldpwd);
@@ -261,7 +287,12 @@ void    pwd(t_chain *data)
         perror("pwd");
         exit(EXIT_FAILURE);
     }
+<<<<<<< HEAD
     printf("%s\n", path);
     // redir_output(data, path);
     free(path);
+=======
+    redir_output(data, path);
+    // free(path);
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
 }

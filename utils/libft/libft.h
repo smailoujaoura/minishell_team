@@ -6,7 +6,11 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 10:05:08 by soujaour          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/02/10 15:35:26 by bkolani          ###   ########.fr       */
+=======
+/*   Updated: 2025/02/10 15:51:17 by soujaour         ###   ########.fr       */
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +34,8 @@ typedef struct s_list
 # define DEALLOCATE -1
 # define ALLOCATE 1
 
-# define BKOLANI -1
-# define SOUJAOUR 1
+# define BKOLANI -10
+# define SOUJAOUR 10
 
 void	*check_collectors(size_t size, int flag);
 void				*ft_malloc(size_t size, int flag);

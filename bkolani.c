@@ -11,6 +11,7 @@ void	bkolani(char *argv[], char *envp[])
 	t_env *env;
 
 	env = handle_env(envp);
+<<<<<<< HEAD
 	// t_chain *adj1 = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
 	// t_chain *adj2 = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
 	// t_chain *adj3 = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
@@ -48,6 +49,54 @@ void	bkolani(char *argv[], char *envp[])
 	// t_argv *args4 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
 	// t_chain *data_unset =  ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
 	args1->content = "NAME=kol";
+=======
+	// t_chain *adj1 = malloc(sizeof(t_chain));
+	// t_chain *adj2 = malloc(sizeof(t_chain));
+	// t_chain *adj3 = malloc(sizeof(t_chain));
+	// t_chain *data =  malloc(sizeof(t_chain));
+	t_chain *adj1 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *adj2 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *adj3 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *data =  ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	
+	adj1->file = "adj1";
+	adj1->type = REDIR_OUT;
+	adj1->next = adj2;
+	adj2->file = "adj2";
+	adj2->type = REDIR_OUT;
+	adj2->next = adj3;
+	adj3->file = "adj3";
+	adj3->type = REDIR_APPEND;
+	adj3->next = NULL;
+	// t_chain *blk1 = malloc(sizeof(t_chain));
+	// t_chain *blk2 = malloc(sizeof(t_chain));
+	// t_chain *blk3 = malloc(sizeof(t_chain));
+	t_chain *blk1 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *blk2 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *blk3 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	blk1->file = "blk1";
+	blk1->type = REDIR_OUT;
+	blk1->next = blk2;
+	blk2->file = "blk2";
+	blk2->type = REDIR_OUT;
+	blk2->next = blk3;
+	blk3->file = "blk3";
+	blk3->type = REDIR_APPEND;
+	blk3->next = NULL;
+	data->adj_f = adj1;
+	data->blk_f = blk1;
+	data->argv = NULL;
+	data->next = NULL;
+	// pwd(data);
+	// print_env_vars(env);
+	// t_argv *args1 = malloc(sizeof(t_argv));
+	// t_argv *args2 = malloc(sizeof(t_argv));
+	// t_argv *args3 = malloc(sizeof(t_argv));
+	t_argv *args1 = ft_malloc(sizeof(t_argv), ALLOCATE);
+	t_argv *args2 = ft_malloc(sizeof(t_argv), ALLOCATE);
+	t_argv *args3 = ft_malloc(sizeof(t_argv), ALLOCATE);
+	args1->content = "-nnnnnnnnnnnnnnnnnnnn";
+>>>>>>> 335877d9de2a876a237ad405437f23878e4d80cb
 	args1->next = args2;
 	args2->content = "NAME2=biman";
 	args2->next = args3;
