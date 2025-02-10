@@ -43,7 +43,10 @@ void	*ft_malloc(size_t size, int flag)
 
 	ptr = NULL;
 	if (flag == DEALLOCATE)
+	{
 		garbage_collector(allocs, NULL, NULL);
+		allocs = NULL;
+	}
 	else
 	{
 		ptr = malloc(size);

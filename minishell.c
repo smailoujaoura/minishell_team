@@ -130,8 +130,8 @@ void	loop_minishell(t_env *env)
 		(void)root;
 		free(line);
 		ft_malloc(0, DEALLOCATE);
-		ft_malloc_bkol(0, DEALLOCATE);
 	}
-	ft_malloc(0, DEALLOCATE);
 	ft_malloc_bkol(0, DEALLOCATE);
+	// ft_malloc(0, DEALLOCATE);
+	// ft_malloc_bkol(0, DEALLOCATE);
 }
