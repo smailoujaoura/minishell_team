@@ -91,6 +91,6 @@ t_chain	*convert_str(char *str)
 
 	list = NULL;
 	while (get_token(&str, &tok_start, &tok_end))
-		lstadd_back(&list, lstnew(ft_substr(tok_start, 0, tok_end - tok_start)));
+		lstadd_back(&list, lstnew(ft_substr(tok_start, 0, tok_end - tok_start, SOUJAOUR)));
 	return (list);
 }

@@ -149,7 +149,7 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     updated_pwd->next = NULL;
     home = get_env_var(env, "HOME");
     path = getcwd(NULL, 0);
-    updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
+    updated_oldpwd->content = ft_strjoin("OLDPWD=", path, BKOLANI);
     data->argv = updated_oldpwd;
     export(env, data);
     if (chdir(home->value) == -1)
@@ -163,7 +163,7 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     free(path);
     path = NULL;
     path = getcwd(NULL, 0);
-    updated_pwd->content = ft_strjoin("PWD=", path);
+    updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
     free(data->argv);
     data->argv = NULL;
     data->argv = updated_pwd;
@@ -184,7 +184,7 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     updated_oldpwd->next = NULL;
     updated_pwd->next = NULL;
     path = getcwd(NULL, 0);
-    updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
+    updated_oldpwd->content = ft_strjoin("OLDPWD=", path, BKOLANI);
     data->argv = updated_oldpwd;
     export(env, data);
     if (chdir(argv->content) == -1)
@@ -198,7 +198,7 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     free(path);
     path = NULL;
     path = getcwd(NULL, 0);
-    updated_pwd->content = ft_strjoin("PWD=", path);
+    updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
     free(data->argv);
     data->argv = NULL;
     data->argv = updated_pwd;

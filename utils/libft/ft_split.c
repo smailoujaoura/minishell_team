@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 11:39:18 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 11:29:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:23:54 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ char	**ft_split(char const *s, char c, int f)
 	if (!s)
 		return (NULL);
 	alt_s = (char *)s;
-	arr = check_collectors((i + 1), f);
+	arr = (char **)check_collectors(sizeof(char *) * (ft_word_len((char *)s, c) + 1), f);
 	i = 0;
 	while (i < ft_words_counter(s, c))
 	{
 		while (*alt_s == c)
 			alt_s++;
-		arr[i] = heck_collectors((ft_word_len(alt_s, c) + 1), f);
+		arr[i] = check_collectors((ft_word_len(alt_s, c) + 1), f);
 		ft_strlcpy(arr[i], alt_s, ft_word_len(alt_s, c) + 1);
 		alt_s += ft_word_len(alt_s, c);
 		i++;

@@ -12,7 +12,8 @@ SRCS =	main.c \
 		parser/parsing/ast_tree.c \
 		executor/builtins.c \
 		bkolani.c \
-		garbage_collector.c
+		garbage_collector.c \
+		bkol_garb_coll.c
 
 OBJS =  $(SRCS:.c=.o)
 COMP = cc -Wall -Wextra -Werror -g -fsanitize=address

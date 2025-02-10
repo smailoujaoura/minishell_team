@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 10:36:16 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 11:29:41 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:24:36 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ char	*ft_strjoin(char const *s1, char const *s2, int f)
 	if (!s1 && !s2)
 		return (NULL);
 	if (!s1)
-		return (ft_strdup(s2));
+		return (ft_strdup(s2, f));
 	if (!s2)
-		return (ft_strdup(s1));
+		return (ft_strdup(s1, f));
 	ptr = check_collectors((ft_strlen(s1) + ft_strlen(s2) + 1), f);
 	j = 0;
 	while (*s1)

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 09:06:34 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 09:59:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:26:25 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len, int f)
 		return (NULL);
 	s_len = ft_strlen(s);
 	if (start >= s_len)
-		return (ft_strdup(""));
+		return (ft_strdup("", f));
 	if (len > s_len - start)
 		len = s_len - start;
 	ptr = check_collectors((len + 1), f);

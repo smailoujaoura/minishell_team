@@ -94,12 +94,12 @@ char	*get_line(t_env *env)
 	new_prompt = NULL;
 	home = get_env_var(env, "HOME");
 	path = get_env_var(env, "PWD");
-	temp = ft_strjoin("Minishell:$~", (path->value + ft_strlen(home->value)));
+	temp = ft_strjoin("Minishell:$~", (path->value + ft_strlen(home->value)), BKOLANI);
 	if (ft_strncmp(path->value, home->value, ft_strlen(path->value)) == 0)
 		line = readline("Minishell:$ ");
 	else
 	{
-		new_prompt = ft_strjoin(temp, " ");
+		new_prompt = ft_strjoin(temp, " ", BKOLANI);
 		line = readline(new_prompt);
 	}
 	if (line)
