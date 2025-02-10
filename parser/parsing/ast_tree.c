@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_tree.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 10:31:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:39:47 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ t_ast	*make_tree_node(t_chain **node, int flag)
 	t_ast	*tree;
 	t_chain	*new;
 
-	tree = ft_calloc(1, sizeof(t_ast));
-	new = ft_calloc(1, sizeof(t_chain));
+	tree = ft_calloc(1, sizeof(t_ast), SOUJAOUR);
+	new = ft_calloc(1, sizeof(t_chain), SOUJAOUR);
 	ft_memcpy(new, *node, sizeof(t_chain));
 	tree->type = flag;
 	tree->data = new;

@@ -180,14 +180,14 @@ void    pwd(t_chain *data);
 void    cd(t_env *env, t_chain *data);
 void    echo(t_chain *data);
 void    mini_exit(t_chain *data);
-void	env(t_env *env, t_chain *data);
+void	mini_env(t_env *env, t_chain *data);
 void   	export(t_env *head, t_chain *data);
 void    unset(t_env *env, t_chain *data);
 
 // Builtins utils
-int		builtins_redir_fd(t_chain *file);
-void    builtins_redir(t_chain *redir_file, char *buff, int create_only);
-void    create_files_only(t_chain *data);
-void    redir_output(t_chain *data, char *output);
+// int		builtins_redir_fd(t_chain *file);
+// void    builtins_redir(t_chain *redir_file, char *buff, int create_only);
+// void    create_files_only(t_chain *data);
+// void    redir_output(t_chain *data, char *output);
 
 #endif

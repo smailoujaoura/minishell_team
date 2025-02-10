@@ -111,7 +111,7 @@ t_argv	*lstnew_arg(t_chain *cmd)
 	new->type = -1;
 	new->wildcard = cmd->wildcard;
 	new->dollar = cmd->dollar;
-	new->content = ft_strdup(cmd->content); // should it be strdup or not? s
+	new->content = ft_strdup(cmd->content, SOUJAOUR); // should it be strdup or not? s
 	return (new);
 }
 

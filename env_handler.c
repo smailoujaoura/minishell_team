@@ -1,14 +1,14 @@
 #include "minishell.h"
 
-static void free_tab(char **tab)
-{
-    int i;
+// static void free_tab(char **tab)
+// {
+//     int i;
 
-    i = -1;
-    while (tab[++i])
-        free(tab[i]);
-    free(tab);
-}
+//     i = -1;
+//     while (tab[++i])
+//         free(tab[i]);
+//     free(tab);
+// }
 
 static t_env *ft_lstlast_env(t_env *env)
 {
@@ -61,18 +61,16 @@ static t_env *create_new_env(char *line)
     char **splited_line;
     t_env *new_env;
 
-    new_env = malloc(sizeof(t_env));
-    if (!new_env)
-        return (NULL);
-    splited_line = ft_split(line, '=');
-    if (!splited_line)
-        return (NULL);
-    new_env->key = ft_strdup(splited_line[0]);
+    new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
+    // if (!new_env)
+    //     return (NULL);
+    splited_line = ft_split(line, '=', BKOLANI);
+    new_env->key = ft_strdup(splited_line[0], BKOLANI);
     if (splited_line[1])
-        new_env->value = ft_strdup(splited_line[1]);
-    new_env->full = ft_strdup(line);
+        new_env->value = ft_strdup(splited_line[1], BKOLANI);
+    new_env->full = ft_strdup(line, BKOLANI);
     new_env->next = NULL;
-    free_tab(splited_line);
+    // ft_malloc_bkol(0, DEALLOCATE);
     return (new_env);
 }
 
@@ -109,11 +107,11 @@ t_env *get_env_var(t_env *env, const char *key)
 static int check_env_str(const char *line, char **str_tab)
 {
     int i;
-    int j;
+    // int j;
 
     i = -1;
-    if (!str_tab[0])
-        return (1);
+    // if (!str_tab[0])
+    //     return (1);
     while (str_tab[0][++i])
     {
         if (((str_tab[0][0] >= '0' && str_tab[0][0] <= '9')
@@ -124,10 +122,10 @@ static int check_env_str(const char *line, char **str_tab)
             && str_tab[0][i] != '_' && !str_tab[1]))
         {
             printf("Minishell: export: `%s': not a valid identifier\n", line);
-            j = -1;
-            while (str_tab[++j])
-                free(str_tab[j]);
-            free(str_tab);
+            // j = -1;
+            // while (str_tab[++j])
+            //     free(str_tab[j]);
+            // free(str_tab);
             return (1);
         }
     }
@@ -138,10 +136,10 @@ static int check_env_str(const char *line, char **str_tab)
 static void    add_new_env(t_env *env, t_env *new_env, const char *line, char *str)
 {
     if (!str)
-        new_env->value = ft_strdup("");
+        new_env->value = ft_strdup("", BKOLANI);
     else
-        new_env->value = ft_strdup(str);  
-    new_env->full = ft_strdup(line);
+        new_env->value = ft_strdup(str, BKOLANI);  
+    new_env->full = ft_strdup(line, BKOLANI);
     new_env->next = NULL;
     ft_lstadd_back_env(&env, new_env);
 }
@@ -151,16 +149,17 @@ static void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str
 {
     char *new_full;
 
-    new_full = ft_strjoin(new_env->key, "=");
+    new_full = ft_strjoin(new_env->key, "=", BKOLANI);
     if (!str)
-        new_env->full = ft_strdup(new_full);
+        new_env->full = ft_strdup(new_full, BKOLANI);
     else
     {
-        new_env->value = ft_strdup(str);
-        new_env->full = ft_strjoin(new_full, new_env->value);
+        new_env->value = ft_strdup(str, BKOLANI);
+        new_env->full = ft_strjoin(new_full, new_env->value, BKOLANI);
     }
     new_env->next = NULL;
-    free(new_full);
+    // free(new_full);
+    // ft_malloc_bkol(0, DEALLOCATE);
     ft_lstadd_back_env(&env, new_env);
 }
 
@@ -173,26 +172,28 @@ static void    update_env_concat(t_env *env, t_env *new_env, const char *str)
     char    *value;
 
     temp = get_env_var(env, new_env->key);
-    value = ft_strdup(temp->value);
+    value = ft_strdup(temp->value, BKOLANI);
+    // ft_malloc_bkol(0, DEALLOCATE);
     free(temp->value);
     free(temp->full);
     temp->full = NULL;
     temp->value = NULL;
     if  (!str)
     {
-        new_full = ft_strjoin(new_env->key, "=");
-        temp->full = ft_strdup(new_full);
+        new_full = ft_strjoin(new_env->key, "=", BKOLANI);
+        temp->full = ft_strdup(new_full, BKOLANI);
     }
     else
     {
-        temp->value = ft_strjoin(value, str);
-        new_full = ft_strjoin(new_env->key, "=");
-        temp->full = ft_strjoin(new_full, temp->value);
+        temp->value = ft_strjoin(value, str, BKOLANI);
+        new_full = ft_strjoin(new_env->key, "=", BKOLANI);
+        temp->full = ft_strjoin(new_full, temp->value, BKOLANI);
     }
-    free(new_env->key);
-    free(new_env);
-    free(value);
-    free(new_full);
+    // ft_malloc_bkol(0, DEALLOCATE);
+    // free(new_env->key);
+    // free(new_env);
+    // free(value);
+    // free(new_full);
 }
 
 // Trunc or overwrite the value of an env var if it exists
@@ -206,10 +207,10 @@ static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, co
     temp->value = NULL;
     temp->full = NULL;
     if (!str)
-        temp->value = ft_strdup("");
+        temp->value = ft_strdup("", BKOLANI);
     else
-        temp->value = ft_strdup(str);
-    temp->full = ft_strdup(line);
+        temp->value = ft_strdup(str, BKOLANI);
+    temp->full = ft_strdup(line, BKOLANI);
     free(new_env->key);
     free(new_env);
 }
@@ -218,9 +219,9 @@ static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, co
 static void    process_env_var(t_env *env, t_env *new_env, char **str_tab, const char *line)
 {
     if (str_tab[0][ft_strlen(str_tab[0]) - 1] == '+')
-        new_env->key = ft_substr(str_tab[0], 0, ft_strlen(str_tab[0])- 1);
+        new_env->key = ft_substr(str_tab[0], 0, ft_strlen(str_tab[0])- 1, BKOLANI);
     else
-        new_env->key = ft_strdup(str_tab[0]);
+        new_env->key = ft_strdup(str_tab[0], BKOLANI);
     if (check_env(env, new_env->key) && str_tab[0][ft_strlen(str_tab[0]) - 1] == '+')
         update_env_concat(env, new_env, str_tab[1]);
     else if (check_env(env, new_env->key) && str_tab[0][ft_strlen(str_tab[0]) - 1] != '+')
@@ -245,7 +246,7 @@ static void    export_with_no_args(t_env *env)
     }
 }
 
-static void check_export_env(t_env *env, char *line)
+void check_export_env(t_env *env, char *line)
 {
     char **splited_line;
     t_env *new_env;
@@ -257,19 +258,21 @@ static void check_export_env(t_env *env, char *line)
     }
     else if (!ft_strchr(line, '='))
         return ;
-    new_env = malloc(sizeof(t_env));
-    if (!new_env)
-        return ;
-    splited_line = ft_split(line, '=');
-    if (!splited_line)
-        return ;
+    new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
+    // new_env = malloc(sizeof(t_env));
+    // if (!new_env)
+    //     return ;
+    splited_line = ft_split(line, '=', BKOLANI);
+    // if (!splited_line)
+    //     return ;
     if (check_env_str(line, splited_line))
     {     
-        free(new_env);
+        ft_malloc_bkol(0, DEALLOCATE);
         return ;
     }
     process_env_var(env, new_env, splited_line, line);
-    free_tab(splited_line);
+    // ft_malloc_bkol(0, DEALLOCATE);
+    // free_tab(splited_line);
 }
 
 void   export(t_env *env, t_chain *data)
@@ -279,7 +282,7 @@ void   export(t_env *env, t_chain *data)
     line = NULL;
     if (!data)
         return ;
-    create_files_only(data);
+    // create_files_only(data);
     if (!data->argv)
     {
         export_with_no_args(env);
@@ -294,19 +297,20 @@ void   export(t_env *env, t_chain *data)
 }
 
 // Print env vars
-void    env(t_env *env, t_chain *data)
+void    mini_env(t_env *env, t_chain *data)
 {
-    if (!env || !data)
+    if (!env)
         return ;
-    if (data->argv)
+    if (data && data->argv)
     {
-        create_files_only(data);
-        write(2, "pwd: too many arguments\n", 24);
+        // create_files_only(data);
+        write(2, "env: too many arguments\n", 24);
         exit(1);
     }
     while (env)
     {
-        redir_output(data, env->full);
+        // redir_output(data, env->full);
+        printf("%s\n", env->full);
         env = env->next;
     }
 }
@@ -321,12 +325,16 @@ static void free_env(t_env *env_to_unset)
     free(env_to_unset);
 }
 
-static void remove_and_rebuilt(t_env *env, t_env *temp, t_chain *data)
+static void remove_and_rebuilt(t_env *env, t_chain *data)
 {
+    t_env *temp;
+
+    temp = NULL;
+    printf("remove and rebuild: %s\n", env->next->full);
     while (env)
     {
         temp = env->next;
-        if (ft_strncmp(temp->key, data->argv->content, ft_strlen(data->argv->content)) == 0)
+        if (ft_strncmp(env->key, data->argv->content, ft_strlen(data->argv->content)) == 0)
         {
             free_env(env);
             env = temp;
@@ -347,21 +355,18 @@ static void remove_and_rebuilt(t_env *env, t_env *temp, t_chain *data)
 
 void    unset(t_env *env, t_chain *data)
 {
-    t_env *temp;
-
-    temp = NULL;
     if (!data)
         return ;
     if (!data->argv)
     {
-        create_files_only(data);
+        // create_files_only(data);
         return ;
     }
     while (data->argv)
     {
         if (!get_env_var(env, data->argv->content))
             return ;
-        remove_and_rebuilt(env, temp, data);
+        remove_and_rebuilt(env, data);
         data->argv = data->argv->next;
     }
 }

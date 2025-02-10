@@ -1,79 +1,79 @@
 #include "../minishell.h"
 
-int builtins_redir_fd(t_chain *file)
-{
-    int fd;
+// int builtins_redir_fd(t_chain *file)
+// {
+//     int fd;
 
-    if (file->type == REDIR_IN)
-        fd = open(file->file, O_RDONLY, 0644);
-    if (file->type == REDIR_APPEND)
-        fd = open(file->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-    else if (file->type == REDIR_OUT)
-        fd = open(file->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd == -1)
-    {
-        perror("open");
-        exit(EXIT_FAILURE);
-    }
-    return (fd);
-}
+//     if (file->type == REDIR_IN)
+//         fd = open(file->file, O_RDONLY, 0644);
+//     if (file->type == REDIR_APPEND)
+//         fd = open(file->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+//     else if (file->type == REDIR_OUT)
+//         fd = open(file->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+//     if (fd == -1)
+//     {
+//         perror("open");
+//         exit(EXIT_FAILURE);
+//     }
+//     return (fd);
+// }
 
-void    builtins_redir(t_chain *redir_file, char *buff, int create_only)
-{
-    int fd;
+// void    builtins_redir(t_chain *redir_file, char *buff, int create_only)
+// {
+//     int fd;
 
-    if (create_only)
-    {
-        while (redir_file)
-        {
-            fd = builtins_redir_fd(redir_file);
-            close(fd);
-            redir_file = redir_file->next;
-        }
-        return ;
-    }
-    while (redir_file)
-    {
-        fd = builtins_redir_fd(redir_file);
-        if (!redir_file->next)
-            break;
-        close(fd);
-        redir_file = redir_file->next;
-    }
-    if (redir_file->type == REDIR_OUT 
-        || redir_file->type == REDIR_APPEND)
-        write(fd, buff, ft_strlen(buff));
-}
+//     if (create_only)
+//     {
+//         while (redir_file)
+//         {
+//             fd = builtins_redir_fd(redir_file);
+//             close(fd);
+//             redir_file = redir_file->next;
+//         }
+//         return ;
+//     }
+//     while (redir_file)
+//     {
+//         fd = builtins_redir_fd(redir_file);
+//         if (!redir_file->next)
+//             break;
+//         close(fd);
+//         redir_file = redir_file->next;
+//     }
+//     if (redir_file->type == REDIR_OUT 
+//         || redir_file->type == REDIR_APPEND)
+//         write(fd, buff, ft_strlen(buff));
+// }
 
-void    redir_output(t_chain *data, char *output)
-{
-    if (data->adj_f)
-    {
-        builtins_redir(data->adj_f, output, 0);
-        if (data->blk_f)
-            builtins_redir(data->blk_f, NULL, 1);
-    }
-    else if (data->blk_f)
-        builtins_redir(data->blk_f, output, 0);
-    else
-        write(1, output, ft_strlen(output));
-}
+// void    redir_output(t_chain *data, char *output)
+// {
+//     if (data->adj_f)
+//     {
+//         builtins_redir(data->adj_f, output, 0);
+//         if (data->blk_f)
+//             builtins_redir(data->blk_f, NULL, 1);
+//     }
+//     else if (data->blk_f)
+//         builtins_redir(data->blk_f, output, 0);
+//     else
+//         write(1, output, ft_strlen(output));
+// }
 
-// exit
-void    create_files_only(t_chain *data)
-{
-    if (data->adj_f)
-        builtins_redir(data->adj_f, NULL, 1);
-    if (data->blk_f)
-        builtins_redir(data->blk_f, NULL, 1);
-}
+// // exit
+// void    create_files_only(t_chain *data)
+// {
+//     if (data->adj_f)
+//         builtins_redir(data->adj_f, NULL, 1);
+//     if (data->blk_f)
+//         builtins_redir(data->blk_f, NULL, 1);
+// }
 
 void    mini_exit(t_chain *data)
 {
     int i;
     int status;
 
-    create_files_only(data);
+    // create_files_only(data);
     if (!data->argv || !data->argv->content)
         exit(0);
     if (data->argv->next)
@@ -116,7 +116,7 @@ void echo(t_chain *data)
 
     if (!data->argv)
     {
-        redir_output(data, "\n");
+        // redir_output(data, "\n");
         return;
     }
     if (data->argv->content[0] == '-' && data->argv->content[1] == 'n')
@@ -125,10 +125,12 @@ void echo(t_chain *data)
     {
         if (option_n && data->argv->content[0] == '-' && data->argv->content[1] == 'n')
             check_option(&data->argv, &option_n);
-        redir_output(data, data->argv->content);
+        // redir_output(data, data->argv->content);
+        write(1, data->argv->content, ft_strlen(data->argv->content));
         data->argv = data->argv->next;
         if (data->argv)
-            redir_output(data, " ");
+            write(1, " ", 1);
+            // redir_output(data, " ");
     }
     if (!option_n)
         write(1, "\n", 1);
@@ -141,7 +143,8 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     char    *path;
     t_chain *data;
 
-    data = malloc(sizeof(t_chain));
+    // data = malloc(sizeof(t_chain));
+    data = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
     data->adj_f = NULL;
     data->blk_f = NULL;
     data->next = NULL;
@@ -149,13 +152,14 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     updated_pwd->next = NULL;
     home = get_env_var(env, "HOME");
     path = getcwd(NULL, 0);
-    updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
+    updated_oldpwd->content = ft_strjoin("OLDPWD=", path, BKOLANI);
     data->argv = updated_oldpwd;
     export(env, data);
     if (chdir(home->value) == -1)
     {  
-        free(updated_oldpwd->content);
-        free(updated_oldpwd);
+        // ft_malloc_bkol(0, DEALLOCATE);
+        // free(updated_oldpwd->content);
+        // free(updated_oldpwd);
         free(path);
         perror("cd");
         exit(EXIT_FAILURE);
@@ -163,12 +167,12 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     free(path);
     path = NULL;
     path = getcwd(NULL, 0);
-    updated_pwd->content = ft_strjoin("PWD=", path);
-    free(data->argv);
+    updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
+    // free(data->argv);
     data->argv = NULL;
     data->argv = updated_pwd;
     export(env, data);
-    free(data);
+    // free(data);
     free(path);
 }
 
@@ -177,20 +181,22 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     char    *path;
     t_chain *data;
 
-    data = malloc(sizeof(t_chain));
+    // data = malloc(sizeof(t_chain));
+    data = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
     data->adj_f = NULL;
     data->blk_f = NULL;
     data->next = NULL;
     updated_oldpwd->next = NULL;
     updated_pwd->next = NULL;
     path = getcwd(NULL, 0);
-    updated_oldpwd->content = ft_strjoin("OLDPWD=", path);
+    updated_oldpwd->content = ft_strjoin("OLDPWD=", path, BKOLANI);
     data->argv = updated_oldpwd;
     export(env, data);
     if (chdir(argv->content) == -1)
     {  
-        free(updated_oldpwd->content);
-        free(updated_oldpwd);
+        // free(updated_oldpwd->content);
+        // free(updated_oldpwd);
+        // ft_malloc_bkol(0, DEALLOCATE);
         free(path);
         perror("cd");
         exit(EXIT_FAILURE) ;
@@ -198,12 +204,13 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     free(path);
     path = NULL;
     path = getcwd(NULL, 0);
-    updated_pwd->content = ft_strjoin("PWD=", path);
+    updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
     free(data->argv);
     data->argv = NULL;
     data->argv = updated_pwd;
     export(env, data);
-    free(data);
+    // ft_malloc_bkol(0, DEALLOCATE);
+    // free(data);
     free(path);
 }
 
@@ -212,9 +219,11 @@ void    cd(t_env *env, t_chain *data)
     t_argv *updated_oldpwd;
     t_argv *updated_pwd;
 
-    updated_oldpwd = malloc(sizeof(t_argv));
-    updated_pwd = malloc(sizeof(t_argv));
-    create_files_only(data);
+    // updated_pwd = malloc(sizeof(t_argv));
+    // updated_oldpwd = malloc(sizeof(t_argv));
+    updated_oldpwd = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
+    updated_pwd = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
+    // create_files_only(data);
     if (data->argv == NULL)
         cd_with_no_args(env, updated_oldpwd, updated_pwd);
     else
@@ -226,10 +235,11 @@ void    cd(t_env *env, t_chain *data)
         }
         cd_with_args(env, data->argv, updated_oldpwd, updated_pwd);
     }
-    free(updated_oldpwd->content);
-    free(updated_pwd->content);
-    free(updated_oldpwd);
-    free(updated_pwd);
+    // ft_malloc_bkol(0, DEALLOCATE);
+    // free(updated_oldpwd->content);
+    // free(updated_pwd->content);
+    // free(updated_oldpwd);
+    // free(updated_pwd);
 }
 
 // pwd
@@ -239,7 +249,7 @@ void    pwd(t_chain *data)
 
     if (!data)
         return ;
-    create_files_only(data);
+    // create_files_only(data);
     if (data->argv)
     {
         write(2, "pwd: too many arguments\n", 24);
@@ -251,6 +261,7 @@ void    pwd(t_chain *data)
         perror("pwd");
         exit(EXIT_FAILURE);
     }
-    redir_output(data, path);
+    printf("%s\n", path);
+    // redir_output(data, path);
     free(path);
 }

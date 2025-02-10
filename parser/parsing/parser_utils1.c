@@ -55,7 +55,7 @@ t_chain	*create_redirs_chain(t_chain *list)
 	while (list && is_redir(list, IN + OR + OUT))
 	{
 		list->removable = REMOVE;
-		new = ft_calloc(1, sizeof(t_chain));
+		new = ft_calloc(1, sizeof(t_chain), SOUJAOUR);
 		ft_memcpy(new, list, sizeof(t_chain));
 		new->next = NULL;
 		new->back = NULL;
@@ -150,7 +150,7 @@ char	*remove_occurences(char *str, int i, int singles, int doubles)
 	char	*s;
 	char	*f;
 
-	s = ft_calloc(ft_strlen(str) + 1, 1);
+	s = ft_calloc(ft_strlen(str) + 1, 1, SOUJAOUR);
 	while (str[i])
 	{
 		if (str[i] == '"' && singles != 1)

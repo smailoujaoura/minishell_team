@@ -66,7 +66,7 @@ void	pick_left_redirs(t_chain *list)
 			ptr = ptr->next;
 		if (ptr != list)
 		{
-			new = ft_calloc(1, sizeof(t_chain));
+			new = ft_calloc(1, sizeof(t_chain), SOUJAOUR);
 			new->type = WORD;
 			// GIVE CONTENT "empty for now"
 			new->content = "Empty CMD";

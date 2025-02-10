@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 17:39:12 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 11:29:22 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:40:13 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	*ft_malloc(size_t size, int flag)
 	t_list			*new;
 	static t_list	*allocs;
 
+	ptr = NULL;
 	if (flag == DEALLOCATE)
 		garbage_collector(allocs, NULL, NULL);
 	else

@@ -23,6 +23,7 @@ void	*ft_malloc_bkol(size_t size, int flag)
 	t_list			*new;
 	static t_list	*allocs;
 
+	ptr = NULL;
 	if (flag == DEALLOCATE)
 		garbage_coll_bkol(allocs, NULL, NULL);
 	else
@@ -31,7 +32,7 @@ void	*ft_malloc_bkol(size_t size, int flag)
 		new = malloc(sizeof(t_list));
 		if (ptr == NULL || new == NULL)
 		{
-			garbage_collector(NULL, NULL, NULL);
+			// garbage_collector(NULL, NULL, NULL);
 			garbage_coll_bkol(allocs, ptr, new);
 			panic_exit(MEMORY_ERROR);
 		}
