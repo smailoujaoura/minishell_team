@@ -154,22 +154,22 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     export(env, data);
     if (chdir(home->value) == -1)
     {  
-        free(updated_oldpwd->content);
-        free(updated_oldpwd);
-        free(path);
+        // free(updated_oldpwd->content);
+        // free(updated_oldpwd);
+        // free(path);
         perror("cd");
         exit(EXIT_FAILURE);
     }
-    free(path);
+    // free(path);
     path = NULL;
     path = getcwd(NULL, 0);
     updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
-    free(data->argv);
+    // free(data->argv);
     data->argv = NULL;
     data->argv = updated_pwd;
     export(env, data);
-    free(data);
-    free(path);
+    // free(data);
+    // free(path);
 }
 
 static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_argv *updated_pwd)
@@ -189,22 +189,22 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     export(env, data);
     if (chdir(argv->content) == -1)
     {  
-        free(updated_oldpwd->content);
-        free(updated_oldpwd);
-        free(path);
+        // free(updated_oldpwd->content);
+        // free(updated_oldpwd);
+        // free(path);
         perror("cd");
         exit(EXIT_FAILURE) ;
     }
-    free(path);
+    // free(path);
     path = NULL;
     path = getcwd(NULL, 0);
     updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
-    free(data->argv);
+    // free(data->argv);
     data->argv = NULL;
     data->argv = updated_pwd;
     export(env, data);
-    free(data);
-    free(path);
+    // free(data);
+    // free(path);
 }
 
 void    cd(t_env *env, t_chain *data)
@@ -226,10 +226,10 @@ void    cd(t_env *env, t_chain *data)
         }
         cd_with_args(env, data->argv, updated_oldpwd, updated_pwd);
     }
-    free(updated_oldpwd->content);
-    free(updated_pwd->content);
-    free(updated_oldpwd);
-    free(updated_pwd);
+    // free(updated_oldpwd->content);
+    // free(updated_pwd->content);
+    // free(updated_oldpwd);
+    // free(updated_pwd);
 }
 
 // pwd
@@ -252,5 +252,5 @@ void    pwd(t_chain *data)
         exit(EXIT_FAILURE);
     }
     redir_output(data, path);
-    free(path);
+    // free(path);
 }

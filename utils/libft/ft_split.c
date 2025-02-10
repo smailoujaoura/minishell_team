@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 11:39:18 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 14:23:54 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:44:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	ft_words_counter(const char *s, char c)
 			count++;
 		i++;
 	}
-	return (count);
+	return (count + 1);
 }
 
 char	**ft_split(char const *s, char c, int f)
@@ -47,7 +47,7 @@ char	**ft_split(char const *s, char c, int f)
 	if (!s)
 		return (NULL);
 	alt_s = (char *)s;
-	arr = (char **)check_collectors(sizeof(char *) * (ft_word_len((char *)s, c) + 1), f);
+	arr = (char **)check_collectors(sizeof(char *) * (ft_words_counter(s, c) + 1), f);
 	i = 0;
 	while (i < ft_words_counter(s, c))
 	{

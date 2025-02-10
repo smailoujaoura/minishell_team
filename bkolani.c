@@ -11,10 +11,15 @@ void	bkolani(char *argv[], char *envp[])
 	t_env *env;
 
 	env = handle_env(envp);
-	t_chain *adj1 = malloc(sizeof(t_chain));
-	t_chain *adj2 = malloc(sizeof(t_chain));
-	t_chain *adj3 = malloc(sizeof(t_chain));
-	t_chain *data =  malloc(sizeof(t_chain));
+	// t_chain *adj1 = malloc(sizeof(t_chain));
+	// t_chain *adj2 = malloc(sizeof(t_chain));
+	// t_chain *adj3 = malloc(sizeof(t_chain));
+	// t_chain *data =  malloc(sizeof(t_chain));
+	t_chain *adj1 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *adj2 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *adj3 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *data =  ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	
 	adj1->file = "adj1";
 	adj1->type = REDIR_OUT;
 	adj1->next = adj2;
@@ -24,9 +29,12 @@ void	bkolani(char *argv[], char *envp[])
 	adj3->file = "adj3";
 	adj3->type = REDIR_APPEND;
 	adj3->next = NULL;
-	t_chain *blk1 = malloc(sizeof(t_chain));
-	t_chain *blk2 = malloc(sizeof(t_chain));
-	t_chain *blk3 = malloc(sizeof(t_chain));
+	// t_chain *blk1 = malloc(sizeof(t_chain));
+	// t_chain *blk2 = malloc(sizeof(t_chain));
+	// t_chain *blk3 = malloc(sizeof(t_chain));
+	t_chain *blk1 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *blk2 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
+	t_chain *blk3 = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
 	blk1->file = "blk1";
 	blk1->type = REDIR_OUT;
 	blk1->next = blk2;

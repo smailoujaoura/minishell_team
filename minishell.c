@@ -86,32 +86,32 @@ void	exit_shell(void)
 char	*get_line(t_env *env)
 {
 	char    *line;
-    t_env    *path;
-    t_env   *home;
-	char    *new_prompt;
-	char    *temp;
+    // t_env    *path;
+    // t_env   *home;
+	// char    *new_prompt;
+	// char    *temp;
 
-	new_prompt = NULL;
-	home = get_env_var(env, "HOME");
-	path = get_env_var(env, "PWD");
-	temp = ft_strjoin("Minishell:$~", (path->value + ft_strlen(home->value)), BKOLANI);
-	if (ft_strncmp(path->value, home->value, ft_strlen(path->value)) == 0)
-		line = readline("Minishell:$ ");
-	else
-	{
-		new_prompt = ft_strjoin(temp, " ", BKOLANI);
-		line = readline(new_prompt);
-	}
-	if (line)
-		add_history(new_prompt);
-	free(new_prompt);
-	free(temp);
-	return (line);  // read after free with my gabage collector
-	// line = readline("Minishell: ");
+	// new_prompt = NULL;
+	// home = get_env_var(env, "HOME");
+	// path = get_env_var(env, "PWD");
+	// temp = ft_strjoin("Minishell:$~", (path->value + ft_strlen(home->value)), BKOLANI);
+	// if (ft_strncmp(path->value, home->value, ft_strlen(path->value)) == 0)
+	// 	line = readline("Minishell:$ ");
+	// else
+	// {
+	// 	new_prompt = ft_strjoin(temp, " ", BKOLANI);
+	// 	line = readline(new_prompt);
+	// }
 	// if (line)
-	// 	add_history(line);
-	// return (line);
-	// (void)env;
+	// 	add_history(new_prompt);
+	// free(new_prompt);
+	// free(temp);
+	// return (line);  // read after free with my gabage collector
+	line = readline("Minishell: ");
+	if (line)
+		add_history(line);
+	return (line);
+	(void)env;
 }
 
 void	loop_minishell(t_env *env)
@@ -129,6 +129,7 @@ void	loop_minishell(t_env *env)
 		// 	// execute tree
 		(void)root;
 		free(line);
-		ft_malloc(0, DEALLOCATE);
 	}
+	ft_malloc(0, DEALLOCATE);
+	ft_malloc_bkol(0, DEALLOCATE);
 }

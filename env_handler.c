@@ -2,12 +2,13 @@
 
 static void free_tab(char **tab)
 {
-    int i;
+    // int i;
 
-    i = -1;
-    while (tab[++i])
-        free(tab[i]);
-    free(tab);
+    // i = -1;
+    // while (tab[++i])
+    //     free(tab[i]);
+    // free(tab);
+    (void)tab;
 }
 
 static t_env *ft_lstlast_env(t_env *env)
@@ -61,7 +62,8 @@ static t_env *create_new_env(char *line)
     char **splited_line;
     t_env *new_env;
 
-    new_env = malloc(sizeof(t_env));
+    // new_env = malloc(sizeof(t_env));
+    new_env = ft_malloc(sizeof(t_env), BKOLANI);
     if (!new_env)
         return (NULL);
     splited_line = ft_split(line, '=', BKOLANI);
@@ -109,7 +111,7 @@ t_env *get_env_var(t_env *env, const char *key)
 static int check_env_str(const char *line, char **str_tab)
 {
     int i;
-    int j;
+    // int j;
 
     i = -1;
     if (!str_tab[0])
@@ -124,10 +126,10 @@ static int check_env_str(const char *line, char **str_tab)
             && str_tab[0][i] != '_' && !str_tab[1]))
         {
             printf("Minishell: export: `%s': not a valid identifier\n", line);
-            j = -1;
-            while (str_tab[++j])
-                free(str_tab[j]);
-            free(str_tab);
+            // j = -1;
+            // while (str_tab[++j])
+                // free(str_tab[j]);
+            // free(str_tab);
             return (1);
         }
     }
@@ -160,7 +162,7 @@ static void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str
         new_env->full = ft_strjoin(new_full, new_env->value, BKOLANI);
     }
     new_env->next = NULL;
-    free(new_full);
+    // free(new_full);
     ft_lstadd_back_env(&env, new_env);
 }
 
@@ -174,8 +176,8 @@ static void    update_env_concat(t_env *env, t_env *new_env, const char *str)
 
     temp = get_env_var(env, new_env->key);
     value = ft_strdup(temp->value, BKOLANI);
-    free(temp->value);
-    free(temp->full);
+    // free(temp->value);
+    // free(temp->full);
     temp->full = NULL;
     temp->value = NULL;
     if  (!str)
@@ -189,10 +191,10 @@ static void    update_env_concat(t_env *env, t_env *new_env, const char *str)
         new_full = ft_strjoin(new_env->key, "=", BKOLANI);
         temp->full = ft_strjoin(new_full, temp->value, BKOLANI);
     }
-    free(new_env->key);
-    free(new_env);
-    free(value);
-    free(new_full);
+    // free(new_env->key);
+    // free(new_env);
+    // free(value);
+    // free(new_full);
 }
 
 // Trunc or overwrite the value of an env var if it exists
@@ -201,8 +203,8 @@ static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, co
     t_env *temp = NULL;
 
     temp = get_env_var(env, new_env->key);
-    free(temp->value);
-    free(temp->full);
+    // free(temp->value);
+    // free(temp->full);
     temp->value = NULL;
     temp->full = NULL;
     if (!str)
@@ -210,8 +212,8 @@ static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, co
     else
         temp->value = ft_strdup(str, BKOLANI);
     temp->full = ft_strdup(line, BKOLANI);
-    free(new_env->key);
-    free(new_env);
+    // free(new_env->key);
+    // free(new_env);
 }
 
 // For each case use the rigth function
@@ -265,7 +267,7 @@ static void check_export_env(t_env *env, char *line)
         return ;
     if (check_env_str(line, splited_line))
     {     
-        free(new_env);
+        // free(new_env);
         return ;
     }
     process_env_var(env, new_env, splited_line, line);
@@ -315,10 +317,11 @@ void    env(t_env *env, t_chain *data)
 // Function to free env var linked list; Is it useful ?
 static void free_env(t_env *env_to_unset)
 {
-    free(env_to_unset->key);
-    free(env_to_unset->value);
-    free(env_to_unset->full);
-    free(env_to_unset);
+    // free(env_to_unset->key);
+    // free(env_to_unset->value);
+    // free(env_to_unset->full);
+    // free(env_to_unset);
+    (void)env_to_unset;
 }
 
 static void remove_and_rebuilt(t_env *env, t_env *temp, t_chain *data)
