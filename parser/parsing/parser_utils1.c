@@ -41,7 +41,7 @@ void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f)
 	while (is_redir(redirs, IN + OR + OUT))
 	{
 		tmp = redirs->next;
-		free(redirs); // need to free content as well.
+		// free(redirs); // need to free content as well.
 		redirs = tmp;
 	}
 }
@@ -124,8 +124,8 @@ char	*copy_if(char *str, char *s, char *f)
 		i++;
 	}
 	f[k] = '\0';
-	free(str);
-	free(s);
+	// free(str);
+	// free(s);
 	return (f);
 }
 
@@ -166,6 +166,7 @@ char	*remove_occurences(char *str, int i, int singles, int doubles)
 			s[i] = 1;
 		i++;
 	}
-	f = malloc(ft_strlen(str) - count_removables(s) + 1);
+	// f = malloc(ft_strlen(str) - count_removables(s) + 1);
+	f = ft_malloc(ft_strlen(str) - count_removables(s) + 1, ALLOCATE);
 	return (copy_if(str, s, f));
 }

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/06 11:06:32 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:31:18 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_chain	*reverse_list(t_chain *list)
 	head = NULL;
 	while (list)
 	{
-		new = malloc(sizeof(t_chain));
+		new = ft_malloc(sizeof(t_chain), ALLOCATE);
 		ft_memcpy(new, list, sizeof(t_chain));
 		new->next = NULL;
 		new->back = NULL;

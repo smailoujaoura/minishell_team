@@ -61,7 +61,6 @@ t_ast	*parse_line(char *line)
 	assign_nodes_sides(root, ROOT);
 	printf("\nTree: \n");
 	print_tree(root);
-	root = NULL;
 	return (root);
 }
 
@@ -121,8 +120,8 @@ void	loop_minishell(t_env *env)
 		if (line == NULL)
 			exit_shell();
 		root = parse_line(line);
-		if (root)
-			// execute tree
+		// if (root)
+		// 	// execute tree
 		ft_malloc(0, DEALLOCATE);
 		(void)root;
 	}

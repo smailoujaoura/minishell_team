@@ -78,9 +78,6 @@ typedef struct s_chain
 # define LEFT -1
 # define RIGHT 1
 
-# define DEALLOCATE -1
-# define ALLOCATE 1
-
 // Abstract Syntax Tree to represent the the parsed line
 typedef struct s_ast
 {

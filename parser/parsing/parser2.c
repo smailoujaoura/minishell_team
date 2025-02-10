@@ -10,9 +10,10 @@ void	delete_any(t_chain *ptr, int i)
 	prev->next = ptr->next;
 	if (ptr->next)
 		ptr->next->back = prev;
-	if (i)
-		free(ptr->content);
-	free(ptr);
+	// if (i)
+	// 	free(ptr->content);
+	// free(ptr);
+	(void)i;
 }
 
 void	remove_if(t_chain *list)
