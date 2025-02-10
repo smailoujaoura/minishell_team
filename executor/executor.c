@@ -34,21 +34,16 @@ void    buildin_excutor(t_chain *data, t_env *env_head)
         mini_exit(data);
 }
 
-void    create_files(t_chain *data)
+void    create_files(t_chain *file)
 {
-    if (!data->adj_f  && !data->blk_f)
+  
+    if (!file)
         return ;
-    while (data->adj_f)
+    while (file)
     {
-        if (open(data->adj_f->file, O_CREAT, 0644) == -1)
+        if (open(file->file, O_CREAT, 0644) == -1)
             printf("Frees and exit\n");
-        data->adj_f = data->adj_f->next;
-    }
-    while (data->blk_f)
-    {
-        if (open(data->adj_f->file, O_CREAT, 0644) == -1)
-            printf("Frees and exit\n");
-        data->adj_f = data->adj_f->next;
+        file = file->next;
     }
 }
 
@@ -90,7 +85,10 @@ void	executor(t_ast *tree, t_env *env)
     if (tree->type == WORD)
     {
         if (tree->data->empty)
-            create_files(tree->data);
+        {
+            create_files(tree->data->adj_f);
+            create_files(tree->data->blk_f);
+        }
         else
         {
             

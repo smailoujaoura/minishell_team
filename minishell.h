@@ -185,6 +185,9 @@ void	mini_env(t_env *env, t_chain *data);
 void   	export(t_env *head, t_chain *data);
 void    unset(t_env *env, t_chain *data);
 
+// here_doc
+void    here_doc(const char *limiter);
+
 // Builtins utils
 // int		builtins_redir_fd(t_chain *file);
 // void    builtins_redir(t_chain *redir_file, char *buff, int create_only);
