@@ -59,5 +59,5 @@ void	bkolani(char *argv[], char *envp[])
 	// mini_exit(echo_data);
 	// cd(env, data);
 	// unset(env, data);
-	loop_minishell(env);
+	(void)env;
 }
