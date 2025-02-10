@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 11:39:18 by soujaour          #+#    #+#             */
-/*   Updated: 2024/10/28 19:11:22 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:29:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,21 +38,7 @@ static int	ft_words_counter(const char *s, char c)
 	return (count);
 }
 
-static char	**ft_free(char **arr, int i)
-{
-	int	index;
-
-	index = 0;
-	while (index < i)
-	{
-		free(arr[index]);
-		index++;
-	}
-	free(arr);
-	return (NULL);
-}
-
-char	**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c, int f)
 {
 	char	**arr;
 	int		i;
@@ -61,17 +47,13 @@ char	**ft_split(char const *s, char c)
 	if (!s)
 		return (NULL);
 	alt_s = (char *)s;
-	arr = (char **)malloc(sizeof(char *) * (ft_words_counter(s, c) + 1));
-	if (!arr)
-		return (NULL);
+	arr = check_collectors((i + 1), f);
 	i = 0;
 	while (i < ft_words_counter(s, c))
 	{
 		while (*alt_s == c)
 			alt_s++;
-		arr[i] = (char *)malloc(sizeof(char) * ft_word_len(alt_s, c) + 1);
-		if (!arr[i])
-			return (ft_free(arr, i));
+		arr[i] = heck_collectors((ft_word_len(alt_s, c) + 1), f);
 		ft_strlcpy(arr[i], alt_s, ft_word_len(alt_s, c) + 1);
 		alt_s += ft_word_len(alt_s, c);
 		i++;

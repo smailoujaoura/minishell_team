@@ -40,19 +40,18 @@ void	delete_one(t_chain **list, int i)
 	*list = tmp->next;
 	if (*list)
 		(*list)->back = NULL;
+	(void)i;
 	// remove the content in the node and the node itself
-	if (i)
-		free(tmp->content);
-	free(tmp);
+	// if (i)
+	// 	free(tmp->content);
+	// free(tmp);
 }
 
 t_chain	*lstnew(char *content)
 {
 	t_chain	*new;
 
-	new = malloc(sizeof(t_chain));
-	if (!new)
-		return (NULL); // DON'T return just panic and exit.
+	new = ft_malloc(sizeof(t_chain), ALLOCATE);
 	new->content = content;
 	new->type = -1;
 	new->lvl = -1;
@@ -106,9 +105,7 @@ t_argv	*lstnew_arg(t_chain *cmd)
 {
 	t_argv	*new;
 
-	new = malloc(sizeof(t_argv));
-	if (!new)
-		return (NULL); // DON'T return just panic and exit.
+	new = ft_malloc(sizeof(t_argv), ALLOCATE);
 	new->back = NULL;
 	new->next = NULL;
 	new->type = -1;

@@ -5,7 +5,7 @@ void	print_tree(t_ast *root)
 	if (root == NULL)
 		return ;
 	print_tree(root->left);
-	printf("[%s]\n", root->data->content);
+	printf("CONTENT:[%s]\t SIDE:[%d]\n", root->data->content, root->side);
 	print_tree(root->right);
 }
 
@@ -22,6 +22,15 @@ void	link_parent_child(t_ast *root, t_ast *parent, int type)
 		root->parent = parent;
 	link_parent_child(root->left, root, IS_CHILD);
 	link_parent_child(root->right, root, IS_CHILD);
+}
+
+void	assign_nodes_sides(t_ast *tree, int side)
+{
+	if (tree == NULL)
+		return ;
+	tree->side = side;
+	assign_nodes_sides(tree->left, LEFT);
+	assign_nodes_sides(tree->right, RIGHT);
 }
 
 t_ast	*parse_line(char *line)
@@ -44,15 +53,14 @@ t_ast	*parse_line(char *line)
 	list = assign_inputs(list, NULL);
 	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
 	pick_left_redirs(list);
-	print_with_files(list);
+	// print_with_files(list);
 
 	post = convert_infix(list);
 	root = build_tree(post);
 	link_parent_child(root, NULL, IS_ROOT);
+	assign_nodes_sides(root, ROOT);
 	printf("\nTree: \n");
 	print_tree(root);
-	// collect_garbage(post);
-	root = NULL;
 	return (root);
 }
 
@@ -98,7 +106,12 @@ char	*get_line(t_env *env)
 		add_history(new_prompt);
 	free(new_prompt);
 	free(temp);
-	return (line);
+	return (line);  // read after free with my gabage collector
+	// line = readline("Minishell: ");
+	// if (line)
+	// 	add_history(line);
+	// return (line);
+	// (void)env;
 }
 
 void	loop_minishell(t_env *env)
@@ -110,12 +123,12 @@ void	loop_minishell(t_env *env)
 	{
 		line = get_line(env);
 		if (line == NULL)
-			exit_shell();
+			break ;
 		root = parse_line(line);
-		if (root)
-			// execute tree
-		// free line
-		// free tree and other stuff
+		// if (root)
+		// 	// execute tree
 		(void)root;
+		free(line);
+		ft_malloc(0, DEALLOCATE);
 	}
 }

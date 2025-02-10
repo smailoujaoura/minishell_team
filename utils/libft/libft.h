@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 10:05:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/01/02 16:16:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 09:59:04 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
+# define DEALLOCATE -1
+# define ALLOCATE 1
+
+# define BKOLANI -1
+# define SOUJAOUR 1
+
+void	*check_collectors(size_t size, int flag);
+void				*ft_malloc(size_t size, int flag);
 int					ft_isalpha(int c);
 int					ft_isdigit(int c);
 int					ft_isalnum(int c);
@@ -80,5 +88,6 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
+
 
 #endif

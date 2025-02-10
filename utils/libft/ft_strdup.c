@@ -6,13 +6,15 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 19:26:22 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/03 22:33:34 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/10 09:59:57 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *s1)
+
+
+char	*ft_strdup(const char *s1, int f)
 {
 	char	*ptr;
 	size_t	i;
@@ -20,9 +22,7 @@ char	*ft_strdup(const char *s1)
 	i = 0;
 	while (s1[i])
 		i++;
-	ptr = (char *)malloc(sizeof(char) * (i + 1));
-	if (!ptr)
-		return (NULL);
+	ptr = check_collectors((i + 1), f);
 	i = 0;
 	while (s1[i])
 	{

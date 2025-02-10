@@ -12,9 +12,6 @@
 # include <readline/history.h>
 # include <errno.h>
 
-
-extern int i;
-
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -32,6 +29,8 @@ extern int i;
 
 # define WILDCARDS 1020
 
+# define MEMORY_ERROR "Memory Error!"
+void	panic_exit(char *s);
 
 # define WHITESPACE "\t\n\v\f\r "
 # define SYMBOLS "<>|()"
@@ -77,6 +76,7 @@ typedef struct s_chain
 	int				dollar;
 }	t_chain;
 
+# define ROOT 0
 # define LEFT -1
 # define RIGHT 1
 
@@ -98,6 +98,9 @@ typedef struct s_env
     char    *full;
     struct s_env *next;
 } t_env;
+
+// Garbage Collector
+void	*ft_malloc(size_t size, int flag);
 
 
 void	print_with_files(t_chain *ptr);
@@ -161,7 +164,8 @@ t_ast	*build_tree(t_chain *post);
 
 
 
-
+// arbage collector
+void	*ft_malloc_bkol(size_t size, int flag);
 
 
 
