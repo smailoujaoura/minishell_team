@@ -11,7 +11,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
-# include <stddef.h>>
+# include <stddef.h>
 
 # define L_PAREN 1001
 # define R_PAREN 1002

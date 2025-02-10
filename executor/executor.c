@@ -29,28 +29,28 @@ void    buildin_excutor(t_chain *data, t_env *env_head)
     if (ft_strncmp("unset", data->content, ft_strlen(data->content)) == 0)
         unset(env_head, data);
     if (ft_strncmp("env", data->content, ft_strlen(data->content)) == 0)
-        env(env_head, data);
+        mini_env(env_head, data);
     if (ft_strncmp("exit", data->content, ft_strlen(data->content)) == 0)
         mini_exit(data);
 }
 
-// void    create_files(t_chain *data)
-// {
-//     if (!data->adj_f  && !data->blk_f)
-//         return ;
-//     while (data->adj_f)
-//     {
-//         if (open(data->adj_f->file, O_CREAT, 0644) == -1)
-//             printf("Frees and exit\n");
-//         data->adj_f = data->adj_f->next;
-//     }
-//     while (data->blk_f)
-//     {
-//         if (open(data->adj_f->file, O_CREAT, 0644) == -1)
-//             printf("Frees and exit\n");
-//         data->adj_f = data->adj_f->next;
-//     }
-// }
+void    create_files(t_chain *data)
+{
+    if (!data->adj_f  && !data->blk_f)
+        return ;
+    while (data->adj_f)
+    {
+        if (open(data->adj_f->file, O_CREAT, 0644) == -1)
+            printf("Frees and exit\n");
+        data->adj_f = data->adj_f->next;
+    }
+    while (data->blk_f)
+    {
+        if (open(data->adj_f->file, O_CREAT, 0644) == -1)
+            printf("Frees and exit\n");
+        data->adj_f = data->adj_f->next;
+    }
+}
 
 int   *create_pipe(void)
 {
@@ -85,12 +85,6 @@ int   *create_pipe(void)
 
 void	executor(t_ast *tree, t_env *env)
 {
-    int *pipe_fd;
-    pid_t pid;
-    t_ast   *temp;
-    int in;
-    int out;
-
     if (!tree)
         return ;
     if (tree->type == WORD)

@@ -57,8 +57,8 @@ void	bkolani(char *argv[], char *envp[])
 	// data->adj_f = adj1;
 	// data->blk_f = blk1;
 	data->next = NULL;
-	export(env, data);
-	mini_env(env, data);
+	// export(env, data);
+	// mini_env(env, data);
 	// pwd(data);
 	// echo(data);
 	mini_exit(data);
