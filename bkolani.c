@@ -50,9 +50,12 @@ void	bkolani(char *argv[], char *envp[])
 	data->next = NULL;
 	// pwd(data);
 	// print_env_vars(env);
-	t_argv *args1 = malloc(sizeof(t_argv));
-	t_argv *args2 = malloc(sizeof(t_argv));
-	t_argv *args3 = malloc(sizeof(t_argv));
+	// t_argv *args1 = malloc(sizeof(t_argv));
+	// t_argv *args2 = malloc(sizeof(t_argv));
+	// t_argv *args3 = malloc(sizeof(t_argv));
+	t_argv *args1 = ft_malloc(sizeof(t_argv), ALLOCATE);
+	t_argv *args2 = ft_malloc(sizeof(t_argv), ALLOCATE);
+	t_argv *args3 = ft_malloc(sizeof(t_argv), ALLOCATE);
 	args1->content = "-nnnnnnnnnnnnnnnnnnnn";
 	args1->next = args2;
 	args2->content = "-nnnnnnnnnnnnnn";
