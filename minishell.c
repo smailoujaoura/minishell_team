@@ -33,6 +33,8 @@ void	assign_nodes_sides(t_ast *tree, int side)
 	assign_nodes_sides(tree->right, RIGHT);
 }
 
+
+void	print_with_args(t_chain *ptr);
 t_ast	*parse_line(char *line)
 {
 	t_chain	*list;
@@ -54,6 +56,7 @@ t_ast	*parse_line(char *line)
 	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
 	pick_left_redirs(list);
 	// print_with_files(list);
+	print_with_args(list);
 
 	post = convert_infix(list);
 	root = build_tree(post);

@@ -54,6 +54,22 @@ void	print_with_files(t_chain *ptr)
 	}
 }
 
+void	print_with_args(t_chain *ptr)
+{
+	t_argv	*args;
+	while (ptr)
+	{
+		printf("CONTENT:[%s]\t depth[%d] wild[%d]  dollar[%d]\n", ptr->content, ptr->depth, ptr->wildcard, ptr->dollar);
+		args = ptr->argv;
+		while (args)
+		{
+			printf("\targ[%s] wild[%d] dollar[%d]\t", args->content, args->wildcard, args->dollar);
+			args = args->next;
+		}
+		ptr = ptr->next;
+	}
+}
+
 void	pick_left_redirs(t_chain *list)
 {
 	t_chain	*ptr;

@@ -47,10 +47,19 @@ void	panic_exit(char *s);
 # define IN 0
 # define OUT 1
 
+// execute(expand(argv->content), )
+
+typedef struct s_exp
+{
+	char *exp_val;
+	struct s_exp *next;
+} t_exp;
+
 typedef struct s_argv
 {
 	int				type;
 	char			*content;
+	t_exp			*exp;
 	int				wildcard;
 	int				dollar;
 	struct s_argv	*next;
@@ -61,6 +70,7 @@ typedef struct s_chain
 {
 	int				type;
 	char			*content;
+	t_exp			*exp;
 	int				depth;
 	int				lvl;
 	t_argv			*argv;

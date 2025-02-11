@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/11 10:39:47 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/11 19:54:33 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void    prompt_here_doc(const char *limiter, int fd)
     while (1337)
     {
         line = readline("> ");
-        if (ft_strncmp(line, limiter, ft_strlen(line)) == 0)
+        if (!line || t_strncmp(line, limiter, ft_strlen(line)) == 0)
             break ;
         write(fd, line, ft_strlen(line));
         write(fd, "\n", 1);
@@ -31,8 +31,8 @@ void    prompt_here_doc(const char *limiter, int fd)
 
 void    here_doc(t_chain *data)
 {
-    int     fd;
-    char    buff[10000];
+    int fd;
+    char buff[1000000];
 
     fd = open(".here_doc", O_WRONLY | O_CREAT | O_APPEND, 0644);
     if (fd == -1)

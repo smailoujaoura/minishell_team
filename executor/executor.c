@@ -34,19 +34,6 @@ void    buildin_excutor(t_chain *data, t_env *env_head)
         mini_exit(data);
 }
 
-void    create_files(t_chain *file)
-{
-  
-    if (!file)
-        return ;
-    while (file)
-    {
-        if (open(file->file, O_CREAT, 0644) == -1)
-            printf("Frees and exit\n");
-        file = file->next;
-    }
-}
-
 int   *create_pipe(void)
 {
     int pipe_fd[2];
@@ -57,6 +44,66 @@ int   *create_pipe(void)
         exit(1);
     }
     return (pipe_fd);
+}
+
+// int   redir_in(t_ast *tree, t_chain *file)
+// {
+//     int fd;
+//     int *pipe_fd;
+
+//     file = tree->data->adj_f;
+//     if (!file->type != REDIR_IN && tree->left->type != PIPE)
+//         return ;
+//     while (file)
+//     {
+//         if (file->type == REDIR_IN)
+//         {
+//             fd = open(file->file, O_RDONLY, 0644);
+//             if ( fd == -1)
+//             {
+//                 perror("open");
+//                 exit(EXIT_FAILURE);
+//             }
+//         }
+//         if (!file->next)
+//             return (fd);
+//         file = file->next;
+//     }
+//     if (tree->left->type == PIPE)
+//     {
+//         pipe_fd = create_pipe();
+//         return (pipe_fd[0]);
+//     }
+// }
+
+int   redir_out(t_chain *file)
+{
+    int fd;
+  
+    if (!file)
+        return ;
+    while (file)
+    {
+        if (file->type == REDIR_OUT)
+        {
+            fd = open(file->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if ( fd == -1)
+            {
+                perror("open");
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if (file->type == REDIR_APPEND)
+        {
+            fd = open(file->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+            if ( fd == -1)
+            {
+                perror("open");
+                exit(EXIT_FAILURE);
+            }
+        }
+        file = file->next;
+    }
 }
 
 // void create_process(t_ast *tree)
@@ -86,8 +133,8 @@ void	executor(t_ast *tree, t_env *env)
     {
         if (tree->data->empty)
         {
-            create_files(tree->data->adj_f);
-            create_files(tree->data->blk_f);
+            redir_out(tree->data->adj_f);
+            redir_out(tree->data->blk_f);
         }
         else
         {

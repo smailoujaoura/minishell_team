@@ -43,7 +43,7 @@ void	bkolani(char *argv[], char *envp[])
 	// pwd(data);
 	// print_env_vars(env);
 	t_argv *args1 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
-	args1->content = "EOF";
+	args1->content = "EOF\\";
 	args1->next = NULL;
 	// t_argv *args2 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
 	// t_argv *args3 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
