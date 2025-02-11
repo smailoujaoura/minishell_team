@@ -79,15 +79,32 @@ int   *create_pipe(void)
 // }
 
 
-void	config_streams(void)
+void	config_streams(t_chain *adj, t_chain *blk, int *fd_in, int *fd_out)
 {
+	t_chain	*adj_out;
+	t_chain	*blk_out;
+	t_chain	*adj_in;
+	t_chain	*blk_in;
+
 	// this function will open up a bunch of files and ... returns two files descriptors in and out.
+
+	while (adj)
+	{
+
+	}
+	while (blk)
+	{
+		
+	}
 }
 
 void	run_cmd(t_ast *tree, t_env *env)
 {
+	int	fd_in;
+	int	fd_out;
+
 	if (tree->data->empty)
-		config_streams();
+		config_streams(tree->data->adj_f, tree->data->blk_f, &fd_in, &fd_out);
 	else
 	{
 		if (check_buildin(tree->data))
