@@ -14,7 +14,7 @@ void	bkolani(char *argv[], char *envp[])
 	// t_chain *adj1 = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
 	// t_chain *adj2 = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
 	// t_chain *adj3 = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
-	// t_chain *data =  ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
+	t_chain *data =  ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
 	// adj1->file = "adj1";
 	// adj1->type = REDIR_OUT;
 	// adj1->next = adj2;
@@ -42,7 +42,9 @@ void	bkolani(char *argv[], char *envp[])
 	// data->next = NULL;
 	// pwd(data);
 	// print_env_vars(env);
-	// t_argv *args1 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
+	t_argv *args1 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
+	args1->content = "EOF";
+	args1->next = NULL;
 	// t_argv *args2 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
 	// t_argv *args3 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
 	// t_argv *args4 = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
@@ -71,6 +73,8 @@ void	bkolani(char *argv[], char *envp[])
 	// data_unset->next = NULL;
 	// unset(env, data_unset);
 	// mini_env(env, NULL);
-	here_doc("EOF");
+	data->argv = args1;
+	data->next = NULL;
+	here_doc(data);
 	(void)env;
 }

@@ -186,7 +186,7 @@ void   	export(t_env *head, t_chain *data);
 void    unset(t_env *env, t_chain *data);
 
 // here_doc
-void    here_doc(const char *limiter);
+void    here_doc(t_chain *data);
 
 // Builtins utils
 // int		builtins_redir_fd(t_chain *file);
