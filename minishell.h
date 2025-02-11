@@ -81,6 +81,12 @@ typedef struct s_chain
 # define LEFT -1
 # define RIGHT 1
 
+
+// typedef struct s_status
+// {
+// 	int	status;
+// }	t_status;
+
 // Abstract Syntax Tree to represent the the parsed line
 typedef struct s_ast
 {
@@ -90,6 +96,8 @@ typedef struct s_ast
 	struct s_ast	*right;
 	struct s_ast	*parent;
 	int				side;
+	int				exit_status;
+	int				*pipe;
 }	t_ast;
 
 typedef struct s_env
