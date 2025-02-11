@@ -78,30 +78,56 @@ int   *create_pipe(void)
 //     }
 // }
 
+
+void	run_cmd(t_ast *tree, t_env *env)
+{
+	if (tree->data->empty)
+	{
+		create_files(tree->data->adj_f);
+		create_files(tree->data->blk_f);
+	}
+	else
+	{
+		
+	}
+}
+
+void	run_pipe(t_ast *tree, t_env *env)
+{
+
+}
+
+void	run_and(t_ast *tree, t_env *env)
+{
+	
+}
+
+void	run_or(t_ast *tree, t_env *env)
+{
+	
+}
+
 void	executor(t_ast *tree, t_env *env)
 {
-    if (!tree)
-        return ;
-    if (tree->type == WORD)
-    {
-        if (tree->data->empty)
-        {
-            create_files(tree->data->adj_f);
-            create_files(tree->data->blk_f);
-        }
-        else
-        {
-            
-        }
-    }
-    else if (tree->type == PIPE)
-    {
-
-    }
-    else if (tree->type == AND)
-        run_and();
-    else if (tree->type == OR)
-        run_or();
-    else
-        printf("Something went wrong\n");
+	if (!tree)
+		return ;
+	if (tree->type == WORD)
+	{
+		run_cmd(tree, env);
+	}
+	else if (tree->type == PIPE)
+	{
+		run_pipe(tree, env);
+	}
+	else if (tree->type == AND)
+	{
+		run_and(tree, env);
+		if (tree->type)
+	}
+	else if (tree->type == OR)
+	{
+		run_or(tree, env);
+	}
+	else
+		printf("Something went wrong\n");
 }
