@@ -79,21 +79,25 @@ int   *create_pipe(void)
 // }
 
 
+void	config_streams(void)
+{
+	// this function will open up a bunch of files and ... returns two files descriptors in and out.
+}
+
 void	run_cmd(t_ast *tree, t_env *env)
 {
 	if (tree->data->empty)
-	{
-		create_files(tree->data->adj_f);
-		create_files(tree->data->blk_f);
-	}
+		config_streams();
 	else
 	{
 		if (check_buildin(tree->data))
 			buildin_excutor(tree->data, env);
 		else
 		{
+			config_streams();
 			// find_path();
 			// executre_cmd();
+			// get exit status and assign it.
 			tree->exit_status = 0;
 		}
 	}
