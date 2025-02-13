@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 11:10:50 by soujaour          #+#    #+#             */
+/*   Updated: 2025/02/13 11:14:05 by soujaour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 # define READ_END 0
@@ -68,12 +80,14 @@ void	run_cmd(t_ast *tree, t_env *env)
 
 	if (tree->data->empty)
 	{
+		expand_files();
 		config_streams(tree->data->adj_f, tree->data->blk_f, &fd_in, &fd_out);
 		// return
 	}
 	else
 	{
-		
+		expand_cmds();
+		expand_args();
 	}
 }
 

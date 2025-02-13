@@ -34,7 +34,7 @@
 void	panic_exit(char *s);
 
 # define WHITESPACE "\t\n\v\f\r "
-# define SYMBOLS "<>|()"
+# define SYMBOLS "<>|()\"'"
 
 # define SINGLES '\''
 # define DOUBLES '"'
@@ -107,6 +107,8 @@ typedef struct s_ast
 	int				side;
 	int				exit_status;
 	int				*pipe;
+	char			*cmd;
+	char			**args;
 }	t_ast;
 
 typedef struct s_env

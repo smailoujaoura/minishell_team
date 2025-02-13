@@ -75,6 +75,6 @@ void	bkolani(char *argv[], char *envp[])
 	// mini_env(env, NULL);
 	data->argv = args1;
 	data->next = NULL;
-	here_doc(data);
+	// here_doc(data);
 	(void)env;
 }

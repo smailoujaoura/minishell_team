@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
+/*   Updated: 2025/02/13 11:45:32 by soujaour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	print_tree(t_ast *root)
@@ -48,7 +60,7 @@ t_ast	*parse_line(char *line)
 		return (free_list(list));
 	prioritize_list(list);
 	assign_depth(list);
-	strip_words(list);
+	// strip_words(list);
 
 	join_redirs(list);
 	join_commands(list);

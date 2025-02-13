@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
+/*   Updated: 2025/02/13 11:47:05 by soujaour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 
@@ -64,7 +76,7 @@ void	print_with_args(t_chain *ptr)
 		args = ptr->argv;
 		while (args)
 		{
-			printf("\targ[%s] wild[%d] dollar[%d]\t", args->content, args->wildcard, args->dollar);
+			printf("\targ[%s] wild[%d] dollar[%d]\n", args->content, args->wildcard, args->dollar);
 			args = args->next;
 		}
 		printf("\n\t\t[FILES]:\n");
