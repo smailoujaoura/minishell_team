@@ -48,11 +48,10 @@ void	panic_exit(char *s);
 # define OUT 1
 
 // execute(expand(argv->content), )
-
 typedef struct s_exp
 {
-	char *exp_val;
-	struct s_exp *next;
+	char			*val;
+	struct s_exp	*next;
 } t_exp;
 
 typedef struct s_argv
@@ -69,11 +68,14 @@ typedef struct s_argv
 typedef struct s_chain
 {
 	int				type;
-	char			*content;
-	t_exp			*exp;
 	int				depth;
 	int				lvl;
+	int				empty;
+	char			*content;
+	int				wildcard;
+	int				dollar;
 	t_argv			*argv;
+	t_exp			*exp;
 	char			*file;
 	char			*delim;
 	int				delim_in_quotes;
@@ -81,10 +83,7 @@ typedef struct s_chain
 	struct s_chain	*back;
 	struct s_chain	*adj_f;
 	struct s_chain	*blk_f;
-	int				empty;
 	int				removable;
-	int				wildcard;
-	int				dollar;
 }	t_chain;
 
 # define ROOT 0

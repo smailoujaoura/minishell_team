@@ -62,8 +62,8 @@ t_ast	*parse_line(char *line)
 	root = build_tree(post);
 	link_parent_child(root, NULL, IS_ROOT);
 	assign_nodes_sides(root, ROOT);
-	printf("\nTree: \n");
-	print_tree(root);
+	// printf("\nTree: \n");
+	// print_tree(root);
 	return (root);
 }
 
