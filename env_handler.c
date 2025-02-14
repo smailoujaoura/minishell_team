@@ -102,7 +102,8 @@ t_env *get_env_var(t_env *env, const char *key)
     }
     return (NULL);
 }
-
+// $l"s"
+// $PWD"$var1'$shit'*"
 // Function to check if an env var is valid
 static int check_env_str(const char *line, char **str_tab)
 {

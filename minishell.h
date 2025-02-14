@@ -97,6 +97,8 @@ typedef struct s_chain
 // }	t_status;
 
 // Abstract Syntax Tree to represent the the parsed line
+	// char			*cmd;
+	// char			**args;
 typedef struct s_ast
 {
 	int				type;
@@ -107,8 +109,6 @@ typedef struct s_ast
 	int				side;
 	int				exit_status;
 	int				*pipe;
-	char			*cmd;
-	char			**args;
 }	t_ast;
 
 typedef struct s_env
@@ -212,5 +212,13 @@ void    here_doc(t_chain *data);
 // void    builtins_redir(t_chain *redir_file, char *buff, int create_only);
 // void    create_files_only(t_chain *data);
 // void    redir_output(t_chain *data, char *output);
+
+
+// EXPANDING
+char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
+void	executor(t_ast *tree, t_env *env);
+
+
+char	*get_value(char *var, t_env *env);
 
 #endif

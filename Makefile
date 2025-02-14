@@ -15,9 +15,12 @@ SRCS =	main.c \
 		garbage_collector.c \
 		bkol_garb_coll.c \
 		utils/libft/allocator.c \
-		executor/here_doc.c
+		executor/here_doc.c \
+		executor/executor.c \
+		executor/expander.c
 
 OBJS =  $(SRCS:.c=.o)
+DEPENS = $(SRCS:.c=.d)
 COMP = cc -Wall -Wextra -Werror -g -fsanitize=address
 FLAGS = -lreadline
 LIBS = ./utils/libft/libft.a
@@ -25,7 +28,7 @@ LIBS = ./utils/libft/libft.a
 all: $(NAME)
 
 %.o: %.c minishell.h
-	$(COMP) -c $< -o $@
+	$(COMP) -c $< -o $@ -MMD
 
 $(NAME): $(LIBS) $(OBJS)
 	$(COMP) $(OBJS) $(LIBS) $(FLAGS) -o $(NAME)
@@ -36,6 +39,7 @@ $(LIBS):
 
 clean: 
 	rm -rf $(OBJS)
+	rm -rf $(DEPENS)
 	make -C utils/libft clean
 
 fclean: clean

@@ -6,11 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:10:50 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/13 11:14:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:25:46 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 # define READ_END 0
 # define WRITE_END 1
@@ -48,20 +48,24 @@ void    buildin_excutor(t_chain *data, t_env *env_head)
 
 void	config_streams(t_chain *adj, t_chain *blk, int *fd_in, int *fd_out)
 {
-	t_chain	*adj_out;
-	t_chain	*blk_out;
-	t_chain	*adj_in;
-	t_chain	*blk_in;
+	(void)adj;
+	(void)blk;
+	(void)fd_in;
+	(void)fd_out;
+	// t_chain	*adj_out;
+	// t_chain	*blk_out;
+	// t_chain	*adj_in;
+	// t_chain	*blk_in;
 
-	// this function will open up a bunch of files and ... returns two files descriptors in and out.
-	while (adj)
-	{
+	// // this function will open up a bunch of files and ... returns two files descriptors in and out.
+	// while (adj)
+	// {
 		
-	}
-	while (blk)
-	{
+	// }
+	// while (blk)
+	// {
 		
-	}
+	// }
 }
 
 /*
@@ -75,29 +79,35 @@ void	config_streams(t_chain *adj, t_chain *blk, int *fd_in, int *fd_out)
 */
 void	run_cmd(t_ast *tree, t_env *env)
 {
-	int	fd_in;
-	int	fd_out;
+	// int	fd_in;
+	// int	fd_out;
 
-	if (tree->data->empty)
-	{
-		expand_files();
-		config_streams(tree->data->adj_f, tree->data->blk_f, &fd_in, &fd_out);
-		// return
-	}
-	else
-	{
-		expand_cmds();
-		expand_args();
-	}
+	
+
+	// if (tree->data->empty)
+	// {
+	// 	expand_files();
+	// 	config_streams(tree->data->adj_f, tree->data->blk_f, &fd_in, &fd_out);
+	// 	// return
+	// }
+	// else
+	// {
+	// 	expand_cmds();
+	// 	expand_args();
+	// }
+	printf("before expand: [%s]\n", tree->data->content);
+	printf("expanded str: [%s]\n", expand_cmd(tree->data, tree->data->argv, env));
 }
 
 void	run_pipe(t_ast *tree, t_env *env)
 {
-	int *pipe;
+	(void)tree;
+	(void)env;
+	// int *pipe;
 
-	tree->pipe = create_pipe();
-	executor(tree->left, env);
-	executor(tree->right, env);
+	// tree->pipe = create_pipe();
+	// executor(tree->left, env);
+	// executor(tree->right, env);
 }
 
 void	run_and(t_ast *tree, t_env *env)
@@ -137,3 +147,27 @@ void	executor(t_ast *tree, t_env *env)
 	else
 		printf("Something went wrong\n");
 }
+
+
+
+// w$var1$var2$var3
+
+// w
+// var1=h
+// var2=o
+// var3=" -b"
+
+// w$var1$var2*                for file: whos
+
+
+// $var1's' >>> ls		var1=l
+// $var1"s" >>> ls		var1=l
+
+// $var2's' >>> l''s     var2=''s
+
+// $var3's' >>> ''ls	  var2=''s
+
+
+// $PWD"$SHLVLTEST"
+
+// $PWD"$SHLVL'TEST'"

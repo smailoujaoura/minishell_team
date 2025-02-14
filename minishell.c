@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/13 11:45:32 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/14 11:59:47 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void	loop_minishell(t_env *env)
 		root = parse_line(line);
 		// if (root)
 		// 	// execute tree
-		(void)root;
+		executor(root, env);
 		free(line);
 		ft_malloc(0, DEALLOCATE);
 	}

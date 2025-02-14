@@ -2,7 +2,7 @@
 
 void	loop_minishell(t_env *env);
 
-void	bkolani(char *argv[], char *envp[])
+t_env	*bkolani(char *argv[], char *envp[])
 {
 	(void)argv;
 	(void)envp;
@@ -76,5 +76,5 @@ void	bkolani(char *argv[], char *envp[])
 	data->argv = args1;
 	data->next = NULL;
 	// here_doc(data);
-	(void)env;
+	return (env);
 }
