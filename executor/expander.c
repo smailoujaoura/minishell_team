@@ -149,13 +149,19 @@ char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 	first = expand_str(cmd->content, 0, &flags, env);
 	while (args)
 	{
+		first = ft_strjoin(first, " ", SOUJAOUR);
 		subseq = expand_str(args->content, 0, &flags, env);
 		first = ft_strjoin(first, subseq, SOUJAOUR);
 		args = args->next;
 	}
 	// return (ft_split(first, ' ', SOUJAOUR));
 	printf("expanded flg: [%s]\n", flags);
+	char **arr = ft_split(first, ' ', SOUJAOUR);
+	int j = 0;
+	while (arr[j])
+	{
+		printf("[%s]\n", arr[j]);
+		j++;
+	}
 	return (first);
 }
-
-
