@@ -36,7 +36,7 @@ char	*just_copy(char *str, int *i, int *singles, int *doubles)
 			break ;
 		else
 		{
-			while (*singles || (str[*i + len] && str[*i + len] != '$'))
+			while (str[*i + len] && (*singles || str[*i + len] != '$'))
 				len++;
 			new = ft_substr(str, *i, len, SOUJAOUR);
 			(*i) += len;
@@ -87,13 +87,33 @@ char	*get_value_wrapper(char *var, t_env *env)
 # define FROM_VAR '1'
 # define LITERAL '2'
 
-char	*expand_str(char *str, int i, char *flags, t_env *env)
+void	construct_flags(char *str, char flag, char **flags)
+{
+	char	*new_flag;
+	size_t	len;
+	size_t	i;
+
+	len = ft_strlen(str);
+	new_flag = ft_calloc(len + 1, sizeof(char), SOUJAOUR);
+	i = 0;
+	while (i < len)
+	{
+		new_flag[i] = flag;
+		i++;
+	}
+	new_flag[i] = '\0';
+	if (*flags == NULL)
+		*flags = new_flag;
+	else
+		*flags = ft_strjoin(*flags, new_flag, SOUJAOUR);
+}
+
+char	*expand_str(char *str, int i, char **flags, t_env *env)
 {
 	char	*new;
 	char	*value;
 	int		singles;
 	int		doubles;
-	(void)flags;
 
 	new = NULL;
 	singles = 0;
@@ -104,12 +124,13 @@ char	*expand_str(char *str, int i, char *flags, t_env *env)
 		{
 			value = expand_var(str, &i, &singles, &doubles);
 			value = get_value_wrapper(value, env);
+			construct_flags(value, FROM_VAR, flags);
 			new = ft_strjoin(new, value, SOUJAOUR);
-			// construct_flags();
 		}
 		else
 		{
 			value = just_copy(str, &i, &singles, &doubles);
+			construct_flags(value, LITERAL, flags);
 			new = ft_strjoin(new, value, SOUJAOUR);
 			// construct_flags();
 		}
@@ -125,14 +146,15 @@ char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 	char	*flags;
 
 	flags = NULL;
-	first = expand_str(cmd->content, 0, flags, env);
+	first = expand_str(cmd->content, 0, &flags, env);
 	while (args)
 	{
-		subseq = expand_str(args->content, 0, flags, env);
+		subseq = expand_str(args->content, 0, &flags, env);
 		first = ft_strjoin(first, subseq, SOUJAOUR);
 		args = args->next;
 	}
 	// return (ft_split(first, ' ', SOUJAOUR));
+	printf("expanded flg: [%s]\n", flags);
 	return (first);
 }
 
