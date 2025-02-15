@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/13 11:47:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/15 08:27:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void	strip_words(t_chain *list)
 {
 	while (list)
 	{
-		if (list->type == HEREDOC && list->next->type == WORD)
+		if (list->type == HEREDOC && list->next && list->next->type == WORD)
 		{
 			if (ft_strchr(list->next->content, '"') || ft_strchr(list->next->content, '\''))
 				list->delim_in_quotes = 1;

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:23 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/13 11:12:25 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/15 08:31:43 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,6 @@ char	*copy_if(char *str, char *s, char *f)
 		i++;
 	}
 	f[k] = '\0';
-	// free(str);
-	// free(s);
 	return (f);
 }
 
@@ -167,18 +165,16 @@ char	*remove_occurences(char *str, int i, int singles, int doubles)
 	{
 		if (str[i] == '"' && singles != 1)
 			doubles++;
-		if (str[i] == 39 && doubles != 1)
+		if (str[i] == '\'' && doubles != 1)
 			singles++;
 		if (doubles == 2)
 			doubles = 0;
 		if (singles == 2)
 			singles = 0;
-		if ((singles != 1 && doubles != 2 && str[i] == '"')
-			|| (doubles != 1 && singles != 2 && str[i] == 39))
+		if (singles != 1 && doubles != 2 && (str[i] == '"' || str[i] == '\''))
 			s[i] = 1;
 		i++;
 	}
-	// f = malloc(ft_strlen(str) - count_removables(s) + 1);
 	f = ft_malloc(ft_strlen(str) - count_removables(s) + 1, ALLOCATE);
 	return (copy_if(str, s, f));
 }

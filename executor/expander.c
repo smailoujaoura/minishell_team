@@ -12,13 +12,21 @@ int	is_var(char *str, int i)
 void	singles_doubles(int *singles, int *doubles, char c)
 {
 	if (c == '\'' && !*singles && !*doubles)
+	{
 		*singles = 1;
+	}
 	else if (c == '\'' && *singles)
+	{
 		*singles = 0;
+	}	
 	if (c == '"' && !*doubles && !*singles)
+	{
 		*doubles = 1;
+	}	
 	else if (c == '"' && *doubles)
+	{
 		*doubles = 0;
+	}
 }
 
 char	*just_copy(char *str, int *i, int *singles, int *doubles)
@@ -37,7 +45,10 @@ char	*just_copy(char *str, int *i, int *singles, int *doubles)
 		else
 		{
 			while (str[*i + len] && (*singles || str[*i + len] != '$'))
+			{
 				len++;
+				singles_doubles(singles, doubles, str[*i + len]);
+			}
 			new = ft_substr(str, *i, len, SOUJAOUR);
 			(*i) += len;
 			return (new);
@@ -138,30 +149,103 @@ char	*expand_str(char *str, int i, char **flags, t_env *env)
 	return (new);
 }
 
+char	*copy_ifnot_quote(char *str, char *flag, char *new)
+{
+	int	i;
+	int	k;
+
+	i = 0;
+	k = 0;
+	while (str[i])
+	{
+		if (flag[i] == 0)
+		{
+			new[k] = str[i];
+			k++;
+		}
+		i++;
+	}
+	new[k] = '\0';
+	return (new);
+}
+
+int	count_rems(char *s)
+{
+	int i;
+	int	rems;
+
+	i = 0;
+	rems = 0;
+	while (s[i])
+	{
+		if (s[i] == 1)
+			rems++;
+		i++;
+	}
+	return (rems);
+}
+
+void	assign_flag(char *flag, char c, int one, int two)
+{
+	if (c == '"' && one == 0 && (two == 1 || two == 0))
+		*flag = 1;
+	if (c == '\'' && two == 0 && (one == 1 || one == 0))
+		*flag = 1;
+}
+
+char	*remove_quotes(char *str, char *flags, int one, int two)
+{
+	char	*flag;
+	char	*new;
+	int		i;
+
+	flag = ft_calloc(ft_strlen(str) + 1, 1, SOUJAOUR);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' && one != 1 && flags[i] == LITERAL)
+			two++;
+		if (str[i] == '\'' && two != 1 && flags[i] == LITERAL)
+			one++;
+		if (two == 2)
+			two = 0;
+		if (one == 2)
+			one = 0;
+		if (flags[i] == LITERAL && (str[i] == '"' || str[i] == '\''))
+			assign_flag(&flag[i], str[i], one, two);
+		i++;
+	}
+	new = ft_malloc(ft_strlen(str) - count_rems(flag) + 1, ALLOCATE);
+	return (copy_ifnot_quote(str, flag, new));
+}
+
 char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 {
-	// char	**ret;
-	char	*first;
+	char	*join;
 	char	*subseq;
 	char	*flags;
 
 	flags = NULL;
-	first = expand_str(cmd->content, 0, &flags, env);
+	join = expand_str(cmd->content, 0, &flags, env);
 	while (args)
 	{
-		first = ft_strjoin(first, " ", SOUJAOUR);
+		join = ft_strjoin(join, " ", SOUJAOUR);
+		flags = ft_strjoin(flags, "2", SOUJAOUR);
 		subseq = expand_str(args->content, 0, &flags, env);
-		first = ft_strjoin(first, subseq, SOUJAOUR);
+		join = ft_strjoin(join, subseq, SOUJAOUR);
 		args = args->next;
 	}
-	// return (ft_split(first, ' ', SOUJAOUR));
+	printf("expanded joi: [%s]\n", join);
 	printf("expanded flg: [%s]\n", flags);
-	char **arr = ft_split(first, ' ', SOUJAOUR);
+	join = remove_quotes(join, flags, 0, 0);
+	printf("expanded joi: [%s]\n", join);
+	printf("expanded flg: [%s]\n", flags);
+	char **arr = ft_split(join, ' ', SOUJAOUR);
 	int j = 0;
 	while (arr[j])
 	{
 		printf("[%s]\n", arr[j]);
 		j++;
 	}
-	return (first);
+	return (join);
 }
