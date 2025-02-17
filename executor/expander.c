@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/17 16:04:28 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:08:01 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -423,18 +423,21 @@ void	expand_redirs(t_chain *adj, t_chain *blk, t_env *env)
 
 	while (adj)
 	{
-		actual = NULL;
-		flags = NULL;
-		actual = expand_str(adj->file, 0, &flags, env);
-		actual = remove_quotes(actual, flags, 0, 0);
-		pattern = actual;
-		actual = expand_wildcard(actual, store_last(NULL, RETRIEVE), 0);
-		if (count_elems(split_if(actual, SEPERATORS, singles_doubles)) > 1)
+		if (adj->type != HEREDOC)
 		{
-			printf("minishell: %s: ambiguous redirect\n", pattern);
-			adj->ambiguous = 1;
+			actual = NULL;
+			flags = NULL;
+			actual = expand_str(adj->file, 0, &flags, env);
+			actual = remove_quotes(actual, flags, 0, 0);
+			pattern = actual;
+			actual = expand_wildcard(actual, store_last(NULL, RETRIEVE), 0);
+			if (count_elems(split_if(actual, SEPERATORS, singles_doubles)) > 1)
+			{
+				printf("minishell: %s: ambiguous redirect\n", pattern);
+				adj->ambiguous = 1;
+			}
+			adj->file = split_if(actual, SEPERATORS, singles_doubles)[0];
 		}
-		adj->file = split_if(actual, SEPERATORS, singles_doubles)[0];
 		adj = adj->next;
 	}
 	if (blk == NULL)
