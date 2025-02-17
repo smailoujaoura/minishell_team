@@ -69,6 +69,7 @@ t_chain	*lstnew(char *content)
 	new->dollar = 0;
 	new->delim_in_quotes = 0;
 	new->exp = NULL;
+	new->ambiguous = 0;
 	return (new);
 }
 

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:10:50 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/14 16:13:19 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:02:01 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # define READ_END 0
 # define WRITE_END 1
 
-int check_buildin(t_chain *data)
+int verify_builtin(t_chain *data)
 {
 	if (ft_strncmp("echo", data->content, ft_strlen(data->content)) == 0
 		|| ft_strncmp("cd", data->content, ft_strlen(data->content)) == 0
@@ -28,7 +28,7 @@ int check_buildin(t_chain *data)
 	return (0);
 }
 
-void    buildin_excutor(t_chain *data, t_env *env_head)
+void    execute_builtin(t_chain *data, t_env *env_head)
 {
 	if (ft_strncmp("echo", data->content, ft_strlen(data->content)) == 0)
 		echo(data);
@@ -81,8 +81,31 @@ void	run_cmd(t_ast *tree, t_env *env)
 {
 	// int	fd_in;
 	// int	fd_out;
+	char	**arr;
 
+	arr = expand_cmd(tree->data, tree->data->argv, env);
+	printf("finally expanded:\n");
+	while (*arr)
+	{
+		printf("[%s]\n", *arr);
+		arr++;
+	}
+	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
 	
+	printf("files:\n");
+	t_chain	*ptr = tree->data->adj_f;
+	while (ptr)
+	{
+		printf("\t[%s]\n", ptr->file);
+		ptr = ptr->next;
+	}
+
+	ptr = tree->data->blk_f;
+	while (ptr)
+	{
+		printf("\t[%s]\n", ptr->file);
+		ptr = ptr->next;
+	}
 
 	// if (tree->data->empty)
 	// {
@@ -95,8 +118,8 @@ void	run_cmd(t_ast *tree, t_env *env)
 	// 	expand_cmds();
 	// 	expand_args();
 	// }
-	printf("before expand: [%s]\n", tree->data->content);
-	printf("expanded str: [%s]\n", expand_cmd(tree->data, tree->data->argv, env));
+	// printf("before expand: [%s]\n", tree->data->content);
+	// printf("expanded str: [%s]\n", expand_cmd(tree->data, tree->data->argv, env));
 }
 
 void	run_pipe(t_ast *tree, t_env *env)

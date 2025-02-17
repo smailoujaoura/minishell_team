@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
+/*   Updated: 2025/02/17 15:26:08 by soujaour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	is_var(char *str, int i)
@@ -366,7 +378,7 @@ char	*expand_wildcard(char *pattern, char *is_wild, int i)
 char	**split_if(char *s, char *seps, void *ptr_fun);
 # define SEPERATORS " \t"
 
-char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
+char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 {
 	char	*join;
 	char	*flags;
@@ -390,11 +402,42 @@ char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 		args = args->next;
 	}
 	char **arr = split_if(actual, SEPERATORS, singles_doubles);
-	int i = 0;
-	while (arr && arr[i])
+	return (arr);
+}
+
+int	count_elems(char **arr)
+{
+	int	len;
+
+	len = 0;
+	while (arr[len])
+		len++;
+	return (len);
+}
+
+void	expand_redirs(t_chain *adj, t_chain *blk, t_env *env)
+{
+	char	*actual;
+	char	*pattern;
+	char	*flags;
+
+	while (adj)
 	{
-		printf("[%s]\n", arr[i]);
-		i++;
+		actual = NULL;
+		flags = NULL;
+		actual = expand_str(adj->file, 0, &flags, env);
+		actual = remove_quotes(actual, flags, 0, 0);
+		pattern = actual;
+		actual = expand_wildcard(actual, store_last(NULL, RETRIEVE), 0);
+		if (count_elems(split_if(actual, SEPERATORS, singles_doubles)) > 1)
+		{
+			printf("minishell: %s: ambiguous redirect\n", pattern);
+			adj->ambiguous = 1;
+		}
+		adj->file = actual;
+		adj = adj->next;
 	}
-	return (actual);
+	if (blk == NULL)
+		return ;
+	expand_redirs(blk, NULL, env);
 }
