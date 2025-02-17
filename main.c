@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/16 18:02:34 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:50:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,3 +41,4 @@ int	main(int argc, char *argv[], char *envp[])
 	// printf("]\n");
 
 // "*"*$var2'*'*
+// ls > *$files

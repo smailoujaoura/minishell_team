@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/17 15:26:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:04:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,7 +434,7 @@ void	expand_redirs(t_chain *adj, t_chain *blk, t_env *env)
 			printf("minishell: %s: ambiguous redirect\n", pattern);
 			adj->ambiguous = 1;
 		}
-		adj->file = actual;
+		adj->file = split_if(actual, SEPERATORS, singles_doubles)[0];
 		adj = adj->next;
 	}
 	if (blk == NULL)
