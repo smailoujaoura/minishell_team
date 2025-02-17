@@ -348,16 +348,23 @@ char	*expand_wildcard(char *pattern, char *is_wild, int i)
 		return (pattern);
 	dir = opendir(".");
 	matched = NULL;
+	flag = 0;
 	while ((entry = readdir(dir)) != NULL)
 	{
 		if (match_wildcard(pattern, entry->d_name, is_wild))
 		{
+			flag = 1;
 			matched = ft_strjoin(matched, entry->d_name, SOUJAOUR);
 			matched = ft_strjoin(matched, " ", SOUJAOUR);
 		}
 	}
-	return (matched);
+	if (flag)
+		return (matched);
+	return (pattern);
 }
+
+char	**split_if(char *s, char *seps, void *ptr_fun);
+# define SEPERATORS " \t"
 
 char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 {
@@ -372,6 +379,7 @@ char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 	actual = expand_wildcard(join, store_last(NULL, RETRIEVE), 0);
 	while (args)
 	{
+		flags = NULL;
 		join = expand_str(args->content, 0, &flags, env);
 		join = remove_quotes(join, flags, 0, 0);
 		temp = expand_wildcard(join, store_last(NULL, RETRIEVE), 0);
@@ -381,7 +389,7 @@ char	*expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 
 		args = args->next;
 	}
-	char **arr = custom_split(actual, ' ', SOUJAOUR);
+	char **arr = split_if(actual, SEPERATORS, singles_doubles);
 	int i = 0;
 	while (arr && arr[i])
 	{

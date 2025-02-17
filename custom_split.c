@@ -6,58 +6,94 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 11:39:18 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/16 22:31:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:42:04 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "./utils/libft/libft.h"
 
-static int	ft_word_len(char *s, char c)
+# define SEPERATORS " \t"
+
+int	is_seperator(char c, char *seps)
+{
+	while (*seps)
+	{
+		if (*seps == c)
+			return (1);
+		seps++;
+	}
+	return (0);
+}
+
+int	count_if(char *s, char *seps, int i, void *ptr_fun)
+{
+	int	one;
+	int	two;
+	int	counter;
+	void (*func)(int *, int *, char);
+
+	one = 0;
+	two = 0;
+	func = (void (*)(int *, int *, char))ptr_fun;
+	counter = 0;
+	while (s[i])
+	{
+		func(&one, &two, s[i]);
+		if (!one && !two && !is_seperator(s[i], seps) && (is_seperator(s[i + 1], seps) || !s[i + 1]))
+			counter++;
+		i++;
+	}
+	return (counter);
+}
+
+int	skip_seperator(char *s, char *seps, void *ptr_fun, int flag)
 {
 	int	i;
+	int	one;
+	int	two;
 
 	i = 0;
-	while (s[i] && s[i] != c)
+	one = 0;
+	two = 0;
+	void (*func)(int *, int *, char);
+	func = (void (*)(int *, int *, char))ptr_fun;
+	while (flag && s[i])
+	{
+		func(&one, &two, s[i]);
+		if (one || two || !is_seperator(s[i], seps))
+			return (i);
 		i++;
+	}
+	while (s[i])
+	{
+		func(&one, &two, s[i]);
+		if (!one && !two && (is_seperator(s[i], seps) || !s[i]))
+			return (i);
+		i++;
+	}
 	return (i);
 }
 
-static int	count_if(const char *s, char c)
+char	**split_if(char *s, char *seps, void *ptr_fun)
 {
-	int	count;
-	int	i;
-
-	count = 0;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] != c && (s[i + 1] == c || !s[i + 1]))
-			count++;
-		i++;
-	}
-	return (count);
-}
-
-char	**custom(char const *s, char c, int f)
-{
-	char	**arr;
 	int		i;
-	char	*alt_s;
+	int		len;
+	char	**arr;
+	char	*trail;
 
-	if (!s)
+	if (s == NULL || seps == NULL)
 		return (NULL);
-	alt_s = (char *)s;
-	arr = (char **)check_collectors((sizeof(char *) * (count_if(s, c) + 1)), f);
 	i = 0;
-	while (i < ft_words_counter(s, c))
+	len = count_if(s, seps, 0, ptr_fun);
+	arr = ft_malloc(sizeof(char *) * (len + 1), ALLOCATE);
+	arr[len] = NULL;
+	while (i < len)
 	{
-		while (*alt_s == c)
-			alt_s++;
-		arr[i] = check_collectors((ft_word_len(alt_s, c) + 1), f);
-		ft_strlcpy(arr[i], alt_s, ft_word_len(alt_s, c) + 1);
-		alt_s += ft_word_len(alt_s, c);
+		s += skip_seperator(s, seps, ptr_fun, 1);
+		trail = s;
+		s += skip_seperator(s, seps, ptr_fun, 0);
+		arr[i] = ft_substr(trail, 0, s - trail, SOUJAOUR);
 		i++;
 	}
-	arr[i] = NULL;
 	return (arr);
 }
