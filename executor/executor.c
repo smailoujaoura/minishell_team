@@ -3,25 +3,6 @@
 // # define READ_END 0
 // # define WRITE_END 1
 
-static int	ft_lstsize_wldc(t_argv *lst)
-{
-	int	size;
-
-	size = 0;
-	while (lst)
-	{
-		size++;
-		lst = lst->next;
-	}
-	return (size);
-}
-
-// Handle a wild card as command
-void	wild_card_as_cmd()
-{
-
-}
-
 // Check if the file is executable 
 char	*construct_cmd_path(const char *cmd, const char **envp)
 {
@@ -37,125 +18,9 @@ char	*construct_cmd_path(const char *cmd, const char **envp)
 	}
 	path = ft_strdup(envp[i] + 5, BKOLANI);
 	printf("Env path: %s \n %s\n", path, cmd);
+	return (NULL);
 }
 
-int	wild_card_syntax_Handler(const char *wild_card)
-{
-	int	i;
-
-	if (!ft_strchr(wild_card, '*'))
-		return (1);
-	i = 0;
-	while (wild_card[i] == ' ' || wild_card[i] == '\t')
-		i++;
-	while (wild_card[i])
-	{
-		if (wild_card[i] == '<' || wild_card[i] == '>')
-		{
-			i++;
-			while (wild_card[i] == '*')
-				i++;
-			if (wild_card[i] == '\0')
-			{
-				printf("minishell: %s: ambiguous redirect\n", (wild_card + 1));
-				return (1);
-			}
-		}
-		else
-			i++;
-	}
-	return (0);
-}
-
-void	wild_card_handler(t_ast *node, const char **envp)
-{
-	char	*path;
-	DIR *dir;
-	struct dirent *entry;
-	int	i;
-	int time;
-	// char	*pattern;
-	const char *wild_card;
-	char	*cmd;
-	const char **cmd_arg;
-
-	wild_card = node->data->content;
-	if(wild_card_syntax_Handler(wild_card))
-		return ;
-	path = getcwd(NULL, 0);
-	if (!path)
-	{
-		perror("getcwd failed");
-		exit(EXIT_FAILURE);
-	}
-	dir = opendir(path);
-	if (!dir)
-	{
-		perror("opendir failed");
-		exit(EXIT_FAILURE);
-	}
-	i = 0;
-	time = 0;
-	// If the wild card has not a parent so try to execute
-	// the first entry of the directory as a command
-	if (!node->parent)
-	{
-		if (ft_strncmp(wild_card, "*", ft_strlen(wild_card)) == 0)
-		{
-			while ((entry = readdir(dir)))
-			{
-				if (entry->d_name[0] != '.')
-					break ;
-			}
-			cmd = construct_cmd_path(wild_card, envp);
-			if (node->data->argv)
-			{
-				i = ft_lstsize_wldc(node->data->argv);
-				cmd_arg = ft_malloc_bkol(((sizeof(char *) * i) + 1), ALLOCATE);
-				i = 0;
-				while (node->data->argv)
-				{
-					cmd_arg = ft_strdup(node->data->argv->content, BKOLANI);
-					i++;
-					node->data->argv = node->data->argv->next;
-				}
-			}
-			// if (execve(entry->d_name, (char *const []){NULL}, (char *const *)envp) == -1)
-			// {
-			// 	// printf("minishell: command not found: %s\n", entry->d_name);
-			// 	perror("execve");
-			// 	closedir(dir);
-			// 	free(path);
-			// 	return ;
-			// }
-		}
-	}
-	i = 0;
-	while (wild_card[i])
-	{
-		if (wild_card[i] == '*' && (wild_card[i + 1] == ' ' || wild_card[i + 1] == '\0'))
-			time++;
-		if (wild_card[i] != '*' && wild_card[i] != ' ')
-		{
-			// 
-		}
-		if (wild_card[i] == '\0')
-			break ;
-		i++;
-	}
-	while ((entry = readdir(dir)))
-	{
-		i =  0;
-		while (++i <= time)
-			printf("%s\n", entry->d_name);
-	}
-	if (closedir(dir) == -1)
-	{
-		perror("closedir failed");
-		exit(EXIT_FAILURE);
-	}
-	free(path);
-}
 
 // int check_buildin(t_chain *data)
 // {
@@ -304,4 +169,15 @@ void	wild_card_handler(t_ast *node, const char **envp)
 // {
 	
 // }
- 
+ void	executor(t_ast *tree, t_env *env)
+ {
+	while (tree)
+	{
+		tree = tree->parent;
+	}
+	while (env)
+	{
+		env = env->next;
+	}
+	return ;
+ }

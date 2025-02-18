@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/15 09:35:29 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:01:11 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,27 +101,6 @@ void	exit_shell(void)
 char	*get_line(t_env *env)
 {
 	char    *line;
-    // t_env    *path;
-    // t_env   *home;
-	// char    *new_prompt;
-	// char    *temp;
-
-	// new_prompt = NULL;
-	// home = get_env_var(env, "HOME");
-	// path = get_env_var(env, "PWD");
-	// temp = ft_strjoin("Minishell:$~", (path->value + ft_strlen(home->value)), BKOLANI);
-	// if (ft_strncmp(path->value, home->value, ft_strlen(path->value)) == 0)
-	// 	line = readline("Minishell:$ ");
-	// else
-	// {
-	// 	new_prompt = ft_strjoin(temp, " ", BKOLANI);
-	// 	line = readline(new_prompt);
-	// }
-	// if (line)
-	// 	add_history(new_prompt);
-	// free(new_prompt);
-	// free(temp);
-	// return (line);  // read after free with my gabage collector
 	line = readline("Minishell: ");
 	if (line)
 		add_history(line);
