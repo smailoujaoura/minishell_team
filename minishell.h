@@ -12,7 +12,8 @@
 # include <readline/history.h>
 # include <errno.h>
 # include <stddef.h>
-# include "dirent.h"
+# include <dirent.h>
+#include <sys/wait.h>
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -200,7 +201,7 @@ char *expand_env_var(t_env *env, char *exp_env);
 // Builtins
 void    pwd(t_chain *data);
 void    cd(t_env *env, t_chain *data);
-void    echo(t_chain *data);
+void    echo(t_chain *data, int *status, t_env *env);
 void    mini_exit(t_chain *data);
 void	mini_env(t_env *env, t_chain *data);
 void   	export(t_env *head, t_chain *data);

@@ -203,8 +203,8 @@ static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, co
     t_env *temp = NULL;
 
     temp = get_env_var(env, new_env->key);
-    free(temp->value);
-    free(temp->full);
+    // free(temp->value);
+    // free(temp->full);
     temp->value = NULL;
     temp->full = NULL;
     if (!str)
@@ -212,8 +212,8 @@ static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, co
     else
         temp->value = ft_strdup(str, BKOLANI);
     temp->full = ft_strdup(line, BKOLANI);
-    free(new_env->key);
-    free(new_env);
+    // free(new_env->key);
+    // free(new_env);
 }
 
 // For each case use the rigth function

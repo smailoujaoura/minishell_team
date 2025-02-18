@@ -76,7 +76,7 @@ void    mini_exit(t_chain *data)
     // create_files_only(data);
     write(1, "exit\n", 5);
     if (!data->argv || !data->argv->content)
-        exit(0);
+        exit(EXIT_SUCCESS);
     if (data->argv->next)
     {
         write(2, "exit: too many arguments\n", 25);
@@ -111,14 +111,18 @@ static void    check_option(t_argv **argv, int *option_n)
     }
 }
 
-void echo(t_chain *data)
+void echo(t_chain *data, int *status, t_env *env)
 {
     int option_n = 0;
+	t_env	*exp_env;
 
     if (!data->argv)
-    {
-        // redir_output(data, "\n");
         return;
+    if (!data->argv->next && ft_strlen(data->argv->content) == 2 
+        && ft_strncmp("$?", data->argv->content, 2) == 0)
+    {
+        printf("%d\n", *status);
+        return ;
     }
     if (data->argv->content[0] == '-' && data->argv->content[1] == 'n')
         check_option(&data->argv, &option_n);
@@ -126,28 +130,43 @@ void echo(t_chain *data)
     {
         if (option_n && data->argv->content[0] == '-' && data->argv->content[1] == 'n')
             check_option(&data->argv, &option_n);
-        // redir_output(data, data->argv->content);
-        write(1, data->argv->content, ft_strlen(data->argv->content));
+        if (data->argv->content[0] == '$' && data->argv->content[1])
+		{
+			exp_env = get_env_var(env, data->argv->content + 1);
+			if (exp_env)
+				write(1, exp_env->value, ft_strlen(exp_env->value));
+		}
+        else
+            write(1, data->argv->content, ft_strlen(data->argv->content));
         data->argv = data->argv->next;
         if (data->argv)
             write(1, " ", 1);
-            // redir_output(data, " ");
     }
     if (!option_n)
         write(1, "\n", 1);
 }
 
 // cd
+static  int cd_executor(const char *cd_arg, char *path)
+{
+    if (chdir(cd_arg) == -1)
+    { 
+        free(path);
+        perror("cd");
+        return (1);
+    }
+    return (0);
+}
+
 static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updated_pwd)
 {
     t_env   *home;
     char    *path;
     t_chain *data;
 
-    // data = malloc(sizeof(t_chain));
     data = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
-    data->adj_f = NULL;
-    data->blk_f = NULL;
+    // data->adj_f = NULL;
+    // data->blk_f = NULL;
     data->next = NULL;
     updated_oldpwd->next = NULL;
     updated_pwd->next = NULL;
@@ -156,24 +175,21 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
     updated_oldpwd->content = ft_strjoin("OLDPWD=", path, BKOLANI);
     data->argv = updated_oldpwd;
     export(env, data);
-    if (chdir(home->value) == -1)
-    {  
-        // ft_malloc_bkol(0, DEALLOCATE);
-        // free(updated_oldpwd->content);
-        // free(updated_oldpwd);
-        free(path);
-        perror("cd");
+    if (cd_executor(home->value, path))
         return ;
-    }
-    // free(path);
+    // if (chdir(home->value) == -1)
+    // { 
+    //     free(path);
+    //     perror("cd");
+    //     return ;
+    // }
+    free(path);
     path = NULL;
     path = getcwd(NULL, 0);
     updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
-    // free(data->argv);
     data->argv = NULL;
     data->argv = updated_pwd;
     export(env, data);
-    // free(data);
     free(path);
 }
 
@@ -181,11 +197,11 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
 {
     char    *path;
     t_chain *data;
+	t_env	*exp_env;
 
-    // data = malloc(sizeof(t_chain));
     data = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
-    data->adj_f = NULL;
-    data->blk_f = NULL;
+    // data->adj_f = NULL;
+    // data->blk_f = NULL;
     data->next = NULL;
     updated_oldpwd->next = NULL;
     updated_pwd->next = NULL;
@@ -193,16 +209,32 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     updated_oldpwd->content = ft_strjoin("OLDPWD=", path, BKOLANI);
     data->argv = updated_oldpwd;
     export(env, data);
-    if (chdir(argv->content) == -1)
-    {  
-        // free(updated_oldpwd->content);
-        // free(updated_oldpwd);
-        // ft_malloc_bkol(0, DEALLOCATE);
-        free(path);
-        perror("cd");
-        return ;
+    if (argv->content[0] == '$' && argv->content[1])
+	{
+		exp_env = get_env_var(env, data->argv->content + 1);
+		if (exp_env)
+        {
+            if (cd_executor(exp_env->value, path))
+                return ;
+			// if (chdir(argv->content) == -1)
+            // {  
+            //     free(path);
+            //     perror("cd");
+            //     return ;
+            // }
+        }
+	}
+    else
+    {
+        if (cd_executor(argv->content, path))
+            return ;
     }
-    // free(path);
+    // if (chdir(argv->content) == -1)
+    // {  
+    //     free(path);
+    //     perror("cd");
+    //     return ;
+    // }
     path = NULL;
     path = getcwd(NULL, 0);
     updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
@@ -210,8 +242,6 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
     data->argv = NULL;
     data->argv = updated_pwd;
     export(env, data);
-    // ft_malloc_bkol(0, DEALLOCATE);
-    // free(data);
     free(path);
 }
 
@@ -220,11 +250,8 @@ void    cd(t_env *env, t_chain *data)
     t_argv *updated_oldpwd;
     t_argv *updated_pwd;
 
-    // updated_pwd = malloc(sizeof(t_argv));
-    // updated_oldpwd = malloc(sizeof(t_argv));
     updated_oldpwd = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
     updated_pwd = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
-    // create_files_only(data);
     if (data->argv == NULL)
         cd_with_no_args(env, updated_oldpwd, updated_pwd);
     else
@@ -236,11 +263,6 @@ void    cd(t_env *env, t_chain *data)
         }
         cd_with_args(env, data->argv, updated_oldpwd, updated_pwd);
     }
-    // ft_malloc_bkol(0, DEALLOCATE);
-    // free(updated_oldpwd->content);
-    // free(updated_pwd->content);
-    // free(updated_oldpwd);
-    // free(updated_pwd);
 }
 
 // pwd
@@ -263,6 +285,5 @@ void    pwd(t_chain *data)
         return ;
     }
     printf("%s\n", path);
-    // redir_output(data, path);
     free(path);
 }

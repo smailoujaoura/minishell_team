@@ -16,7 +16,9 @@ SRCS =	main.c \
 		bkol_garb_coll.c \
 		utils/libft/allocator.c \
 		executor/here_doc.c \
-		executor/executor.c
+		executor/executor.c \
+		executor/expander.c \
+		custom_split.c
 
 OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)
