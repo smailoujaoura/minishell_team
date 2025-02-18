@@ -210,7 +210,6 @@ void    unset(t_env *env, t_chain *data);
 void    here_doc(t_chain *data);
 
 // Execution
-void	wild_card_handler(t_ast *node, const char **envp);
 
 // Builtins utils
 // int		builtins_redir_fd(t_chain *file);

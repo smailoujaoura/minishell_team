@@ -2,12 +2,9 @@
 
 void	loop_minishell(t_env *env);
 
-void	bkolani(char *argv[], const char *envp[])
+t_env	*bkolani(char *argv[], const char *envp[])
 {
 	(void)argv;
-	(void)envp;
-	(void)argv;
-	(void)envp;
 	t_env *env;
 
 	env = handle_env(envp);
@@ -76,13 +73,13 @@ void	bkolani(char *argv[], const char *envp[])
 	// data->argv = args1;
 	// data->next = NULL;
 	// here_doc(data);
-	t_ast *node = ft_malloc_bkol(sizeof(t_ast), ALLOCATE);
-	node->parent = NULL;
-	node->left = NULL;
-	node->right = NULL;
-	node->data = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
-	node->data->next = NULL;
-	node->data->content = "*";
-	wild_card_handler(node, envp);
-	(void)env;
+	// t_ast *node = ft_malloc_bkol(sizeof(t_ast), ALLOCATE);
+	// node->parent = NULL;
+	// node->left = NULL;
+	// node->right = NULL;
+	// node->data = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
+	// node->data->next = NULL;
+	// node->data->content = "*";
+	// wild_card_handler(node, envp);
+	return (env);
 }
