@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
+/*   Updated: 2025/02/15 08:27:29 by soujaour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 
@@ -57,14 +69,22 @@ void	print_with_files(t_chain *ptr)
 void	print_with_args(t_chain *ptr)
 {
 	t_argv	*args;
+	t_chain	*files;
 	while (ptr)
 	{
 		printf("CONTENT:[%s]\t depth[%d] wild[%d]  dollar[%d]\n", ptr->content, ptr->depth, ptr->wildcard, ptr->dollar);
 		args = ptr->argv;
 		while (args)
 		{
-			printf("\targ[%s] wild[%d] dollar[%d]\t", args->content, args->wildcard, args->dollar);
+			printf("\targ[%s] wild[%d] dollar[%d]\n", args->content, args->wildcard, args->dollar);
 			args = args->next;
+		}
+		printf("\n\t\t[FILES]:\n");
+		files = ptr->adj_f;
+		while (files)
+		{
+			printf("\t\t\tfile[%s] wild[%d] dollar[%d]\n", files->file, files->wildcard, files->dollar);
+			files = files->next;
 		}
 		ptr = ptr->next;
 	}
@@ -146,12 +166,15 @@ t_chain	*join_redirs(t_chain *list)
 		if (list->type == REDIR_IN || list->type == REDIR_OUT || list->type == REDIR_APPEND)
 		{
 			list->file = list->next->content;
+			list->wildcard = list->next->wildcard;
+			list->dollar = list->next->dollar;
 			delete_any(list->next, 0);
 			// handle ambiguous syntax when given * if it expands to more than it should.
 		}
 		if (list->type == HEREDOC)
 		{
 			list->delim = list->next->content;
+			list->delim_in_quotes = list->next->delim_in_quotes;
 			delete_any(list->next, 0);
 		}
 		list = list->next;
@@ -163,7 +186,7 @@ void	strip_words(t_chain *list)
 {
 	while (list)
 	{
-		if (list->type == HEREDOC && list->next->type == WORD)
+		if (list->type == HEREDOC && list->next && list->next->type == WORD)
 		{
 			if (ft_strchr(list->next->content, '"') || ft_strchr(list->next->content, '\''))
 				list->delim_in_quotes = 1;

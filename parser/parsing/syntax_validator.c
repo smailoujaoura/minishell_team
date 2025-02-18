@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/07 11:08:16 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/13 17:32:52 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,11 @@ int	check_rparen(t_chain *prev, t_chain *next)
 	if (next && next->type == L_PAREN)
 	{
 		printf("%s `%s'\n", SYNTAXERR, next->content);
+		return (1);
+	}
+	if (next && next->type == R_PAREN)
+	{
+		printf("We don't do arithmetics in our tiny shell. Check 42sh for more...\n");
 		return (1);
 	}
 	(void)prev;

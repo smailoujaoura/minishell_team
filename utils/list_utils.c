@@ -68,6 +68,8 @@ t_chain	*lstnew(char *content)
 	new->wildcard = 0;
 	new->dollar = 0;
 	new->delim_in_quotes = 0;
+	new->exp = NULL;
+	new->ambiguous = 0;
 	return (new);
 }
 
@@ -108,6 +110,7 @@ t_argv	*lstnew_arg(t_chain *cmd)
 	new = ft_malloc(sizeof(t_argv), ALLOCATE);
 	new->back = NULL;
 	new->next = NULL;
+	new->exp = NULL;
 	new->type = -1;
 	new->wildcard = cmd->wildcard;
 	new->dollar = cmd->dollar;

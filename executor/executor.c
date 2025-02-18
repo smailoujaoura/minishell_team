@@ -299,10 +299,6 @@ void	wild_card_handler(t_ast *node, const char **envp)
 //         printf("Something went wrong\n");
 // }
 
-// void	run_and(t_ast *tree, t_env *env)
-// {
-	
-// }
 
 // void	run_or(t_ast *tree, t_env *env)
 // {

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer_utils1.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 11:11:38 by soujaour          #+#    #+#             */
+/*   Updated: 2025/02/13 11:11:45 by soujaour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 void	handle_quotes(char **start, char target, char opposite)
@@ -97,21 +109,16 @@ void	find_type(t_chain *list)
 	if (ft_strchr(list->content, '*') && is_wildcard(list->content))
 	{
 		list->wildcard = WILDCARD;
-		list->type = WORD;
 		if (handle_dollar(list->content))
 			list->dollar = DOLLAR;
 	}
 	else if (*list->content == '"' || *list->content == '\'')
 	{
-		list->type = WORD;
 		if (handle_dollar(list->content))
 			list->dollar = DOLLAR;
 	}
-	else if (list->content[0] == '$')
+	else if (list->content[0] == '$' || handle_dollar(list->content))
 	{
-		list->type = WORD;
 		list->dollar = DOLLAR;
 	}
-	else
-		list->type = WORD;
 }

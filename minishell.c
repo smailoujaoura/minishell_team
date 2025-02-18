@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
+/*   Updated: 2025/02/15 09:35:29 by soujaour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	print_tree(t_ast *root)
@@ -48,7 +60,7 @@ t_ast	*parse_line(char *line)
 		return (free_list(list));
 	prioritize_list(list);
 	assign_depth(list);
-	strip_words(list);
+	// strip_words(list);
 
 	join_redirs(list);
 	join_commands(list);
@@ -62,8 +74,8 @@ t_ast	*parse_line(char *line)
 	root = build_tree(post);
 	link_parent_child(root, NULL, IS_ROOT);
 	assign_nodes_sides(root, ROOT);
-	printf("\nTree: \n");
-	print_tree(root);
+	// printf("\nTree: \n");
+	// print_tree(root);
 	return (root);
 }
 
@@ -130,7 +142,7 @@ void	loop_minishell(t_env *env)
 		root = parse_line(line);
 		// if (root)
 		// 	// execute tree
-		(void)root;
+		executor(root, env);
 		free(line);
 		ft_malloc(0, DEALLOCATE);
 	}

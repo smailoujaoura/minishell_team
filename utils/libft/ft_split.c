@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 11:39:18 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 21:12:50 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/14 21:20:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	ft_words_counter(const char *s, char c)
 			count++;
 		i++;
 	}
-	return (count + 1);
+	return (count);
 }
 
 char	**ft_split(char const *s, char c, int f)

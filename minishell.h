@@ -34,7 +34,7 @@
 void	panic_exit(char *s);
 
 # define WHITESPACE "\t\n\v\f\r "
-# define SYMBOLS "<>|()"
+# define SYMBOLS "<>|()\"'"
 
 # define SINGLES '\''
 # define DOUBLES '"'
@@ -48,11 +48,10 @@ void	panic_exit(char *s);
 # define OUT 1
 
 // execute(expand(argv->content), )
-
 typedef struct s_exp
 {
-	char *exp_val;
-	struct s_exp *next;
+	char			*val;
+	struct s_exp	*next;
 } t_exp;
 
 typedef struct s_argv
@@ -69,11 +68,14 @@ typedef struct s_argv
 typedef struct s_chain
 {
 	int				type;
-	char			*content;
-	t_exp			*exp;
 	int				depth;
 	int				lvl;
+	int				empty;
+	char			*content;
+	int				wildcard;
+	int				dollar;
 	t_argv			*argv;
+	t_exp			*exp;
 	char			*file;
 	char			*delim;
 	int				delim_in_quotes;
@@ -81,10 +83,8 @@ typedef struct s_chain
 	struct s_chain	*back;
 	struct s_chain	*adj_f;
 	struct s_chain	*blk_f;
-	int				empty;
 	int				removable;
-	int				wildcard;
-	int				dollar;
+	int				ambiguous;
 }	t_chain;
 
 # define ROOT 0
@@ -98,6 +98,8 @@ typedef struct s_chain
 // }	t_status;
 
 // Abstract Syntax Tree to represent the the parsed line
+	// char			*cmd;
+	// char			**args;
 typedef struct s_ast
 {
 	int				type;
@@ -215,5 +217,14 @@ void	wild_card_handler(t_ast *node, const char **envp);
 // void    builtins_redir(t_chain *redir_file, char *buff, int create_only);
 // void    create_files_only(t_chain *data);
 // void    redir_output(t_chain *data, char *output);
+
+
+// EXPANDING
+char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
+void	executor(t_ast *tree, t_env *env);
+void	expand_redirs(t_chain *adj, t_chain *blk, t_env *env);
+
+
+char	*get_value(char *var, t_env *env);
 
 #endif
