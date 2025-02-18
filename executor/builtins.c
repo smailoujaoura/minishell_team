@@ -163,7 +163,7 @@ static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updat
         // free(updated_oldpwd);
         free(path);
         perror("cd");
-        exit(EXIT_FAILURE);
+        return ;
     }
     // free(path);
     path = NULL;
@@ -200,7 +200,7 @@ static void    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_
         // ft_malloc_bkol(0, DEALLOCATE);
         free(path);
         perror("cd");
-        exit(EXIT_FAILURE) ;
+        return ;
     }
     // free(path);
     path = NULL;
@@ -232,7 +232,7 @@ void    cd(t_env *env, t_chain *data)
         if (data->argv->next)
         {
             write(2, "cd: too many arguments\n", 23);
-            exit(EXIT_FAILURE);
+            return ;
         }
         cd_with_args(env, data->argv, updated_oldpwd, updated_pwd);
     }
@@ -251,16 +251,16 @@ void    pwd(t_chain *data)
     if (!data)
         return ;
     // create_files_only(data);
-    if (data->argv)
-    {
-        write(2, "pwd: too many arguments\n", 24);
-        exit(1);
-    }
+    // if (data->argv)
+    // {
+    //     write(2, "pwd: too many arguments\n", 24);
+    //     exit(1);
+    // }
     path = getcwd(NULL, 0);
     if (!path)
     {
         perror("pwd");
-        exit(EXIT_FAILURE);
+        return ;
     }
     printf("%s\n", path);
     // redir_output(data, path);

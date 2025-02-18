@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/11 19:54:33 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/12 14:20:56 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void    prompt_here_doc(const char *limiter, int fd)
     while (1337)
     {
         line = readline("> ");
-        if (!line || t_strncmp(line, limiter, ft_strlen(line)) == 0)
+        if (!line || ft_strncmp(line, limiter, ft_strlen(line)) == 0)
             break ;
         write(fd, line, ft_strlen(line));
         write(fd, "\n", 1);

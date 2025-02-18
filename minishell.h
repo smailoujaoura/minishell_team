@@ -12,7 +12,7 @@
 # include <readline/history.h>
 # include <errno.h>
 # include <stddef.h>
-
+# include "dirent.h"
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -121,6 +121,7 @@ typedef struct s_env
 // Garbage Collector
 void	*ft_malloc(size_t size, int flag);
 void	garbage_collector(t_list *allocs, void *one, void *two);
+void	*ft_malloc_bkol(size_t size, int flag);
 
 void	print_with_files(t_chain *ptr);
 
@@ -183,14 +184,14 @@ t_ast	*build_tree(t_chain *post);
 
 
 
-// arbage collector
-void	*ft_malloc_bkol(size_t size, int flag);
+
+
 
 
 
 
 //env
-t_env	*handle_env(char **envp);
+t_env	*handle_env(const char **envp);
 t_env *get_env_var(t_env *env, const char *key);
 char *expand_env_var(t_env *env, char *exp_env);
 
@@ -205,6 +206,9 @@ void    unset(t_env *env, t_chain *data);
 
 // here_doc
 void    here_doc(t_chain *data);
+
+// Execution
+void	wild_card_handler(t_ast *node, const char **envp);
 
 // Builtins utils
 // int		builtins_redir_fd(t_chain *file);

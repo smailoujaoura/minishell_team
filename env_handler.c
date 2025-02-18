@@ -56,7 +56,7 @@ char *expand_env_var(t_env *env, char *exp_env)
 }
 
 // Create a new env var node
-static t_env *create_new_env(char *line)
+static t_env *create_new_env(const char *line)
 {
     char **splited_line;
     t_env *new_env;
@@ -75,7 +75,7 @@ static t_env *create_new_env(char *line)
 }
 
 // Function to convert every line of envp as env node
-t_env *handle_env(char **envp)
+t_env *handle_env(const char **envp)
 {
     int i = -1;
     t_env *head;
@@ -304,8 +304,8 @@ void    mini_env(t_env *env, t_chain *data)
     if (data && data->argv)
     {
         // create_files_only(data);
-        write(2, "env: too many arguments\n", 24);
-        exit(1);
+        printf("env: '%s': No such file or directory\n", data->argv->content);
+        return ;
     }
     while (env)
     {
@@ -330,7 +330,6 @@ static void remove_and_rebuilt(t_env *env, t_chain *data)
     t_env *temp;
 
     temp = NULL;
-    printf("remove and rebuild: %s\n", env->next->full);
     while (env)
     {
         temp = env->next;

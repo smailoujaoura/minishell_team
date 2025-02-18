@@ -15,7 +15,8 @@ SRCS =	main.c \
 		garbage_collector.c \
 		bkol_garb_coll.c \
 		utils/libft/allocator.c \
-		executor/here_doc.c
+		executor/here_doc.c \
+		executor/executor.c
 
 OBJS =  $(SRCS:.c=.o)
 COMP = cc -Wall -Wextra -Werror -g -fsanitize=address
