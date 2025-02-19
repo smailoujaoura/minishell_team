@@ -46,36 +46,69 @@ void	assign_nodes_sides(t_ast *tree, int side)
 }
 
 
+
 void	print_with_args(t_chain *ptr);
+
+void	*check_heredoc_existence(t_chain *list)
+{
+	t_chain	*ptr;
+
+	while (list)
+	{
+		if (list->type == WORD)
+		{
+			ptr = list->adj_f;
+			while (ptr)
+			{
+				if (ptr->type == HEREDOC)
+					here_doc(ptr);
+				ptr = ptr->next;
+			}
+			ptr = list->blk_f;
+			while (ptr)
+			{
+				if (ptr->type == HEREDOC)
+					here_doc(ptr);
+				ptr = ptr->next;
+			}
+		}
+		if (list->error)
+			break ;
+		list = list->next;
+	}
+	return (NULL);
+}
+
 t_ast	*parse_line(char *line)
 {
 	t_chain	*list;
 	t_chain	*post;
 	t_ast	*root;
+	int		error;
 
+	error = 0;
 	list = convert_str(line);
 	tokenize_list(list);
-
-	if (check_syntax(list, line, 0, 0))
-		return (free_list(list));
+	error = check_syntax(list, line, 0, 0);
 	prioritize_list(list);
 	assign_depth(list);
 	// strip_words(list);
 
 	join_redirs(list);
 	join_commands(list);
+	
 	list = assign_inputs(list, NULL);
-	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
 	pick_left_redirs(list);
+	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
 	// print_with_files(list);
-	print_with_args(list);
+	// print_with_args(list);
+	if (error == 1)
+		return (check_heredoc_existence(list));
 
 	post = convert_infix(list);
 	root = build_tree(post);
 	link_parent_child(root, NULL, IS_ROOT);
 	assign_nodes_sides(root, ROOT);
-	// printf("\nTree: \n");
-	// print_tree(root);
 	return (root);
 }
 
@@ -108,6 +141,39 @@ char	*get_line(t_env *env)
 	(void)env;
 }
 
+void	open_heredocs(t_ast *root, t_chain *cmds, t_chain *redirs)
+{
+	if (root == NULL)
+	{
+		printf("hddsh\n");
+		return ;
+	}
+	open_heredocs(root->left, NULL, NULL);
+	open_heredocs(root->right, NULL, NULL);
+	cmds = root->data;
+	while (cmds)
+	{
+		if (cmds->type == WORD)
+		{
+			redirs = cmds->adj_f;
+			while (redirs)
+			{
+				if (redirs->type == HEREDOC)
+					here_doc(redirs);
+				redirs = redirs->next;
+			}
+			redirs = cmds->blk_f;
+			while (redirs)
+			{
+				if (redirs->type == HEREDOC)
+					here_doc(redirs);
+				redirs = redirs->next;
+			}
+		}
+		cmds = cmds->next;
+	}
+}
+
 void	loop_minishell(t_env *env)
 {
 	char	*line;
@@ -120,6 +186,8 @@ void	loop_minishell(t_env *env)
 			break ;
 		root = parse_line(line);
 		// if (root)
+		// open heredocs
+		open_heredocs(root, NULL, NULL);
 		// 	// execute tree
 		executor(root, env);
 		free(line);

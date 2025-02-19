@@ -87,6 +87,8 @@ typedef struct s_chain
 	struct s_chain	*blk_f;
 	int				removable;
 	int				ambiguous;
+	int				*pipe;
+	int				error;
 }	t_chain;
 
 # define ROOT 0
