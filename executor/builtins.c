@@ -73,7 +73,6 @@ void    mini_exit(t_chain *data, int *status)
     int i;
     int exit_status;
 
-    // create_files_only(data);
     write(1, "exit\n", 5);
     if (!data->argv || !data->argv->content)
         exit(EXIT_SUCCESS);

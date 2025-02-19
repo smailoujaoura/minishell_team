@@ -209,7 +209,9 @@ void	run_cmd(t_ast *tree, t_env *env)
 }
 
 void	run_pipe()
-{}
+{
+	
+}
 
 void	executor(t_ast *tree, t_env *env)
 {

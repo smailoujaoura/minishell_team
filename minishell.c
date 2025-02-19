@@ -96,6 +96,7 @@ t_ast	*parse_line(char *line)
 
 	join_redirs(list);
 	join_commands(list);
+	
 	list = assign_inputs(list, NULL);
 	pick_left_redirs(list);
 	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
@@ -140,6 +141,39 @@ char	*get_line(t_env *env)
 	(void)env;
 }
 
+void	open_heredocs(t_ast *root, t_chain *cmds, t_chain *redirs)
+{
+	if (root == NULL)
+	{
+		printf("hddsh\n");
+		return ;
+	}
+	open_heredocs(root->left, NULL, NULL);
+	open_heredocs(root->right, NULL, NULL);
+	cmds = root->data;
+	while (cmds)
+	{
+		if (cmds->type == WORD)
+		{
+			redirs = cmds->adj_f;
+			while (redirs)
+			{
+				if (redirs->type == HEREDOC)
+					here_doc(redirs);
+				redirs = redirs->next;
+			}
+			redirs = cmds->blk_f;
+			while (redirs)
+			{
+				if (redirs->type == HEREDOC)
+					here_doc(redirs);
+				redirs = redirs->next;
+			}
+		}
+		cmds = cmds->next;
+	}
+}
+
 void	loop_minishell(t_env *env)
 {
 	char	*line;
@@ -152,8 +186,9 @@ void	loop_minishell(t_env *env)
 			break ;
 		root = parse_line(line);
 		// if (root)
+		// open heredocs
+		open_heredocs(root, NULL, NULL);
 		// 	// execute tree
-
 		executor(root, env);
 		free(line);
 		ft_malloc(0, DEALLOCATE);
