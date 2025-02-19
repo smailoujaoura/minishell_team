@@ -163,10 +163,83 @@ void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
 	}
 }
 
-void	run_empty_cmd(t_ast *tree, t_env *env)
+int	ft_open(char *path, int mode, int permissions)
+{
+	int fd;
+
+	fd = open(path, mode, permissions);
+	if (fd == -1)
+	{
+		printf("minishell: %s: %s\n", path, strerror(errno));
+	}
+	return (fd);
+}
+
+void	create_blk_files(t_chain *blk, int deepest)
+{
+	int		current;
+	t_chain	*ptr;
+
+	current = 0;
+	while (current <= deepest)
+	{
+		ptr = blk;
+		while (ptr)
+		{
+			if (ptr->type != HEREDOC && ptr->depth == current)
+			{
+				if (ptr->type == REDIR_OUT)
+				{
+					ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+					if (ptr->fd == -1)
+						return ;
+				}
+			}
+			ptr = ptr->next;
+		}
+		current++;
+	}
+}
+
+void	create_adj_files(t_chain *adj)
+{
+	t_chain	*ptr;
+
+	ptr = adj;
+	while (ptr)
+	{
+		if (ptr->type != HEREDOC)
+		{
+			if (ptr->type == REDIR_OUT)
+			{
+				ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				if (ptr->fd == -1)
+					return ;
+			}
+		}
+		ptr = ptr->next;
+	}
+}
+
+int find_deepest(t_chain *ptr)
+{
+	int deepest = -1;
+
+	while (ptr)
+	{
+		if (ptr->depth > deepest)
+			deepest = ptr->depth;
+		ptr = ptr->next;
+	}
+	return (deepest);
+}
+
+int run_empty_cmd(t_ast *tree, t_env *env)
 {
 	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
-	// if ()
+	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
+	create_adj_files(tree->data->adj_f);
+	return (0);
 }
 
 void	run_cmd(t_ast *tree, t_env *env)
@@ -176,12 +249,18 @@ void	run_cmd(t_ast *tree, t_env *env)
 	char 	**exp_tab;
 	static int		status;
 
-	// Check if the type of the cmd is empty and create redir files 
-	// If they exist
 	if (tree->data->empty)
 	{
 		run_empty_cmd(tree, env);
+		return ;
 	}
+
+	expand_cmd(tree->data, tree->data->argv, env);
+	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
+
+	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
+	create_adj_files(tree->data->adj_f);
+
 	argv = generate_args_tab(tree->data, env);
 	env_tab = generate_env_tab(env);
 

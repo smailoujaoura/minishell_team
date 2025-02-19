@@ -72,6 +72,7 @@ t_chain	*lstnew(char *content)
 	new->delim_in_quotes = 0;
 	new->ambiguous = 0;
 	new->error = 0;
+	new->fd = -2;
 	return (new);
 }
 

@@ -89,6 +89,7 @@ typedef struct s_chain
 	int				ambiguous;
 	int				*pipe;
 	int				error;
+	int				fd;
 }	t_chain;
 
 # define ROOT 0
