@@ -163,6 +163,12 @@ void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
 	}
 }
 
+void	run_empty_cmd(t_ast *tree, t_env *env)
+{
+	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
+	// if ()
+}
+
 void	run_cmd(t_ast *tree, t_env *env)
 {
 	char	**argv;
@@ -172,9 +178,13 @@ void	run_cmd(t_ast *tree, t_env *env)
 
 	// Check if the type of the cmd is empty and create redir files 
 	// If they exist
-	
+	if (tree->data->empty)
+	{
+		run_empty_cmd(tree, env);
+	}
 	argv = generate_args_tab(tree->data, env);
 	env_tab = generate_env_tab(env);
+
 	if (tree->data->content[0] == '$' || tree->data->content[0] == '*')
 	{
 		exp_tab = expand_cmd(tree->data, tree->data->argv, env);

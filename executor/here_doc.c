@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void    prompt_here_doc(const char *limiter, int fd)
+void    prompt_here_doc(const char *limiter, int *fd)
 {
     char    *line;
     
@@ -22,8 +22,8 @@ void    prompt_here_doc(const char *limiter, int fd)
         line = readline("> ");
         if (!line || ft_strncmp(line, limiter, ft_strlen(line)) == 0)
             break ;
-        write(fd, line, ft_strlen(line));
-        write(fd, "\n", 1);
+        write(fd[1], line, ft_strlen(line));
+        write(fd[1], "\n", 1);
         free(line);
     }
     free(line);
@@ -31,19 +31,13 @@ void    prompt_here_doc(const char *limiter, int fd)
 
 void    here_doc(t_chain *data)
 {
-    int fd;
-    char buff[1000000];
+    int pipe_fd[2];
 
-    fd = open(".here_doc", O_WRONLY | O_CREAT | O_APPEND, 0644);
-    if (fd == -1)
+    if (pipe(pipe_fd) == -1)
     {
-        perror("open");
-        exit(1);
+        perror("minishell");
+        return ;
     }
-    prompt_here_doc(data->argv->content, fd);
-    fd = open(".here_doc", O_RDONLY, 0644);
-    read(fd, buff, 1337);
-    printf("%s", buff);
-    if (access(".here_doc", F_OK) == 0)
-        unlink(".here_doc");
+    prompt_here_doc(data->delim, pipe_fd);
+    data->pipe = pipe_fd;
 }

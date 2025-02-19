@@ -218,7 +218,10 @@ int	check_syntax(t_chain *list, char *line, int l_paren, int r_paren)
 			else if (list->type == R_PAREN)
 				r_paren++;
 			if (multiple_tokens(list->back, list, list->next))
+			{
+				list->error = 1;
 				return (1);
+			}
 			list = list->next;
 		}
 	}

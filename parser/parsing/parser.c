@@ -43,8 +43,14 @@ void	print_with_files(t_chain *ptr)
 		printf("CONTENT:[%s]\t %d\n", ptr->content, ptr->depth);
 		if (ptr->type == WORD)
 		{
-			if (ptr->adj_f)
-				printf("%s \t %d\n", ptr->adj_f->file, ptr->adj_f->depth);
+			t_chain *heredocs = ptr->adj_f;
+			while (heredocs)
+			{
+				printf("[%s]\n", heredocs->delim);
+				heredocs = heredocs->next;
+			}
+			// if (ptr->adj_f)
+			// 	printf("%s \t %d\n", ptr->adj_f->file, ptr->adj_f->depth);
 			// while (ptr->adj_f)
 			// {
 			// 	printf("\t[%s]\t[%s]\n", ptr->adj_f->file, ptr->adj_f->delim);
