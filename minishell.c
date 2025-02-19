@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/18 17:25:31 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/19 21:28:12 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,35 +48,23 @@ void	assign_nodes_sides(t_ast *tree, int side)
 
 
 void	print_with_args(t_chain *ptr);
-
-void	*check_heredoc_existence(t_chain *list)
+int	open_heredocs(t_chain *list)
 {
-	t_chain	*ptr;
+	int	execute_or_not;
 
+	execute_or_not = 0;
 	while (list)
 	{
-		if (list->type == WORD)
+		if (list->error == 1)
 		{
-			ptr = list->adj_f;
-			while (ptr)
-			{
-				if (ptr->type == HEREDOC)
-					here_doc(ptr);
-				ptr = ptr->next;
-			}
-			ptr = list->blk_f;
-			while (ptr)
-			{
-				if (ptr->type == HEREDOC)
-					here_doc(ptr);
-				ptr = ptr->next;
-			}
+			execute_or_not = 1;
+			break ; 
 		}
-		if (list->error)
-			break ;
+		if (list->type == HEREDOC)
+			here_doc(list);
 		list = list->next;
 	}
-	return (NULL);
+	return (execute_or_not);
 }
 
 t_ast	*parse_line(char *line)
@@ -84,12 +72,11 @@ t_ast	*parse_line(char *line)
 	t_chain	*list;
 	t_chain	*post;
 	t_ast	*root;
-	int		error;
 
-	error = 0;
+
 	list = convert_str(line);
 	tokenize_list(list);
-	error = check_syntax(list, line, 0, 0);
+	check_syntax(list, line, 0, 0);
 	prioritize_list(list);
 	assign_depth(list);
 	// strip_words(list);
@@ -97,13 +84,15 @@ t_ast	*parse_line(char *line)
 	join_redirs(list);
 	join_commands(list);
 	
+	// 
+	if (open_heredocs(list))
+		return (NULL);
+
 	list = assign_inputs(list, NULL);
 	pick_left_redirs(list);
 	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
 	// print_with_files(list);
 	// print_with_args(list);
-	if (error == 1)
-		return (check_heredoc_existence(list));
 
 	post = convert_infix(list);
 	root = build_tree(post);
@@ -141,39 +130,6 @@ char	*get_line(t_env *env)
 	(void)env;
 }
 
-void	open_heredocs(t_ast *root, t_chain *cmds, t_chain *redirs)
-{
-	if (root == NULL)
-	{
-		printf("hddsh\n");
-		return ;
-	}
-	open_heredocs(root->left, NULL, NULL);
-	open_heredocs(root->right, NULL, NULL);
-	cmds = root->data;
-	while (cmds)
-	{
-		if (cmds->type == WORD)
-		{
-			redirs = cmds->adj_f;
-			while (redirs)
-			{
-				if (redirs->type == HEREDOC)
-					here_doc(redirs);
-				redirs = redirs->next;
-			}
-			redirs = cmds->blk_f;
-			while (redirs)
-			{
-				if (redirs->type == HEREDOC)
-					here_doc(redirs);
-				redirs = redirs->next;
-			}
-		}
-		cmds = cmds->next;
-	}
-}
-
 void	loop_minishell(t_env *env)
 {
 	char	*line;
@@ -186,8 +142,6 @@ void	loop_minishell(t_env *env)
 			break ;
 		root = parse_line(line);
 		// if (root)
-		// open heredocs
-		open_heredocs(root, NULL, NULL);
 		// 	// execute tree
 		executor(root, env);
 		free(line);
