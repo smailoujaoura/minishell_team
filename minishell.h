@@ -200,9 +200,9 @@ char *expand_env_var(t_env *env, char *exp_env);
 
 // Builtins
 void    pwd(t_chain *data);
-void    cd(t_env *env, t_chain *data);
-void    echo(t_chain *data, int *status, t_env *env);
-void    mini_exit(t_chain *data);
+void    cd(t_env *env, t_chain *data, int *status);
+void	echo(t_chain *data, t_env *env, int *gl_stat);
+void    mini_exit(t_chain *data, int *status);
 void	mini_env(t_env *env, t_chain *data);
 void   	export(t_env *head, t_chain *data);
 void    unset(t_env *env, t_chain *data);

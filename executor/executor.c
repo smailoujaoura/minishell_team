@@ -61,21 +61,28 @@ char	**generate_env_tab(t_env *envp)
 	return (env);
 }
 
-int	init_process(const char *cmd_path, char *argv[], char *envp[], int *status)
+void	init_process(const char *cmd_path, char *argv[], char *envp[], int *status)
 {
 	pid_t	pid;
+	int		proc_stat;
 
 	pid = fork();
 	if (pid == -1)
-		return (1);
+	{
+		*status = EXIT_FAILURE;
+		return ;
+	}
 	if (pid == 0)
 	{
 		if (execve(cmd_path, argv, envp) == -1)
-			exit(EXIT_FAILURE);
+		{
+			perror("minishell");
+			exit(127);
+		}
 	}
-	wait(status);
-	printf("status: %d\n", *status);
-	return (0);
+	wait(&proc_stat);
+	*status = WEXITSTATUS(proc_stat);
+	return ;
 }
 
 char	*construct_cmd_path(t_chain *data, t_env *envp)
@@ -119,12 +126,12 @@ int check_buildin(const char *cmd)
 	return (0);
 }
 
-void    buildin_excutor(t_chain *data, t_env *env_head, int *status)
+void    buildin_excutor(t_chain *data, t_env *env_head, int *glob_st)
 {
 	if (ft_strncmp("echo", data->content, ft_strlen(data->content)) == 0)
-		echo(data, status, env_head);
+		echo(data, env_head, glob_st);
 	if (ft_strncmp("cd", data->content, ft_strlen(data->content)) == 0)
-		cd(env_head, data);
+		cd(env_head, data, glob_st);
 	if (ft_strncmp("pwd", data->content, ft_strlen(data->content)) == 0)
 		pwd(data);
 	if (ft_strncmp("export", data->content, ft_strlen(data->content)) == 0)
@@ -134,7 +141,7 @@ void    buildin_excutor(t_chain *data, t_env *env_head, int *status)
 	if (ft_strncmp("env", data->content, ft_strlen(data->content)) == 0)
 		mini_env(env_head, data);
 	if (ft_strncmp("exit", data->content, ft_strlen(data->content)) == 0)
-		mini_exit(data);
+		mini_exit(data, glob_st);
 }
 
 void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
@@ -142,26 +149,17 @@ void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
 	char	*cmd_path;
 
 	if (ft_strchr(tree->data->content, '/'))
-	{
-		if (init_process(tree->data->content, argv, env_tab, &tree->exit_status))
-		{
-			perror("minishell");
-			return ;
-		}
-	}
+		init_process(tree->data->content, argv, env_tab, &tree->exit_status);
 	else
 	{
 		cmd_path = construct_cmd_path(tree->data, env);
 		if (!cmd_path)
 		{
 			write(2, "minishell: command not found\n", 29);
+			tree->exit_status = 127;
 			return ;
 		}
-		if (init_process(cmd_path, argv, env_tab, &tree->exit_status))
-		{
-			perror("minishell");
-			return ;
-		}
+		init_process(cmd_path, argv, env_tab, &tree->exit_status);
 	}
 }
 
@@ -170,23 +168,34 @@ void	run_cmd(t_ast *tree, t_env *env)
 	char	**argv;
 	char	**env_tab;
 	char 	**exp_tab;
+	static int		status;
 
 	// Check if the type of the cmd is empty and create redir files 
 	// If they exist
+	
 	argv = generate_args_tab(tree->data, env);
 	env_tab = generate_env_tab(env);
 	if (tree->data->content[0] == '$' || tree->data->content[0] == '*')
 	{
 		exp_tab = expand_cmd(tree->data, tree->data->argv, env);
 		init_process(exp_tab[0], exp_tab, env_tab, &tree->exit_status);
+		return ;
 	}
 	if (check_buildin(tree->data->content))
 	{	
-		buildin_excutor(tree->data, env, &tree->exit_status);
+		buildin_excutor(tree->data, env, &status);
+		tree->exit_status = status;
+		printf("builtin STATUS: %d\n", status);
 		return ;
 	}
 	else
+	{
 		external_cmd(tree, env, argv, env_tab);
+		status = tree->exit_status;
+		printf("ext_cmd STATUS: %d\n", status);
+		printf("ext_cmd STATUS: %d\n", tree->exit_status);
+		return ;
+	}
 }
 
 void	run_pipe()
