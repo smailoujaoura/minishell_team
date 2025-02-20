@@ -62,15 +62,12 @@ static t_env *create_new_env(const char *line)
     t_env *new_env;
 
     new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
-    // if (!new_env)
-    //     return (NULL);
     splited_line = ft_split(line, '=', BKOLANI);
     new_env->key = ft_strdup(splited_line[0], BKOLANI);
     if (splited_line[1])
         new_env->value = ft_strdup(splited_line[1], BKOLANI);
     new_env->full = ft_strdup(line, BKOLANI);
     new_env->next = NULL;
-    // ft_malloc_bkol(0, DEALLOCATE);
     return (new_env);
 }
 
@@ -102,17 +99,15 @@ t_env *get_env_var(t_env *env, const char *key)
     }
     return (NULL);
 }
+
 // $l"s"
 // $PWD"$var1'$shit'*"
 // Function to check if an env var is valid
 static int check_env_str(const char *line, char **str_tab)
 {
     int i;
-    // int j;
 
     i = -1;
-    // if (!str_tab[0])
-    //     return (1);
     while (str_tab[0][++i])
     {
         if (((str_tab[0][0] >= '0' && str_tab[0][0] <= '9')
@@ -123,10 +118,6 @@ static int check_env_str(const char *line, char **str_tab)
             && str_tab[0][i] != '_' && !str_tab[1]))
         {
             printf("Minishell: export: `%s': not a valid identifier\n", line);
-            // j = -1;
-            // while (str_tab[++j])
-            //     free(str_tab[j]);
-            // free(str_tab);
             return (1);
         }
     }
@@ -159,8 +150,6 @@ static void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str
         new_env->full = ft_strjoin(new_full, new_env->value, BKOLANI);
     }
     new_env->next = NULL;
-    // free(new_full);
-    // ft_malloc_bkol(0, DEALLOCATE);
     ft_lstadd_back_env(&env, new_env);
 }
 
@@ -174,7 +163,6 @@ static void    update_env_concat(t_env *env, t_env *new_env, const char *str)
 
     temp = get_env_var(env, new_env->key);
     value = ft_strdup(temp->value, BKOLANI);
-    // ft_malloc_bkol(0, DEALLOCATE);
     free(temp->value);
     free(temp->full);
     temp->full = NULL;
@@ -190,11 +178,6 @@ static void    update_env_concat(t_env *env, t_env *new_env, const char *str)
         new_full = ft_strjoin(new_env->key, "=", BKOLANI);
         temp->full = ft_strjoin(new_full, temp->value, BKOLANI);
     }
-    // ft_malloc_bkol(0, DEALLOCATE);
-    // free(new_env->key);
-    // free(new_env);
-    // free(value);
-    // free(new_full);
 }
 
 // Trunc or overwrite the value of an env var if it exists
@@ -203,8 +186,6 @@ static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, co
     t_env *temp = NULL;
 
     temp = get_env_var(env, new_env->key);
-    // free(temp->value);
-    // free(temp->full);
     temp->value = NULL;
     temp->full = NULL;
     if (!str)
@@ -212,8 +193,6 @@ static void    update_env_trunc(t_env *env, t_env *new_env, const char *line, co
     else
         temp->value = ft_strdup(str, BKOLANI);
     temp->full = ft_strdup(line, BKOLANI);
-    // free(new_env->key);
-    // free(new_env);
 }
 
 // For each case use the rigth function
@@ -254,63 +233,47 @@ void check_export_env(t_env *env, char *line)
 
     if (!ft_strchr(line, '=') && line[ft_strlen(line) -1] == '+')
     {
-        printf("export: not valid in this context: %s\n", line);
+        printf("minishell: export: `%s': not a valid identifier\n", line);
         return ;
     }
     else if (!ft_strchr(line, '='))
         return ;
     new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
-    // new_env = malloc(sizeof(t_env));
-    // if (!new_env)
-    //     return ;
     splited_line = ft_split(line, '=', BKOLANI);
-    // if (!splited_line)
-    //     return ;
     if (check_env_str(line, splited_line))
     {     
         ft_malloc_bkol(0, DEALLOCATE);
         return ;
     }
     process_env_var(env, new_env, splited_line, line);
-    // ft_malloc_bkol(0, DEALLOCATE);
-    // free_tab(splited_line);
 }
 
-void   export(t_env *env, t_chain *data)
+void   builtin_export(t_env *env, char **argv)
 {
-    char *line;
+    int  i;
 
-    line = NULL;
-    if (!data)
-        return ;
-    // create_files_only(data);
-    if (!data->argv)
+    if (!argv)
     {
         export_with_no_args(env);
         return ;
     }
-    while (data->argv)
-    {
-        line = data->argv->content;
-        check_export_env(env, line);
-        data->argv = data->argv->next;
-    }
+    i = 0;
+    while (argv[++i])
+        check_export_env(env, argv[i]);
 }
 
 // Print env vars
-void    mini_env(t_env *env, t_chain *data)
+void    builtin_env(t_env *env, char **argv)
 {
     if (!env)
         return ;
-    if (data && data->argv)
+    if (argv[1])
     {
-        // create_files_only(data);
-        printf("env: '%s': No such file or directory\n", data->argv->content);
+        printf("env: '%s': No such file or directory\n", argv[1]);
         return ;
     }
     while (env)
     {
-        // redir_output(data, env->full);
         printf("%s\n", env->full);
         env = env->next;
     }
@@ -326,7 +289,7 @@ static void free_env(t_env *env_to_unset)
     free(env_to_unset);
 }
 
-static void remove_and_rebuilt(t_env *env, t_chain *data)
+static void remove_and_rebuilt(t_env *env, char *arg)
 {
     t_env *temp;
 
@@ -334,13 +297,13 @@ static void remove_and_rebuilt(t_env *env, t_chain *data)
     while (env)
     {
         temp = env->next;
-        if (ft_strncmp(env->key, data->argv->content, ft_strlen(data->argv->content)) == 0)
+        if (ft_strncmp(env->key, arg, ft_strlen(arg)) == 0)
         {
             free_env(env);
             env = temp;
             break ;
         }
-        else if (ft_strncmp(temp->key, data->argv->content, ft_strlen(data->argv->content)) == 0)
+        else if (ft_strncmp(temp->key, arg, ft_strlen(arg)) == 0)
         {
             if (temp->next)
                 env->next = temp->next;
@@ -353,20 +316,17 @@ static void remove_and_rebuilt(t_env *env, t_chain *data)
     }
 }
 
-void    unset(t_env *env, t_chain *data)
+void    builtin_unset(t_env *env, char **argv)
 {
-    if (!data)
+    int i;
+
+    i = 0;
+    if (!argv[1])
         return ;
-    if (!data->argv)
+    while (argv[++i])
     {
-        // create_files_only(data);
-        return ;
-    }
-    while (data->argv)
-    {
-        if (!get_env_var(env, data->argv->content))
+        if (!get_env_var(env, argv[i]))
             return ;
-        remove_and_rebuilt(env, data);
-        data->argv = data->argv->next;
+        remove_and_rebuilt(env, argv[i]);
     }
 }

@@ -3,39 +3,39 @@
 // # define READ_END 0
 // # define WRITE_END 1
 
-char	**generate_args_tab(t_chain *data, t_env *env)
-{
-	int		i;
-	char	**argv;
-	t_argv	*tmp;
-	t_env	*exp_env;
+// char	**generate_args_tab(t_chain *data, t_env *env)
+// {
+// 	int		i;
+// 	char	**argv;
+// 	t_argv	*tmp;
+// 	t_env	*exp_env;
 
-	i = 0;
-	tmp = data->argv;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	argv = ft_malloc_bkol(sizeof(char *) * (i + 2), ALLOCATE);
-	i = -1;
-	tmp = data->argv;
-	argv[++i] = ft_strdup(data->content, BKOLANI);
-	while (tmp)
-	{
-		if (tmp->content[0] == '$' && tmp->content[1])
-		{
-			exp_env = get_env_var(env, tmp->content + 1);
-			if (exp_env)
-				argv[++i] = ft_strdup(exp_env->value, BKOLANI);
-		}
-		else
-			argv[++i] = ft_strdup(tmp->content, BKOLANI);
-		tmp = tmp->next;
-	}
-	argv[++i] = NULL;
-	return (argv);
-}
+// 	i = 0;
+// 	tmp = data->argv;
+// 	while (tmp)
+// 	{
+// 		i++;
+// 		tmp = tmp->next;
+// 	}
+// 	argv = ft_malloc_bkol(sizeof(char *) * (i + 2), ALLOCATE);
+// 	i = -1;
+// 	tmp = data->argv;
+// 	argv[++i] = ft_strdup(data->content, BKOLANI);
+// 	while (tmp)
+// 	{
+// 		if (tmp->content[0] == '$' && tmp->content[1])
+// 		{
+// 			exp_env = get_env_var(env, tmp->content + 1);
+// 			if (exp_env)
+// 				argv[++i] = ft_strdup(exp_env->value, BKOLANI);
+// 		}
+// 		else
+// 			argv[++i] = ft_strdup(tmp->content, BKOLANI);
+// 		tmp = tmp->next;
+// 	}
+// 	argv[++i] = NULL;
+// 	return (argv);
+// }
 
 char	**generate_env_tab(t_env *envp)
 {
@@ -126,22 +126,22 @@ int check_buildin(const char *cmd)
 	return (0);
 }
 
-void    buildin_excutor(char *cmd, char **argv, t_env *env_head, int *glob_st)
+void    buildin_excutor(char **argv, t_env *env_head, int *glob_st)
 {
-	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
-		echo(cmd, argv, env_head, glob_st);
-	if (ft_strncmp("cd", cmd, ft_strlen(cmd)) == 0)
-		cd(env_head, cmd, glob_st);
-	if (ft_strncmp("pwd", cmd, ft_strlen(cmd)) == 0)
-		pwd(cmd);
-	if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
-		export(env_head, cmd);
-	if (ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0)
-		unset(env_head, cmd);
-	if (ft_strncmp("env", cmd, ft_strlen(cmd)) == 0)
-		mini_env(env_head, cmd);
-	if (ft_strncmp("exit", cmd, ft_strlen(cmd)) == 0)
-		mini_exit(cmd, glob_st);
+	if (ft_strncmp("echo", argv[0], ft_strlen(argv[0])) == 0)
+		builtin_echo(argv, glob_st);
+	if (ft_strncmp("cd", argv[0], ft_strlen(argv[0])) == 0)
+		builtin_cd(env_head, argv, glob_st);
+	if (ft_strncmp("pwd", argv[0], ft_strlen(argv[0])) == 0)
+		builtin_pwd();
+	if (ft_strncmp("export", argv[0], ft_strlen(argv[0])) == 0)
+		builtin_export(env_head, argv);
+	if (ft_strncmp("unset", argv[0], ft_strlen(argv[0])) == 0)
+		builtin_unset(env_head, argv);
+	if (ft_strncmp("env", argv[0], ft_strlen(argv[0])) == 0)
+		builtin_env(env_head, argv);
+	if (ft_strncmp("exit", argv[0], ft_strlen(argv[0])) == 0)
+		builtin_exit(argv, glob_st);
 }
 
 void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
@@ -253,18 +253,14 @@ void	run_cmd(t_ast *tree, t_env *env)
 		run_empty_cmd(tree, env);
 		return ;
 	}
-
 	argv = expand_cmd(tree->data, tree->data->argv, env);
 	envp = generate_env_tab(env);
 	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
-
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
-
-
 	if (check_buildin(argv[0]))
 	{	
-		buildin_excutor(tree->data, env, &status);
+		buildin_excutor(argv, env, &status);
 		tree->exit_status = status;
 		printf("builtin STATUS: %d\n", status);
 		return ;

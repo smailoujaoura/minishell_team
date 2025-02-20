@@ -68,89 +68,153 @@
 //         builtins_redir(data->blk_f, NULL, 1);
 // }
 
-void    mini_exit(t_chain *data, int *status)
+void    check_exit_status(char *str, int *status)
 {
     int i;
+
+    i = -1;
+    while (str[++i])
+    {
+        if (str[i] < '0' && str[i] > 9)
+        {
+            printf("exit: %s: numeric argument required\n", str);
+            *status = 2;
+            exit(2);
+        }
+    }
+}
+
+void    builtin_exit(char **argv, int *status)
+{
     int exit_status;
 
     write(1, "exit\n", 5);
-    if (!data->argv || !data->argv->content)
+    if (!argv[1])
+    {
+        *status = 0;
         exit(EXIT_SUCCESS);
-    if (data->argv->next)
+    }
+    if (argv[2])
     {
         write(2, "exit: too many arguments\n", 25);
         *status = 1;
         return ;
     }
-    i = -1;
-    while (data->argv->content[++i])
-    {
-        if (data->argv->content[i] < '0' && data->argv->content[i] > 9)
-        {
-            printf("exit: %s: numeric argument required\n", data->argv->content);
-            *status = 2;
-            exit(2);
-        }
-    }
-    exit_status = ft_atoi(data->argv->content);
+    check_exit_status(argv[1], status);
+    exit_status = ft_atoi(argv[1]);
     exit_status = exit_status % 256;
     *status = exit_status;
     exit(exit_status);
 }
 
 // echo
-static void    check_option(t_argv **argv, int *option_n)
+// static void    check_option(t_argv **argv, int *option_n)
+// {
+//     int i;
+
+//     i = 2;
+//     while ((*argv)->content[i] && (*argv)->content[i] == 'n')
+//         i++;
+//     if ((*argv)->content[i] == '\0')
+//     {
+//         (*option_n)++;
+//         *argv = (*argv)->next;
+//     }
+// }
+
+int	skip_rest(char *arg, int *new_line)
 {
-    int i;
+	int	i;
 
-    i = 2;
-    while ((*argv)->content[i] && (*argv)->content[i] == 'n')
-        i++;
-    if ((*argv)->content[i] == '\0')
-    {
-        (*option_n)++;
-        *argv = (*argv)->next;
-    }
-}
-
-void echo(t_chain *data, t_env *env, int *gl_stat)
-{
-    int option_n = 0;
-	t_env	*exp_env;
-
-    if (!data->argv)
-        return;
-    if (!data->argv->next && ft_strlen(data->argv->content) == 2 
-        && ft_strncmp("$?", data->argv->content, 2) == 0)
-    {
-        printf("%d\n", *gl_stat);
-        *gl_stat = 0;
-        return ;
-    }
-    if (data->argv->content[0] == '-' && data->argv->content[1] == 'n')
-        check_option(&data->argv, &option_n);
-    while (data->argv)
-    {
-        if (option_n && data->argv->content[0] == '-' && data->argv->content[1] == 'n')
-            check_option(&data->argv, &option_n);
-        if (data->argv->content[0] == '$' && data->argv->content[1])
+	i = 0;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
 		{
-			exp_env = get_env_var(env, data->argv->content + 1);
-			if (exp_env)
-				write(1, exp_env->value, ft_strlen(exp_env->value));
+			break ;
+			return (1);
 		}
-        else if (data->argv->content[0] != '#')
-            write(1, data->argv->content, ft_strlen(data->argv->content));
-        else if (data->argv->content[0] == '#')
-            break ;
-        data->argv = data->argv->next;
-        if (data->argv)
-            write(1, " ", 1);
-    }
-    if (!option_n)
-        write(1, "\n", 1);
-    *gl_stat = 0;
+	}
+	*new_line = 0;
+	return (0);
 }
+
+void	print_status(char **argv, int *status)
+{
+	if (argv[1] && ft_strlen(argv[1]) == 2 && !ft_strncmp(argv[1], "$?", 2))
+	{
+		printf("%d\n", *status);
+		*status = 0;
+	}
+}
+
+void	builtin_echo(char **argv, int *status)
+{
+	int	new_line;
+	int	i;
+
+	new_line = 1;
+	i = 1;
+	if (argv[1] == NULL)
+		return ;
+	print_status(argv, status);
+	while (argv[i])
+	{
+		if (argv[i][0] == '-' && argv[i][1] == 'n')
+			skip_rest(argv[i], &new_line);
+		else
+			break ;
+		i++;
+	}
+    i = 1;
+	while (argv[i])
+	{
+		printf("%s", argv[i++]);
+		if (argv[i] != NULL)
+			printf(" ");
+	}
+	if (new_line)
+		printf("\n");
+}
+
+// void echo(t_chain *data, t_env *env, int *gl_stat)
+// {
+//     int option_n = 0;
+// 	t_env	*exp_env;
+
+//     if (!data->argv)
+//         return;
+//     if (!data->argv->next && ft_strlen(data->argv->content) == 2 
+//         && ft_strncmp("$?", data->argv->content, 2) == 0)
+//     {
+//         printf("%d\n", *gl_stat);
+//         *gl_stat = 0;
+//         return ;
+//     }
+//     if (data->argv->content[0] == '-' && data->argv->content[1] == 'n')
+//         check_option(&data->argv, &option_n);
+//     while (data->argv)
+//     {
+//         if (option_n && data->argv->content[0] == '-' && data->argv->content[1] == 'n')
+//             check_option(&data->argv, &option_n);
+//         if (data->argv->content[0] == '$' && data->argv->content[1])
+// 		{
+// 			exp_env = get_env_var(env, data->argv->content + 1);
+// 			if (exp_env)
+// 				write(1, exp_env->value, ft_strlen(exp_env->value));
+// 		}
+//         else if (data->argv->content[0] != '#')
+//             write(1, data->argv->content, ft_strlen(data->argv->content));
+//         else if (data->argv->content[0] == '#')
+//             break ;
+//         data->argv = data->argv->next;
+//         if (data->argv)
+//             write(1, " ", 1);
+//     }
+//     if (!option_n)
+//         write(1, "\n", 1);
+//     *gl_stat = 0;
+// }
 
 // cd
 static  int cd_executor(const char *cd_arg, char *path, int *status)
@@ -162,132 +226,77 @@ static  int cd_executor(const char *cd_arg, char *path, int *status)
         *status = 1;
         return (1);
     }
+    free(path);
+    path = NULL;
     return (0);
 }
 
-static void    cd_with_no_args(t_env *env, t_argv *updated_oldpwd, t_argv *updated_pwd, int *status)
+static void    cd_with_no_args(t_env *env, int *status)
 {
     t_env   *home;
     char    *path;
-    t_chain *data;
+    char    **updated_oldpwd;
+    char    **updated_pwd;
 
-    data = ft_malloc_bkol(sizeof(t_chain), BKOLANI);
-    // data->adj_f = NULL;
-    // data->blk_f = NULL;
-    data->next = NULL;
-    updated_oldpwd->next = NULL;
-    updated_pwd->next = NULL;
+    updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
+    updated_pwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
     home = get_env_var(env, "HOME");
     path = getcwd(NULL, 0);
-    updated_oldpwd->content = ft_strjoin("OLDPWD=", path, BKOLANI);
-    data->argv = updated_oldpwd;
-    export(env, data);
+    updated_oldpwd[0] = ft_strjoin("OLDPWD=", path, BKOLANI);
+    updated_oldpwd[1] = NULL;
+    builtin_export(env, updated_oldpwd);
     if (cd_executor(home->value, path, status))
         return ;
-    // if (chdir(home->value) == -1)
-    // { 
-    //     free(path);
-    //     perror("cd");
-    //     return ;
-    // }
-    free(path);
-    path = NULL;
     path = getcwd(NULL, 0);
-    updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
-    data->argv = NULL;
-    data->argv = updated_pwd;
-    export(env, data);
+    updated_pwd[0] = ft_strjoin("PWD=", path, BKOLANI);
+    updated_pwd[1] = NULL;
+    builtin_export(env, updated_pwd);
     free(path);
 }
 
-static int    cd_with_args(t_env *env, t_argv *argv, t_argv *updated_oldpwd, t_argv *updated_pwd)
+static void    cd_with_args(t_env *env, char **argv, int *status)
 {
     char    *path;
-    t_chain *data;
-	t_env	*exp_env;
-    int     status;
+    char    **updated_oldpwd;
+    char    **updated_pwd;
 
-    data = ft_malloc_bkol(sizeof(t_chain), ALLOCATE);
-    // data->adj_f = NULL;
-    // data->blk_f = NULL;
-    data->next = NULL;
-    updated_oldpwd->next = NULL;
-    updated_pwd->next = NULL;
+    updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
+    updated_pwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
     path = getcwd(NULL, 0);
-    updated_oldpwd->content = ft_strjoin("OLDPWD=", path, BKOLANI);
-    data->argv = updated_oldpwd;
-    export(env, data);
-    if (argv->content[0] == '$' && argv->content[1])
-	{
-		exp_env = get_env_var(env, data->argv->content + 1);
-		if (exp_env)
-        {
-            if (cd_executor(exp_env->value, path, &status))
-                return (1);
-			// if (chdir(argv->content) == -1)
-            // {  
-            //     free(path);
-            //     perror("cd");
-            //     return ;
-            // }
-        }
-	}
-    else
-    {
-        if (cd_executor(argv->content, path, &status))
-            return (1);
-    }
-    // if (chdir(argv->content) == -1)
-    // {  
-    //     free(path);
-    //     perror("cd");
-    //     return ;
-    // }
-    path = NULL;
+    updated_oldpwd[0] = ft_strjoin("OLDPWD=", path, BKOLANI);
+    updated_oldpwd[1] = NULL;
+    builtin_export(env, updated_oldpwd);
+    if (cd_executor(argv[1], path, status))
+        return ;
     path = getcwd(NULL, 0);
-    updated_pwd->content = ft_strjoin("PWD=", path, BKOLANI);
-    free(data->argv);
-    data->argv = NULL;
-    data->argv = updated_pwd;
-    export(env, data);
+    updated_pwd[0] = ft_strjoin("PWD=", path, BKOLANI);
+    updated_pwd[1] = NULL;
+    builtin_export(env, updated_pwd);
     free(path);
-    return (0);
+    return ;
 }
 
-void    cd(t_env *env, t_chain *data, int *status)
+void    builtin_cd(t_env *env, char **argv, int *status)
 {
-    t_argv *updated_oldpwd;
-    t_argv *updated_pwd;
-
-    updated_oldpwd = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
-    updated_pwd = ft_malloc_bkol(sizeof(t_argv), ALLOCATE);
-    if (data->argv == NULL)
-        cd_with_no_args(env, updated_oldpwd, updated_pwd, status);
+    if (argv[1] == NULL)
+        cd_with_no_args(env, status);
     else
     {
-        if (data->argv->next)
+        if (argv[2])
         {
             write(2, "cd: too many arguments\n", 23);
             *status = 1;
             return ;
         }
-        *status = cd_with_args(env, data->argv, updated_oldpwd, updated_pwd);
+        cd_with_args(env, argv, status);
     }
 }
 
 // pwd
-void    pwd(t_chain *data)
+void    builtin_pwd(void)
 {
     char *path;
 
-    if (!data)
-        return ;
-    // create_files_only(data);
-    // if (data->argv)
-    // {
-    //     write(2, "pwd: too many arguments\n", 24);
-    //     exit(1);
-    // }
     path = getcwd(NULL, 0);
     if (!path)
     {

@@ -203,13 +203,19 @@ t_env *get_env_var(t_env *env, const char *key);
 char *expand_env_var(t_env *env, char *exp_env);
 
 // Builtins
-void    pwd(t_chain *data);
-void    cd(t_env *env, t_chain *data, int *status);
-void	echo(t_chain *data, t_env *env, int *gl_stat);
-void    mini_exit(t_chain *data, int *status);
-void	mini_env(t_env *env, t_chain *data);
-void   	export(t_env *head, t_chain *data);
-void    unset(t_env *env, t_chain *data);
+// void    pwd(t_chain *data);
+// void    cd(t_env *env, t_chain *data, int *status);
+void    builtin_pwd(void);
+void	builtin_echo(char **argv, int *status);
+// void    builtin_exit(t_chain *data, int *status);
+void    builtin_exit(char **argv, int *status);
+// void	builtin_env(t_env *env, t_chain *data);
+void	builtin_env(t_env *env, char **argv);
+void    builtin_cd(t_env *env, char **argv, int *status);
+void   	builtin_export(t_env *env, char **argv);
+// void    builtin_unset(t_env *env, t_chain *data);
+void    builtin_unset(t_env *env, char **argv);
+
 
 // here_doc
 void    here_doc(t_chain *data);
