@@ -126,22 +126,22 @@ int check_buildin(const char *cmd)
 	return (0);
 }
 
-void    buildin_excutor(t_chain *data, t_env *env_head, int *glob_st)
+void    buildin_excutor(char *cmd, char **argv, t_env *env_head, int *glob_st)
 {
-	if (ft_strncmp("echo", data->content, ft_strlen(data->content)) == 0)
-		echo(data, env_head, glob_st);
-	if (ft_strncmp("cd", data->content, ft_strlen(data->content)) == 0)
-		cd(env_head, data, glob_st);
-	if (ft_strncmp("pwd", data->content, ft_strlen(data->content)) == 0)
-		pwd(data);
-	if (ft_strncmp("export", data->content, ft_strlen(data->content)) == 0)
-		export(env_head, data);
-	if (ft_strncmp("unset", data->content, ft_strlen(data->content)) == 0)
-		unset(env_head, data);
-	if (ft_strncmp("env", data->content, ft_strlen(data->content)) == 0)
-		mini_env(env_head, data);
-	if (ft_strncmp("exit", data->content, ft_strlen(data->content)) == 0)
-		mini_exit(data, glob_st);
+	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0)
+		echo(cmd, argv, env_head, glob_st);
+	if (ft_strncmp("cd", cmd, ft_strlen(cmd)) == 0)
+		cd(env_head, cmd, glob_st);
+	if (ft_strncmp("pwd", cmd, ft_strlen(cmd)) == 0)
+		pwd(cmd);
+	if (ft_strncmp("export", cmd, ft_strlen(cmd)) == 0)
+		export(env_head, cmd);
+	if (ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0)
+		unset(env_head, cmd);
+	if (ft_strncmp("env", cmd, ft_strlen(cmd)) == 0)
+		mini_env(env_head, cmd);
+	if (ft_strncmp("exit", cmd, ft_strlen(cmd)) == 0)
+		mini_exit(cmd, glob_st);
 }
 
 void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
@@ -244,9 +244,8 @@ int run_empty_cmd(t_ast *tree, t_env *env)
 
 void	run_cmd(t_ast *tree, t_env *env)
 {
-	char	**argv;
-	char	**env_tab;
-	char 	**exp_tab;
+	char			**argv;
+	char			**envp;
 	static int		status;
 
 	if (tree->data->empty)
@@ -256,21 +255,14 @@ void	run_cmd(t_ast *tree, t_env *env)
 	}
 
 	argv = expand_cmd(tree->data, tree->data->argv, env);
+	envp = generate_env_tab(env);
 	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
 
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
 
-	argv = generate_args_tab(tree->data, env); // This might be redundant; we already have expand_cmd returning [[ls], [-l], [-a]] array with command and it's options and arguments
-	env_tab = generate_env_tab(env);
 
-	if (tree->data->content[0] == '$' || tree->data->content[0] == '*') // no need to check for variables and wildcards
-	{
-		exp_tab = expand_cmd(tree->data, tree->data->argv, env);
-		init_process(exp_tab[0], exp_tab, env_tab, &tree->exit_status);
-		return ;
-	}
-	if (check_buildin(tree->data->content))
+	if (check_buildin(argv[0]))
 	{	
 		buildin_excutor(tree->data, env, &status);
 		tree->exit_status = status;
@@ -279,7 +271,7 @@ void	run_cmd(t_ast *tree, t_env *env)
 	}
 	else
 	{
-		external_cmd(tree, env, argv, env_tab); // we should work with only one argv
+		external_cmd(tree, env, argv, envp);
 		status = tree->exit_status;
 		printf("ext_cmd STATUS: %d\n", status);
 		printf("ext_cmd STATUS: %d\n", tree->exit_status);
