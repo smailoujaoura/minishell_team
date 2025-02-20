@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/17 16:08:01 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:19:30 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,6 +370,7 @@ char	*expand_wildcard(char *pattern, char *is_wild, int i)
 			matched = ft_strjoin(matched, " ", SOUJAOUR);
 		}
 	}
+	closedir(dir);
 	if (flag)
 		return (matched);
 	return (pattern);

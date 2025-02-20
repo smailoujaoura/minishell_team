@@ -255,16 +255,16 @@ void	run_cmd(t_ast *tree, t_env *env)
 		return ;
 	}
 
-	expand_cmd(tree->data, tree->data->argv, env);
+	argv = expand_cmd(tree->data, tree->data->argv, env);
 	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
 
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
 
-	argv = generate_args_tab(tree->data, env);
+	argv = generate_args_tab(tree->data, env); // This might be redundant; we already have expand_cmd returning [[ls], [-l], [-a]] array with command and it's options and arguments
 	env_tab = generate_env_tab(env);
 
-	if (tree->data->content[0] == '$' || tree->data->content[0] == '*')
+	if (tree->data->content[0] == '$' || tree->data->content[0] == '*') // no need to check for variables and wildcards
 	{
 		exp_tab = expand_cmd(tree->data, tree->data->argv, env);
 		init_process(exp_tab[0], exp_tab, env_tab, &tree->exit_status);
@@ -279,7 +279,7 @@ void	run_cmd(t_ast *tree, t_env *env)
 	}
 	else
 	{
-		external_cmd(tree, env, argv, env_tab);
+		external_cmd(tree, env, argv, env_tab); // we should work with only one argv
 		status = tree->exit_status;
 		printf("ext_cmd STATUS: %d\n", status);
 		printf("ext_cmd STATUS: %d\n", tree->exit_status);
