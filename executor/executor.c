@@ -3,40 +3,40 @@
 // # define READ_END 0
 // # define WRITE_END 1
 
-char	**generate_args_tab(t_chain *data, t_env *env)
-{
-	int		i;
-	char	**argv;
-	t_argv	*tmp;
-	t_env	*exp_env;
+// char	**generate_args_tab(t_chain *data, t_env *env)
+// {
+// 	int		i;
+// 	char	**argv;
+// 	t_argv	*tmp;
+// 	t_env	*exp_env;
 
-	i = 0;
-	tmp = data->argv;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	argv = ft_malloc_bkol(sizeof(char *) * (i + 2), ALLOCATE);
-	i = -1;
-	tmp = data->argv;
-	argv[++i] = ft_strdup(data->content, BKOLANI);
-	while (tmp)
-	{
-		if (tmp->content[0] == '$' && tmp->content[1] != '?')
-		{
-			exp_env = get_env_var(env, tmp->content + 1);
-			if (exp_env)
-				argv[++i] = ft_strdup(exp_env->value, BKOLANI);
-		}
-		else
-			argv[++i] = ft_strdup(tmp->content, BKOLANI);
-		tmp = tmp->next;
-	}
-	argv[++i] = NULL;
-	// printf("Generate here: %s\n", argv[1]);
-	return (argv);
-}
+// 	i = 0;
+// 	tmp = data->argv;
+// 	while (tmp)
+// 	{
+// 		i++;
+// 		tmp = tmp->next;
+// 	}
+// 	argv = ft_malloc_bkol(sizeof(char *) * (i + 2), ALLOCATE);
+// 	i = -1;
+// 	tmp = data->argv;
+// 	argv[++i] = ft_strdup(data->content, BKOLANI);
+// 	while (tmp)
+// 	{
+// 		if (tmp->content[0] == '$' && tmp->content[1] != '?')
+// 		{
+// 			exp_env = get_env_var(env, tmp->content + 1);
+// 			if (exp_env)
+// 				argv[++i] = ft_strdup(exp_env->value, BKOLANI);
+// 		}
+// 		else
+// 			argv[++i] = ft_strdup(tmp->content, BKOLANI);
+// 		tmp = tmp->next;
+// 	}
+// 	argv[++i] = NULL;
+// 	// printf("Generate here: %s\n", argv[1]);
+// 	return (argv);
+// }
 
 char	**generate_env_tab(t_env *envp)
 {
@@ -254,12 +254,14 @@ void	run_cmd(t_ast *tree, t_env *env)
 		run_empty_cmd(tree, env);
 		return ;
 	}
-	// argv = expand_cmd(tree->data, tree->data->argv, env);
-	argv = generate_args_tab(tree->data, env);
+	argv = expand_cmd(tree->data, tree->data->argv, env);
 	envp = generate_env_tab(env);
-	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
+
+
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
+	printf("%p\n", argv);
+	printf("%s\n", argv[0]);
 	if (check_buildin(argv[0]))
 	{	
 		buildin_excutor(argv, env, &status);
@@ -288,6 +290,8 @@ void	executor(t_ast *tree, t_env *env)
 		return ;
 	if (tree->type == WORD)
 	{
+		printf("%p\n", tree->data);
+		printf("%s\n", tree->data->content);
 		run_cmd(tree, env);
 	}
 	if (tree->type == PIPE)
@@ -307,120 +311,3 @@ void	executor(t_ast *tree, t_env *env)
 			executor(tree->right, env);
 	}
 }
-
-// void	check_streams_perm(t_chain *file)
-// {
-// 	if (file->type == REDIR_IN)
-// 	{
-// 		if (access(file->file, F_OK | R_OK) == -1)
-// 		{
-// 			perror("access");
-// 			exit(EXIT_FAILURE);
-// 		}
-// 	}
-// 	else if (file->type == REDIR_OUT || file->type == REDIR_APPEND)
-// 	{
-// 		if (access(file->file, W_OK) == -1)
-// 		{
-// 			perror("access");
-// 			exit(EXIT_FAILURE);
-// 		}
-// 	}
-// }
-
-// int   *create_pipe(void)
-// {
-// 	int pipe_fd[2];
-
-// 	if (pipe(pipe_fd) == -1)
-// 	{
-// 		perror("pipe()");
-// 		exit(1);
-// 	}
-// 	return (pipe_fd);
-// }
-
-// void	config_streams(t_chain *adj, t_chain *blk, int *fd_in, int *fd_out)
-// {
-// 	t_chain	*adj_out;
-// 	t_chain	*blk_out;
-// 	t_chain	*adj_in;
-// 	t_chain	*blk_in;
-
-// 	// this function will open up a bunch of files and ... returns two files descriptors in and out.
-
-// 	while (adj)
-// 	{
-		
-// 		adj = adj->next;
-// 	}
-// 	while (blk)
-// 	{
-		
-// 	}
-// }
-
-// void	run_cmd(t_ast *tree, t_env *env)
-// {
-// 	int	fd_in;
-// 	int	fd_out;
-
-// 	if (tree->data->empty)
-// 		config_streams(tree->data->adj_f, tree->data->blk_f, &fd_in, &fd_out);
-// 	else
-// 	{
-// 		if (check_buildin(tree->data))
-// 			buildin_excutor(tree->data, env);
-// 		else
-// 		{
-// 			// config_streams();
-// 			// find_path();
-// 			// executre_cmd();
-// 			// get exit status and assign it.
-// 			tree->exit_status = 0;
-// 		}
-// 	}
-// }
-
-// void	run_pipe(t_ast *tree, t_env *env)
-// {
-// 	int *pipe;
-
-// 	tree->pipe = create_pipe();
-// 	executor(tree->left, env);
-// 	executor(tree->right, env);
-// }
-
-// void	executor(t_ast *tree, t_env *env)
-// {
-//     if (!tree)
-//         return ;
-//     if (tree->type == WORD)
-//     {
-//         if (tree->data->empty)
-//         {
-//             redir_out(tree->data->adj_f);
-//             redir_out(tree->data->blk_f);
-//         }
-//         else
-//         {
-            
-//         }
-//     }
-//     else if (tree->type == PIPE)
-//     {
-
-//     }
-//     else if (tree->type == AND)
-//         run_and();
-//     else if (tree->type == OR)
-//         run_or();
-//     else
-//         printf("Something went wrong\n");
-// }
-
-
-// void	run_or(t_ast *tree, t_env *env)
-// {
-	
-// }

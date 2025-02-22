@@ -13,7 +13,27 @@
 # include <errno.h>
 # include <stddef.h>
 # include <dirent.h>
-#include <sys/wait.h>
+# include <sys/wait.h>
+#include <dirent.h>
+#include <sys/types.h>
+
+# define FROM_VAR 'v'
+# define LITERAL 'l'
+# define IGNORE 'i'
+# define SPLIT 's'
+
+# define IS_WILD 'w'
+# define NOT_WILD 'n'
+
+# define REMOVE_QUOTE 'r'
+# define STORE 111
+# define RETRIEVE 222
+
+# define SEPERATORS " \t"
+
+# define NOT_QUOTE '!'
+# define QUOTE 'q'
+
 
 # define L_PAREN 1001
 # define R_PAREN 1002
@@ -50,17 +70,11 @@ void	panic_exit(char *s);
 # define OUT 1
 
 // execute(expand(argv->content), )
-typedef struct s_exp
-{
-	char			*val;
-	struct s_exp	*next;
-} t_exp;
 
 typedef struct s_argv
 {
 	int				type;
 	char			*content;
-	t_exp			*exp;
 	int				wildcard;
 	int				dollar;
 	struct s_argv	*next;
@@ -77,7 +91,6 @@ typedef struct s_chain
 	int				wildcard;
 	int				dollar;
 	t_argv			*argv;
-	t_exp			*exp;
 	char			*file;
 	char			*delim;
 	int				delim_in_quotes;
@@ -97,14 +110,6 @@ typedef struct s_chain
 # define RIGHT 1
 
 
-// typedef struct s_status
-// {
-// 	int	status;
-// }	t_status;
-
-// Abstract Syntax Tree to represent the the parsed line
-	// char			*cmd;
-	// char			**args;
 typedef struct s_ast
 {
 	int				type;

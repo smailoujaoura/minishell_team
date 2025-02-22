@@ -65,7 +65,6 @@ t_chain	*lstnew(char *content)
 	new->blk_f = NULL;
 	new->argv = NULL;
 	new->pipe = NULL;
-	new->exp = NULL;
 	new->removable = 0;
 	new->wildcard = 0;
 	new->dollar = 0;
@@ -113,7 +112,6 @@ t_argv	*lstnew_arg(t_chain *cmd)
 	new = ft_malloc(sizeof(t_argv), ALLOCATE);
 	new->back = NULL;
 	new->next = NULL;
-	new->exp = NULL;
 	new->type = -1;
 	new->wildcard = cmd->wildcard;
 	new->dollar = cmd->dollar;

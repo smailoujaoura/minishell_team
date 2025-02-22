@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/19 21:28:12 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/22 15:57:29 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,13 +141,9 @@ void	loop_minishell(t_env *env)
 		if (line == NULL)
 			break ;
 		root = parse_line(line);
-		// if (root)
-		// 	// execute tree
 		executor(root, env);
 		free(line);
 		ft_malloc(0, DEALLOCATE);
 	}
 	ft_malloc_bkol(0, DEALLOCATE);
-	// ft_malloc(0, DEALLOCATE);
-	// ft_malloc_bkol(0, DEALLOCATE);
 }
