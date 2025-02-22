@@ -77,9 +77,13 @@ void	init_process(t_ast *tree, const char *cmd_path, char *argv[], char *envp[])
 	{
 		if (tree->parent == PIPE)
 		{
-			close(tree->parent->pipe[0]);
-			dup2(tree->parent->pipe[1], STDOUT_FILENO);
-			close(tree->parent->pipe[1]);
+			if (tree->side == LEFT)
+			{
+				close(tree->parent->pipe[0]);
+				dup2(tree->parent->pipe[1], STDOUT_FILENO);
+				close(tree->parent->pipe[1]);
+			}
+			
 		}
 		if (execve(cmd_path, argv, envp) == -1)
 		{
@@ -270,7 +274,7 @@ void	run_cmd(t_ast *tree, t_env *env)
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
 	
-	
+
 
 	if (tree->parent == PIPE || !check_buildin(argv[0]))
 	{
