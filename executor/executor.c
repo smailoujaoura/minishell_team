@@ -256,12 +256,9 @@ void	run_cmd(t_ast *tree, t_env *env)
 	}
 	argv = expand_cmd(tree->data, tree->data->argv, env);
 	envp = generate_env_tab(env);
-
-
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
-	printf("%p\n", argv);
-	printf("%s\n", argv[0]);
+	
 	if (check_buildin(argv[0]))
 	{	
 		buildin_excutor(argv, env, &status);
@@ -290,8 +287,6 @@ void	executor(t_ast *tree, t_env *env)
 		return ;
 	if (tree->type == WORD)
 	{
-		printf("%p\n", tree->data);
-		printf("%s\n", tree->data->content);
 		run_cmd(tree, env);
 	}
 	if (tree->type == PIPE)
