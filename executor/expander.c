@@ -591,11 +591,6 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 	actual = remove_quotes(actual, flags, 0, 0);
 	arr = ft_split_if(actual, SPLIT, store_wilds(NULL, -1, RETRIEVE));
 	arr = expand_wildcards(arr, NULL, NULL, 0);
-	while (*arr)
-	{
-		printf("[%s]\n", *arr);
-		arr++;
-	}
 	return (expand_wildcards(arr, NULL, NULL, 0));
 }
 
