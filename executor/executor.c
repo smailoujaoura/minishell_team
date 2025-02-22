@@ -62,7 +62,7 @@ char	**generate_env_tab(t_env *envp)
 	return (env);
 }
 
-void	init_process(const char *cmd_path, char *argv[], char *envp[], int *status)
+void	init_process(t_ast *tree, const char *cmd_path, char *argv[], char *envp[])
 {
 	pid_t	pid;
 	int		proc_stat;
@@ -70,11 +70,17 @@ void	init_process(const char *cmd_path, char *argv[], char *envp[], int *status)
 	pid = fork();
 	if (pid == -1)
 	{
-		*status = EXIT_FAILURE;
+		tree->exit_status = EXIT_FAILURE;
 		return ;
 	}
 	if (pid == 0)
 	{
+		if (tree->parent == PIPE)
+		{
+			close(tree->parent->pipe[0]);
+			dup2(tree->parent->pipe[1], STDOUT_FILENO);
+			close(tree->parent->pipe[1]);
+		}
 		if (execve(cmd_path, argv, envp) == -1)
 		{
 			perror("minishell");
@@ -82,11 +88,11 @@ void	init_process(const char *cmd_path, char *argv[], char *envp[], int *status)
 		}
 	}
 	wait(&proc_stat);
-	*status = WEXITSTATUS(proc_stat);
+	tree->exit_status = WEXITSTATUS(proc_stat);
 	return ;
 }
 
-char	*construct_cmd_path(t_chain *data, t_env *envp)
+char	*construct_cmd_path(char **argv, t_env *envp)
 {
 	char *path;
 	int		i;
@@ -106,7 +112,7 @@ char	*construct_cmd_path(t_chain *data, t_env *envp)
 	spl_path = ft_split(path, ':', BKOLANI);
 	while (spl_path[++i])
 	{
-		new_cmd = ft_strjoin("/", data->content, BKOLANI);
+		new_cmd = ft_strjoin("/", argv[0], BKOLANI);
 		tmp_cmd = ft_strjoin(spl_path[i], new_cmd, BKOLANI);
 		if (access(tmp_cmd, X_OK) == 0)
 			return (tmp_cmd);
@@ -149,11 +155,11 @@ void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
 {
 	char	*cmd_path;
 
-	if (ft_strchr(tree->data->content, '/'))
-		init_process(tree->data->content, argv, env_tab, &tree->exit_status);
+	if (ft_strchr(argv[0], '/'))
+		init_process(argv[0], argv, env_tab, tree);
 	else
 	{
-		cmd_path = construct_cmd_path(tree->data, env);
+		cmd_path = construct_cmd_path(argv, env);
 		if (!cmd_path)
 		{
 			write(2, "minishell: command not found\n", 29);
@@ -243,6 +249,11 @@ int run_empty_cmd(t_ast *tree, t_env *env)
 	return (0);
 }
 
+void	create_proc_if(t_ast *tree, t_env *env, char **argv, char **envp)
+{
+	external_cmd(tree, env, argv, envp);
+}
+
 void	run_cmd(t_ast *tree, t_env *env)
 {
 	char			**argv;
@@ -259,26 +270,27 @@ void	run_cmd(t_ast *tree, t_env *env)
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
 	
-	if (check_buildin(argv[0]))
-	{	
-		buildin_excutor(argv, env, &status);
-		tree->exit_status = status;
-		// printf("builtin STATUS: %d\n", status);
-		return ;
+	
+
+	if (tree->parent == PIPE || !check_buildin(argv[0]))
+	{
+		create_proc_if(tree, env, argv, envp);
+		status = tree->exit_status;
 	}
 	else
 	{
-		external_cmd(tree, env, argv, envp);
-		status = tree->exit_status;
-		printf("ext_cmd STATUS: %d\n", status);
-		printf("ext_cmd STATUS: %d\n", tree->exit_status);
-		return ;
+		buildin_excutor(argv, env, &status);
+		tree->exit_status = status;
 	}
 }
 
-void	run_pipe()
+void	run_pipe(t_ast *tree)
 {
-	
+	if (pipe(tree->pipe) == -1)
+	{
+		perror("minishell");
+		return ;
+	}
 }
 
 void	executor(t_ast *tree, t_env *env)
@@ -291,7 +303,7 @@ void	executor(t_ast *tree, t_env *env)
 	}
 	if (tree->type == PIPE)
 	{
-		run_pipe();
+		run_pipe(tree);
 	}
 	if (tree->type == AND)
 	{

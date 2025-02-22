@@ -120,6 +120,8 @@ typedef struct s_ast
 	int				side;
 	int				exit_status;
 	int				*pipe;
+	int				in;
+	int				out;
 }	t_ast;
 
 typedef struct s_env
