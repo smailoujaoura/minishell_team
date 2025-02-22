@@ -108,112 +108,92 @@ void    builtin_exit(char **argv, int *status)
 }
 
 // echo
-// static void    check_option(t_argv **argv, int *option_n)
-// {
-//     int i;
+static void  check_option(char *argv, int *option_n, int *stop_check_opt)
+{
+    int i;
 
-//     i = 2;
-//     while ((*argv)->content[i] && (*argv)->content[i] == 'n')
+    i = 2;
+    if (argv[0] == '-' && argv[1] == 'n')
+    {
+        while (argv[i] && argv[i] == 'n')
+            i++;
+        if (argv[i] == '\0')
+            (*option_n)++;
+        else
+            *stop_check_opt = 1;
+    }
+    else
+        *stop_check_opt = 1;
+}
+
+void builtin_echo(char **argv, int *gl_stat)
+{
+    int option_n = 0;
+    int i;
+    int stop_check_opt;
+
+    i = 1;
+    stop_check_opt = 0;
+    while (argv[i])
+    {
+        check_option(argv[i], &option_n, &stop_check_opt);
+        if (ft_strlen(argv[i]) == 2 && ft_strncmp("$?", argv[i], 2) == 0)
+        {
+            printf("%d", *gl_stat);
+		    *gl_stat = 0;
+        }
+        else if (stop_check_opt)
+                printf("%s", argv[i]);
+        if (stop_check_opt && argv[i + 1])
+            printf(" ");
+        i++;
+    }
+    if (!option_n)
+        printf("\n");
+}
+
+// int	skip_rest(char *arg)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (arg[i] && arg[i] == 'n')
+// 	{
 //         i++;
-//     if ((*argv)->content[i] == '\0')
-//     {
-//         (*option_n)++;
-//         *argv = (*argv)->next;
-//     }
+// 	}
+//     if (arg[i] == '\0')
+//         return (1);
+//     return (-1);
 // }
 
-int	skip_rest(char *arg, int *new_line)
-{
-	int	i;
-
-	i = 0;
-	while (arg[i])
-	{
-		if (arg[i] != 'n')
-		{
-			break ;
-			return (1);
-		}
-	}
-	*new_line = 0;
-	return (0);
-}
-
-void	print_status(char **argv, int *status)
-{
-	if (argv[1] && ft_strlen(argv[1]) == 2 && !ft_strncmp(argv[1], "$?", 2))
-	{
-		printf("%d\n", *status);
-		*status = 0;
-	}
-}
-
-void	builtin_echo(char **argv, int *status)
-{
-	int	new_line;
-	int	i;
-
-	new_line = 1;
-	i = 1;
-	if (argv[1] == NULL)
-		return ;
-	print_status(argv, status);
-	while (argv[i])
-	{
-		if (argv[i][0] == '-' && argv[i][1] == 'n')
-			skip_rest(argv[i], &new_line);
-		else
-			break ;
-		i++;
-	}
-    i = 1;
-	while (argv[i])
-	{
-		printf("%s", argv[i++]);
-		if (argv[i] != NULL)
-			printf(" ");
-	}
-	if (new_line)
-		printf("\n");
-}
-
-// void echo(t_chain *data, t_env *env, int *gl_stat)
+// void	builtin_echo(char **argv, int *status)
 // {
-//     int option_n = 0;
-// 	t_env	*exp_env;
+// 	int	new_line;
+// 	int	i;
 
-//     if (!data->argv)
-//         return;
-//     if (!data->argv->next && ft_strlen(data->argv->content) == 2 
-//         && ft_strncmp("$?", data->argv->content, 2) == 0)
-//     {
-//         printf("%d\n", *gl_stat);
-//         *gl_stat = 0;
-//         return ;
-//     }
-//     if (data->argv->content[0] == '-' && data->argv->content[1] == 'n')
-//         check_option(&data->argv, &option_n);
-//     while (data->argv)
-//     {
-//         if (option_n && data->argv->content[0] == '-' && data->argv->content[1] == 'n')
-//             check_option(&data->argv, &option_n);
-//         if (data->argv->content[0] == '$' && data->argv->content[1])
-// 		{
-// 			exp_env = get_env_var(env, data->argv->content + 1);
-// 			if (exp_env)
-// 				write(1, exp_env->value, ft_strlen(exp_env->value));
-// 		}
-//         else if (data->argv->content[0] != '#')
-//             write(1, data->argv->content, ft_strlen(data->argv->content));
-//         else if (data->argv->content[0] == '#')
-//             break ;
-//         data->argv = data->argv->next;
-//         if (data->argv)
-//             write(1, " ", 1);
-//     }
-//     if (!option_n)
-//         write(1, "\n", 1);
-//     *gl_stat = 0;
+// 	new_line = 1;
+// 	i = 1;
+// 	if (argv[1] == NULL)
+// 		return ;
+// 	print_status(argv, status);
+// 	while (argv[i] && new_line != -1)
+// 	{
+// 		if (argv[i][0] == '-' && argv[i][1] == 'n')
+// 			new_line = skip_rest(argv[i]);
+// 		else
+// 			break ;
+//         if (new_line)
+// 		    i++;
+// 	}
+//     i = 1 + !new_line;
+// 	while (argv[i])
+// 	{
+// 		printf("%s", argv[i++]);
+// 		if (argv[i] != NULL)
+// 			printf(" ");
+// 	}
+// 	if (new_line)
+// 		printf("\n");
 // }
 
 // cd

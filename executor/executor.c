@@ -3,39 +3,40 @@
 // # define READ_END 0
 // # define WRITE_END 1
 
-// char	**generate_args_tab(t_chain *data, t_env *env)
-// {
-// 	int		i;
-// 	char	**argv;
-// 	t_argv	*tmp;
-// 	t_env	*exp_env;
+char	**generate_args_tab(t_chain *data, t_env *env)
+{
+	int		i;
+	char	**argv;
+	t_argv	*tmp;
+	t_env	*exp_env;
 
-// 	i = 0;
-// 	tmp = data->argv;
-// 	while (tmp)
-// 	{
-// 		i++;
-// 		tmp = tmp->next;
-// 	}
-// 	argv = ft_malloc_bkol(sizeof(char *) * (i + 2), ALLOCATE);
-// 	i = -1;
-// 	tmp = data->argv;
-// 	argv[++i] = ft_strdup(data->content, BKOLANI);
-// 	while (tmp)
-// 	{
-// 		if (tmp->content[0] == '$' && tmp->content[1])
-// 		{
-// 			exp_env = get_env_var(env, tmp->content + 1);
-// 			if (exp_env)
-// 				argv[++i] = ft_strdup(exp_env->value, BKOLANI);
-// 		}
-// 		else
-// 			argv[++i] = ft_strdup(tmp->content, BKOLANI);
-// 		tmp = tmp->next;
-// 	}
-// 	argv[++i] = NULL;
-// 	return (argv);
-// }
+	i = 0;
+	tmp = data->argv;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	argv = ft_malloc_bkol(sizeof(char *) * (i + 2), ALLOCATE);
+	i = -1;
+	tmp = data->argv;
+	argv[++i] = ft_strdup(data->content, BKOLANI);
+	while (tmp)
+	{
+		if (tmp->content[0] == '$' && tmp->content[1] != '?')
+		{
+			exp_env = get_env_var(env, tmp->content + 1);
+			if (exp_env)
+				argv[++i] = ft_strdup(exp_env->value, BKOLANI);
+		}
+		else
+			argv[++i] = ft_strdup(tmp->content, BKOLANI);
+		tmp = tmp->next;
+	}
+	argv[++i] = NULL;
+	// printf("Generate here: %s\n", argv[1]);
+	return (argv);
+}
 
 char	**generate_env_tab(t_env *envp)
 {
@@ -253,7 +254,8 @@ void	run_cmd(t_ast *tree, t_env *env)
 		run_empty_cmd(tree, env);
 		return ;
 	}
-	argv = expand_cmd(tree->data, tree->data->argv, env);
+	// argv = expand_cmd(tree->data, tree->data->argv, env);
+	argv = generate_args_tab(tree->data, env);
 	envp = generate_env_tab(env);
 	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
@@ -262,7 +264,7 @@ void	run_cmd(t_ast *tree, t_env *env)
 	{	
 		buildin_excutor(argv, env, &status);
 		tree->exit_status = status;
-		printf("builtin STATUS: %d\n", status);
+		// printf("builtin STATUS: %d\n", status);
 		return ;
 	}
 	else
