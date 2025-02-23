@@ -263,29 +263,29 @@ void	executor(t_ast *tree, t_env *env __attribute__((unused)))
 {
 	if (tree == NULL)
 		return ;
-	executor(tree->left, env);
-	executor(tree->right, env);
-	printf("[%s]\n", tree->data->content);
-	// if (tree == NULL)
-	// 	return ;
-	// if (tree->type == WORD)
-	// {
-	// 	run_cmd(tree, env);
-	// }
-	// if (tree->type == PIPE)
-	// {
-	// 	run_pipe(tree);
-	// }
-	// if (tree->type == AND)
-	// {
-	// 	executor(tree->left, env);
-	// 	if (tree->left->exit_status == 0)
-	// 		executor(tree->right, env);
-	// }
-	// if (tree->type == OR)
-	// {
-	// 	executor(tree->left, env);
-	// 	if (tree->left->exit_status != 0)
-	// 		executor(tree->right, env);
-	// }
+	// executor(tree->left, env);
+	// executor(tree->right, env);
+	// printf("[%s]\n", tree->data->content);
+	if (tree == NULL)
+		return ;
+	if (tree->type == WORD)
+	{
+		run_cmd(tree, env);
+	}
+	if (tree->type == PIPE)
+	{
+		run_pipe(tree);
+	}
+	if (tree->type == AND)
+	{
+		executor(tree->left, env);
+		if (tree->left->exit_status == 0)
+			executor(tree->right, env);
+	}
+	if (tree->type == OR)
+	{
+		executor(tree->left, env);
+		if (tree->left->exit_status != 0)
+			executor(tree->right, env);
+	}
 }
