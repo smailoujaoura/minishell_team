@@ -1,43 +1,5 @@
 #include "../minishell.h"
 
-// # define READ_END 0
-// # define WRITE_END 1
-
-// char	**generate_args_tab(t_chain *data, t_env *env)
-// {
-// 	int		i;
-// 	char	**argv;
-// 	t_argv	*tmp;
-// 	t_env	*exp_env;
-
-// 	i = 0;
-// 	tmp = data->argv;
-// 	while (tmp)
-// 	{
-// 		i++;
-// 		tmp = tmp->next;
-// 	}
-// 	argv = ft_malloc_bkol(sizeof(char *) * (i + 2), ALLOCATE);
-// 	i = -1;
-// 	tmp = data->argv;
-// 	argv[++i] = ft_strdup(data->content, BKOLANI);
-// 	while (tmp)
-// 	{
-// 		if (tmp->content[0] == '$' && tmp->content[1] != '?')
-// 		{
-// 			exp_env = get_env_var(env, tmp->content + 1);
-// 			if (exp_env)
-// 				argv[++i] = ft_strdup(exp_env->value, BKOLANI);
-// 		}
-// 		else
-// 			argv[++i] = ft_strdup(tmp->content, BKOLANI);
-// 		tmp = tmp->next;
-// 	}
-// 	argv[++i] = NULL;
-// 	// printf("Generate here: %s\n", argv[1]);
-// 	return (argv);
-// }
-
 char	**generate_env_tab(t_env *envp)
 {
 	int		i;
@@ -258,36 +220,36 @@ void	create_proc_if(t_ast *tree, t_env *env, char **argv, char **envp)
 	external_cmd(tree, env, argv, envp);
 }
 
-void	detect_in_wich_pipe(t_ast *tree)
-{
-	t_ast	*tmp;
-	// t_ast	*tmp_1;
+// void	detect_in_wich_pipe(t_ast *tree)
+// {
+// 	t_ast	*tmp;
+// 	// t_ast	*tmp_1;
 
-	// if (!tree->parent)
-	// 	return ;
-	tmp = NULL;
-	if (tree->parent)
-		printf("Parent: %s\n", tree->parent->data->content);
-	if (tree->left)
-		printf("Left: %s\n", tree->left->data->content);
-	printf("node: %s\n", tree->data->content);
-	if (tree->right)
-		printf("Right: %s\n", tree->right->data->content);
-	// return ;
-	// while (tmp)
-	// {
-	// 	if (tmp->type == PIPE
-	// 	&& tmp->data->depth != tree->data->depth
-	// 	&& ft_strncmp(tree->data->next->content, 
-	// 		"&&", ft_strlen(tree->data->content)) != 0)
-	// 		break ;
-	// 	tmp = tmp->parent;
-	// }
-	// printf("Pipe depth: %d\n", tmp->data->depth);
-	// printf("Pipe: %s\n", tmp->data->content);
-	// tree->pipe = tmp->pipe;
-	return ;
-}
+// 	// if (!tree->parent)
+// 	// 	return ;
+// 	tmp = NULL;
+// 	if (tree->parent)
+// 		printf("Parent: %s\n", tree->parent->data->content);
+// 	if (tree->left)
+// 		printf("Left: %s\n", tree->left->data->content);
+// 	printf("node: %s\n", tree->data->content);
+// 	if (tree->right)
+// 		printf("Right: %s\n", tree->right->data->content);
+// 	// return ;
+// 	// while (tmp)
+// 	// {
+// 	// 	if (tmp->type == PIPE
+// 	// 	&& tmp->data->depth != tree->data->depth
+// 	// 	&& ft_strncmp(tree->data->next->content, 
+// 	// 		"&&", ft_strlen(tree->data->content)) != 0)
+// 	// 		break ;
+// 	// 	tmp = tmp->parent;
+// 	// }
+// 	// printf("Pipe depth: %d\n", tmp->data->depth);
+// 	// printf("Pipe: %s\n", tmp->data->content);
+// 	// tree->pipe = tmp->pipe;
+// 	return ;
+// }
 
 void	run_cmd(t_ast *tree, t_env *env)
 {
@@ -321,11 +283,14 @@ void	run_cmd(t_ast *tree, t_env *env)
 
 void	run_pipe(t_ast *tree)
 {
-	if (pipe(tree->pipe) == -1)
+	int	pipe_pair[2];
+
+	if (pipe(pipe_pair) == -1)
 	{
 		perror("minishell");
 		return ;
 	}
+	tree->pipe = pipe_pair;
 }
 
 void	executor(t_ast *tree, t_env *env)
@@ -336,10 +301,14 @@ void	executor(t_ast *tree, t_env *env)
 	if (tree->type == WORD)
 	{
 		run_cmd(tree, env);
+		executor(tree->left, env);
+		executor(tree->right, env);
 	}
 	if (tree->type == PIPE)
 	{
 		run_pipe(tree);
+		executor(tree->left, env);
+		executor(tree->right, env);
 	}
 	if (tree->type == AND)
 	{

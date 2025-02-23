@@ -34,6 +34,28 @@
 # define NOT_QUOTE '!'
 # define QUOTE 'q'
 
+# define READ_END 0
+# define WRITE_END 1
+
+
+enum e_enums
+{
+	L_PAREN = 1001,
+	R_PAREN,
+	OR,
+	PIPE,
+	AND,
+	REDIR_APPEND,
+	REDIR_OUT,
+	HEREDOC,
+	REDIR_IN,
+	wORD,
+	DOLLAR,
+	WILDCARD,
+	QUOTES,
+	REMOVE
+};
+
 
 # define L_PAREN 1001
 # define R_PAREN 1002
@@ -150,8 +172,8 @@ void	handle_quotes(char **start, char target, char opposite);
 void	prioritize_list(t_chain *list);
 void	assign_depth(t_chain *list);
 void	strip_words(t_chain *list);
-t_chain	*join_redirs(t_chain *list);
-t_chain	*join_commands(t_chain *list);
+void	join_redirs(t_chain *list);
+void	join_commands(t_chain *list);
 t_chain	*assign_inputs(t_chain *list, t_chain *ptr);
 void	pick_left_redirs(t_chain *list);
 t_chain	*convert_infix(t_chain *infix);
