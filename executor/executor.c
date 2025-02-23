@@ -75,16 +75,16 @@ void	init_process(t_ast *tree, const char *cmd_path, char *argv[], char *envp[])
 	}
 	if (pid == 0)
 	{
-		if (tree->parent == PIPE)
-		{
-			if (tree->side == LEFT)
-			{
-				close(tree->parent->pipe[0]);
-				dup2(tree->parent->pipe[1], STDOUT_FILENO);
-				close(tree->parent->pipe[1]);
-			}
+		// if (tree->parent == PIPE)
+		// {
+		// 	if (tree->side == LEFT)
+		// 	{
+		// 		close(tree->parent->pipe[0]);
+		// 		dup2(tree->parent->pipe[1], STDOUT_FILENO);
+		// 		close(tree->parent->pipe[1]);
+		// 	}
 			
-		}
+		// }
 		if (execve(cmd_path, argv, envp) == -1)
 		{
 			perror("minishell");
@@ -160,7 +160,7 @@ void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
 	char	*cmd_path;
 
 	if (ft_strchr(argv[0], '/'))
-		init_process(argv[0], argv, env_tab, tree);
+		init_process(tree, argv[0], argv, env_tab);
 	else
 	{
 		cmd_path = construct_cmd_path(argv, env);
@@ -170,7 +170,7 @@ void	external_cmd(t_ast *tree, t_env	*env, char **argv, char **env_tab)
 			tree->exit_status = 127;
 			return ;
 		}
-		init_process(cmd_path, argv, env_tab, &tree->exit_status);
+		init_process(tree, cmd_path, argv, env_tab);
 	}
 }
 
@@ -258,6 +258,37 @@ void	create_proc_if(t_ast *tree, t_env *env, char **argv, char **envp)
 	external_cmd(tree, env, argv, envp);
 }
 
+void	detect_in_wich_pipe(t_ast *tree)
+{
+	t_ast	*tmp;
+	// t_ast	*tmp_1;
+
+	// if (!tree->parent)
+	// 	return ;
+	tmp = NULL;
+	if (tree->parent)
+		printf("Parent: %s\n", tree->parent->data->content);
+	if (tree->left)
+		printf("Left: %s\n", tree->left->data->content);
+	printf("node: %s\n", tree->data->content);
+	if (tree->right)
+		printf("Right: %s\n", tree->right->data->content);
+	// return ;
+	// while (tmp)
+	// {
+	// 	if (tmp->type == PIPE
+	// 	&& tmp->data->depth != tree->data->depth
+	// 	&& ft_strncmp(tree->data->next->content, 
+	// 		"&&", ft_strlen(tree->data->content)) != 0)
+	// 		break ;
+	// 	tmp = tmp->parent;
+	// }
+	// printf("Pipe depth: %d\n", tmp->data->depth);
+	// printf("Pipe: %s\n", tmp->data->content);
+	// tree->pipe = tmp->pipe;
+	return ;
+}
+
 void	run_cmd(t_ast *tree, t_env *env)
 {
 	char			**argv;
@@ -276,7 +307,7 @@ void	run_cmd(t_ast *tree, t_env *env)
 	
 
 
-	if (tree->parent == PIPE || !check_buildin(argv[0]))
+	if ((tree->parent && tree->parent->type == PIPE) || !check_buildin(argv[0]))
 	{
 		create_proc_if(tree, env, argv, envp);
 		status = tree->exit_status;
@@ -299,6 +330,7 @@ void	run_pipe(t_ast *tree)
 
 void	executor(t_ast *tree, t_env *env)
 {
+	// detect_in_wich_pipe(tree);
 	if (tree == NULL)
 		return ;
 	if (tree->type == WORD)
