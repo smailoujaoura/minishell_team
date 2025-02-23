@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/23 13:07:22 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/23 13:36:33 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,7 @@ t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
 	remove_if(list);
 	return (list);
 }
-
-t_chain	*join_commands(t_chain *list)
+void	join_commands(t_chain *list)
 {
 	t_argv	*argv;
 	t_argv	*new;
@@ -161,11 +160,10 @@ t_chain	*join_commands(t_chain *list)
 		}
 		list = list->next;
 	}
-	return (list);
 }
 
 
-t_chain	*join_redirs(t_chain *list)
+void	join_redirs(t_chain *list)
 {
 	while (list)
 	{
@@ -185,7 +183,6 @@ t_chain	*join_redirs(t_chain *list)
 		}
 		list = list->next;
 	}
-	return (list);
 }
 
 void	strip_words(t_chain *list)

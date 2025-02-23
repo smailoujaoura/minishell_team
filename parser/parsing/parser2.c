@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/23 13:27:11 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/23 13:37:34 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ t_chain	*convert_infix(t_chain *infix)
 		{
 			if ((!ops || infix->lvl == NAN) && infix->type != R_PAREN)
 				move_item(&infix, &ops, 1);
-			else if (ops && ops->lvl && infix->type != R_PAREN)
+			else if (ops && ops->lvl && infix->type != R_PAREN) // should consolidate more these
 			{
 				while (ops && ops->lvl && ops->lvl >= infix->lvl)
 					move_item(&ops, &post, 0);
@@ -173,7 +173,7 @@ t_chain	*convert_infix(t_chain *infix)
 			else
 			{
 				printf("handle this shit ls unclosed parenthesis *\n");
-				move_item(&infix, &strain, 1);
+				move_item(&infix, &strain, 1); // STRAIN SHOULD BE NULL AT THE END OR WE HAVE SOMETHING WRONG IN INFIX POSTFIX CONVERTER
 			}
 		}
 	}
