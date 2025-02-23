@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/22 15:57:29 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/23 13:07:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ t_ast	*parse_line(char *line)
 	assign_depth(list);
 	// strip_words(list);
 
-	join_redirs(list);
-	join_commands(list);
+	join_redirs(list); // list =  did not assign returned to list!
+	join_commands(list);// did not assign returned to list!
 	
 	// 
 	if (open_heredocs(list))

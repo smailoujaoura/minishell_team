@@ -29,7 +29,7 @@ LIBS = ./utils/libft/libft.a
 all: $(NAME)
 
 %.o: %.c minishell.h
-	$(COMP) -c $< -o $@ -MMD
+	$(COMP) -c $< -o $@
 
 $(NAME): $(LIBS) $(OBJS)
 	$(COMP) $(OBJS) $(LIBS) $(FLAGS) -o $(NAME)

@@ -34,6 +34,9 @@
 # define NOT_QUOTE '!'
 # define QUOTE 'q'
 
+# define READ_END 0
+# define WRITE_END 1
+
 
 # define L_PAREN 1001
 # define R_PAREN 1002
