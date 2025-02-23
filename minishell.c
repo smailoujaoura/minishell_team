@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/23 13:07:42 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/23 18:38:06 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ t_ast	*parse_line(char *line)
 	t_chain	*list;
 	t_chain	*post;
 	t_ast	*root;
+	char	*temp;
 
 
 	list = convert_str(line);
@@ -94,6 +95,15 @@ t_ast	*parse_line(char *line)
 	// print_with_files(list);
 	// print_with_args(list);
 
+	t_chain	*last = lstlast(list);
+	if (last->type == PIPE)
+	{
+		ft_malloc(0, DEALLOCATE);
+		temp = readline("> ");
+		line = ft_strjoin(line, temp, SOUJAOUR);
+		free(temp);
+		parse_line(line);
+	}
 	post = convert_infix(list);
 	root = build_tree(post);
 	link_parent_child(root, NULL, IS_ROOT);
@@ -123,6 +133,7 @@ void	exit_shell(void)
 char	*get_line(t_env *env)
 {
 	char    *line;
+
 	line = readline("Minishell: ");
 	if (line)
 		add_history(line);
