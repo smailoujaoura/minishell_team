@@ -251,7 +251,7 @@ void    here_doc(t_chain *data);
 // EXPANDING
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
 void	executor(t_ast *tree, t_env *env);
-void	expand_redirs(t_chain *adj, t_chain *blk, t_env *env);
+void	expand_redirs(t_chain *ptr, t_env *env);
 
 
 char	*get_value(char *var, t_env *env);

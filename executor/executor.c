@@ -163,7 +163,7 @@ void	create_adj_files(t_chain *adj)
 
 int run_empty_cmd(t_ast *tree, t_env *env)
 {
-	expand_redirs(tree->data->adj_f, NULL, env);
+	expand_redirs(tree->data->adj_f, env);
 	create_adj_files(tree->data->adj_f);
 	return (0);
 }
