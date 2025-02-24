@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/22 15:55:59 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/24 11:20:47 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+# define RECORD 9327
+# define SORT 1232
 
 int	is_var(char *str, int i)
 {
@@ -364,79 +367,6 @@ void	swap_contents(t_list *one, t_list *two)
 	two->content = tmp;
 }
 
-// int	cmp(char *one, char *two)
-// {
-// 	return (ft_strncmp(one, two, ft_strlen(one)));
-// }
-
-// int	calculate_length(t_list *list)
-// {
-// 	int		len;
-// 	int		i;
-// 	char	*str;
-
-// 	len = 0;
-// 	while (list)
-// 	{
-// 		i = 0;
-// 		str = (char *)list->content;
-// 		while (str[i++])
-// 			len++;
-// 		if (list->next)
-// 			len++;
-// 		list = list->next;
-// 	}
-// 	return (len);
-// }
-
-// char	*make_array_list(t_list *list)
-// {
-// 	char	*result;
-// 	char	*str;
-// 	int		i;
-// 	int		j;
-
-// 	j = 0;
-// 	result = ft_malloc(calculate_length(list) + 1, ALLOCATE);
-// 	while (list)
-// 	{
-// 		i = 0;
-// 		str = (char *)list->content;
-// 		while (str[i])
-// 			result[j++] = str[i++];
-// 		if (list->next)
-// 			result[j++] = ' ';
-// 		list = list->next;
-// 	}
-// 	result[j] = '\0';
-// 	return (result);
-// }
-
-// char	*sort_list_make_array(t_list *list)
-// {
-// 	int		swapped;
-// 	t_list	*ptr;
-
-// 	swapped = 1;
-// 	ptr = list;
-// 	if (list == NULL)
-// 		return (NULL);
-// 	while (swapped)
-// 	{
-// 		swapped = 0;
-// 		while (ptr->next)
-// 		{
-// 			if (cmp(ptr->content, ptr->next->content) > 0)
-// 			{
-// 				swap_contents(ptr, ptr->next);
-// 				swapped = 1;
-// 			}
-// 			ptr = ptr->next;
-// 		}
-// 		ptr = list;
-// 	}
-// 	return (make_array_list(list));
-// }
 
 char	**ft_split_if(char *str, char sep, char *delim_place)
 {
@@ -490,9 +420,6 @@ char	**dynamic_array(char **arr, char *new)
 	result[size] = ft_strdup(new, SOUJAOUR);
 	return (result);
 }
-
-# define RECORD 9327
-# define SORT 1232
 
 void	bubble_ascii_sort(char **arr)
 {
@@ -609,7 +536,7 @@ int	is_spaces(char *str)
 	return (1);
 }
 
-void	expand_redirs(t_chain *ptr, t_chain *blk, t_env *env)
+void	expand_redirs(t_chain *ptr, t_env *env)
 {
 	char	*pattern[2];
 	char	*actual;
@@ -638,8 +565,5 @@ void	expand_redirs(t_chain *ptr, t_chain *blk, t_env *env)
 		}
 		ptr = ptr->next;
 	}
-	if (blk == NULL)
-		return ;
-	expand_redirs(blk, NULL, env);
 }
  
