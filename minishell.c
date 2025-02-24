@@ -6,13 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 11:14:23 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 12:29:09 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_with_args(t_chain *ptr);
+
 int	open_heredocs(t_chain *list)
 {
 	int	execute_or_not;
@@ -32,40 +32,53 @@ int	open_heredocs(t_chain *list)
 	return (execute_or_not);
 }
 
+t_ast	*parse_line(char *line);
+
+int	complete_line(t_chain *last, char **line)
+{
+	char		*temp;
+
+	if (last->type == PIPE || last->type == AND || last->type == OR)
+	{
+		temp = readline("> ");
+		if (temp == NULL)
+		{
+			printf("minishell: syntax error: unexpected end of file\n");
+			printf("exit\n");
+			exit(1);
+		}
+		*line = ft_strjoin(*line, " ", SOUJAOUR);
+		*line = ft_strjoin(*line, temp, SOUJAOUR);
+		free(temp);
+		return (1);
+	}
+	else
+	{
+		if (line[0])
+			add_history(*line);
+		return (0);
+	}
+}
+
 t_ast	*parse_line(char *line)
 {
 	t_chain	*list;
+	t_chain	*last;
 	t_chain	*post;
 	t_ast	*root;
-	char	*temp;
-
 
 	list = convert_str(line);
 	tokenize_list(list);
 	check_syntax(list, line, 0, 0);
 	prioritize_list(list);
-
 	join_redirs(list);
 	join_commands(list);
-
 	if (open_heredocs(list))
 		return (NULL);
-
 	list = assign_inputs(list, NULL);
-	pick_left_redirs(list);
-	// severe_redirs will pick up left redirections and assign them to an EMPTY CMD of type WORD
-	// print_with_files(list);
-	// print_with_args(list);
-
-	t_chain	*last = lstlast(list);
-	if (last->type == PIPE)
-	{
-		ft_malloc(0, DEALLOCATE);
-		temp = readline("> ");
-		line = ft_strjoin(line, temp, SOUJAOUR);
-		free(temp);
-		parse_line(line);
-	}
+	last = lstlast(list);
+	if (complete_line(last, &line))
+		return (parse_line(line));
 	post = convert_infix(list);
 	root = build_tree(post);
 	return (root);
@@ -90,16 +103,16 @@ void	exit_shell(void)
 	exit(0);
 }
 
-char	*get_line(t_env *env)
-{
-	char    *line;
+// char	*get_line(t_env *env)
+// {
+// 	char    *line;
 
-	line = readline("Minishell: ");
-	if (line[0])
-		add_history(line);
-	return (line);
-	(void)env;
-}
+// 	line = readline("Minishell: ");
+// 	if (line[0])
+// 		add_history(line);
+// 	return (line);
+// 	(void)env;
+// }
 
 void	loop_minishell(t_env *env)
 {
@@ -108,7 +121,7 @@ void	loop_minishell(t_env *env)
 	
 	while (1337)
 	{
-		line = get_line(env);
+		line = readline("Minishell: ");
 		if (line == NULL)
 			break ;
 		root = parse_line(line);

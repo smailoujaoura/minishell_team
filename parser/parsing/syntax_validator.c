@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/13 17:32:52 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:32:34 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 
 int	check_pipe(t_chain *prev, t_chain *next)
 {
-	if (!next || next->type == PIPE || next->type == AND || next->type == OR || !prev)
+	if (next == NULL)
+		return (0);
+	if (next->type == PIPE || next->type == AND || next->type == OR || !prev)
 	{
 		if (!next)
 			printf("%s '%s'\n", SYNTAXERR, "newline");
@@ -33,7 +35,9 @@ int	check_pipe(t_chain *prev, t_chain *next)
 
 int	check_logicals(t_chain *prev, t_chain *next)
 {
-	if (!next || next->type == PIPE || next->type == AND || next->type == OR)
+	if (next == NULL)
+		return (0);
+	if (next->type == PIPE || next->type == AND || next->type == OR)
 	{
 		if (!next)
 			printf("%s `%s'\n", SYNTAXERR, "newline");

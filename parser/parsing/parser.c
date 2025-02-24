@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 11:09:04 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:41:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
 	list = assign_inputs_edges(list);
 	assign_adjacent_redirs(list, ptr);
 	remove_if(list);
+	pick_left_redirs(list); // actually needed.
 	return (list);
 }
 void	join_commands(t_chain *list)

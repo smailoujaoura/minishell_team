@@ -239,5 +239,4 @@ void	executor(t_ast *tree, t_env *env)
 	// 	if (tree->left->exit_status != 0)
 	// 		executor(tree->right, env);
 	// }
-	
 }
