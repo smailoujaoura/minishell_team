@@ -147,6 +147,14 @@ typedef struct s_env
     struct s_env *next;
 } t_env;
 
+// this struct will be sent around in execution better than keeping sending env
+typedef struct	s_shell
+{
+	t_env	*env;
+	int		exit;
+	int		last;
+}	t_shell;
+
 // Garbage Collectors
 void	*ft_malloc(size_t size, int flag);
 void	garbage_collector(t_list *allocs, void *one, void *two);
