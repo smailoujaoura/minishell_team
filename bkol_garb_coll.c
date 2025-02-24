@@ -34,7 +34,7 @@ void	*ft_malloc_bkol(size_t size, int flag)
 		{
 			// garbage_collector(NULL, NULL, NULL);
 			garbage_coll_bkol(allocs, ptr, new);
-			panic_exit(MEMORY_ERROR);
+			printf("Panic exit\n");
 		}
 		new->content = ptr;
 		new->next = NULL;

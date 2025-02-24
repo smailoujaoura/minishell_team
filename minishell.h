@@ -17,6 +17,58 @@
 #include <dirent.h>
 #include <sys/types.h>
 
+// General Macros
+# define MEMORY_ERROR "Memory Error!"
+
+// Macros for token recognization
+# define WHITESPACE "\t\n\v\f\r "
+# define SYMBOLS "<>|()\"'"
+
+# define SINGLES '\''
+# define DOUBLES '"'
+
+// Easy pipes ends remembering
+# define READ_END 0
+# define WRITE_END 1
+
+// Types for recognized by tokenizer except for SUB; AST nodes have types: SUB, OR, AND, WORD, PIPE
+# define L_PAREN 1001
+# define R_PAREN 1002
+# define OR 1003
+# define PIPE 1004
+# define AND 1005
+# define REDIR_APPEND 1006
+# define REDIR_OUT 1007
+# define HEREDOC 1008
+# define REDIR_IN 1009
+# define WORD 1010
+# define DOLLAR 1011
+# define WILDCARD 1012
+# define QUOTES 1013
+# define SUB 1016
+# define WILDCARDS 1020
+
+// Identify redir mode
+# define IN 0
+# define OUT 1
+
+// Assigning this type for some nodes to be removed later on, like redirs...
+# define REMOVE 1015
+
+/*
+Macros for operators and terms priority: 
+	VIP for all commands: ls, echo, grep, ./a.out, ... 
+	LVL1 for pipes, 
+	LVL2 for logicals "&&" and "||"
+	NAN for parenthesis, which have no priority
+this to apply the Shunting Yard algorithm
+*/
+# define VIP 9
+# define NAN 0
+# define LVL1 2
+# define LVL2 1
+
+// Macros for expanding
 # define FROM_VAR 'v'
 # define LITERAL 'l'
 # define IGNORE 'i'
@@ -34,119 +86,59 @@
 # define NOT_QUOTE '!'
 # define QUOTE 'q'
 
-# define READ_END 0
-# define WRITE_END 1
 
 
-// enum e_enums
-// {
-// 	L_PAREN = 1001,
-// 	R_PAREN,
-// 	OR,
-// 	PIPE,
-// 	AND,
-// 	REDIR_APPEND,
-// 	REDIR_OUT,
-// 	HEREDOC,
-// 	REDIR_IN,
-// 	WORD,
-// 	DOLLAR,
-// 	WILDCARD,
-// 	QUOTES,
-// 	REMOVE
-// };
-
-
-# define L_PAREN 1001
-# define R_PAREN 1002
-# define OR 1003
-# define PIPE 1004
-# define AND 1005
-# define REDIR_APPEND 1006
-# define REDIR_OUT 1007
-# define HEREDOC 1008
-# define REDIR_IN 1009
-# define WORD 1010
-# define DOLLAR 1011
-# define WILDCARD 1012
-# define QUOTES 1013
-# define REMOVE 1015
-# define SUB 1016
-
-# define WILDCARDS 1020
-
-# define MEMORY_ERROR "Memory Error!"
-void	panic_exit(char *s);
-
-# define WHITESPACE "\t\n\v\f\r "
-# define SYMBOLS "<>|()\"'"
-
-# define SINGLES '\''
-# define DOUBLES '"'
-
-# define VIP 9
-# define NAN 0
-# define LVL1 2
-# define LVL2 1
-
-# define IN 0
-# define OUT 1
-
-// execute(expand(argv->content), )
-
+// Struct for arguments which is a assigned to a variable in t_chain
 typedef struct s_argv
 {
 	int				type;
 	char			*content;
-	int				wildcard;
-	int				dollar;
 	struct s_argv	*next;
 	struct s_argv	*back;
 }	t_argv;
 
+/*
+	Struct for each token but as the algorithm progresses, the list will be compacted until only these are recognized:
+		- Command, this token will absorb the nodes before/after it that are redirections or arguments,
+			and point to them with adj_f for redirs and heredoc, and with argv for arguments 
+		- Pipe (does not absorb any adjacent nodes)
+		- && (does not absorb any adjacent nodes)
+		- || (does not absorb any adjacent nodes)
+		- ( (does not absorb any adjacent nodes)
+		- ) (does not absorb any adjacent nodes)
+			these nodes that don't absorb any nodes adjacent to them will waste memory, and will make code prone errors like derefrencing NULLs/ Bad design
+	This means that the nodes that had tokens like ">", ">>", "<", "file", "<<", "EOF",
+		will be compacted starting [<<]->[EOF] and ending in [<< EOF]
+*/
 typedef struct s_chain
 {
 	int				type;
-	int				depth;
-	int				lvl;
-	int				empty;
 	char			*content;
-	int				wildcard;
-	int				dollar;
 	t_argv			*argv;
+	struct s_chain	*adj_f;
 	char			*file;
 	char			*delim;
 	int				delim_in_quotes;
+	int				lvl;
+	int				empty;
+	int				removable;
+	int				error;
+	int				ambiguous;
 	struct s_chain	*next;
 	struct s_chain	*back;
-	struct s_chain	*adj_f;
-	struct s_chain	*blk_f;
-	int				removable;
-	int				ambiguous;
-	int				*pipe;
-	int				error;
-	int				fd;
 }	t_chain;
 
-# define ROOT 0
-# define LEFT -1
-# define RIGHT 1
-
-
+// Struct for the abstract syntax tree
 typedef struct s_ast
 {
 	int				type;
 	struct s_chain	*data;
 	struct s_ast	*left;
 	struct s_ast	*right;
-	struct s_ast	*parent;
-	int				side;
 	int				exit_status;
-	int				*pipe;
-	int				in;
-	int				out;
 }	t_ast;
 
+// Struct for list of the environment's variables
 typedef struct s_env
 {
     char    *key;
@@ -155,7 +147,7 @@ typedef struct s_env
     struct s_env *next;
 } t_env;
 
-// Garbage Collector
+// Garbage Collectors
 void	*ft_malloc(size_t size, int flag);
 void	garbage_collector(t_list *allocs, void *one, void *two);
 void	*ft_malloc_bkol(size_t size, int flag);
@@ -214,17 +206,6 @@ t_ast	*free_list(t_chain *list);
 
 // convert Post to AST
 t_ast	*build_tree(t_chain *post);
-
-
-
-
-
-
-
-
-
-
-
 
 
 //env

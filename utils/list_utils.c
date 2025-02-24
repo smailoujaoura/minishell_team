@@ -55,23 +55,17 @@ t_chain	*lstnew(char *content)
 	new->content = content;
 	new->type = -1;
 	new->lvl = -1;
-	new->depth = 0;
 	new->empty = 0;
 	new->next = NULL;
 	new->back = NULL;
 	new->delim = NULL;
 	new->file = NULL;
 	new->adj_f = NULL;
-	new->blk_f = NULL;
 	new->argv = NULL;
-	new->pipe = NULL;
 	new->removable = 0;
-	new->wildcard = 0;
-	new->dollar = 0;
 	new->delim_in_quotes = 0;
 	new->ambiguous = 0;
 	new->error = 0;
-	new->fd = -2;
 	return (new);
 }
 
@@ -113,8 +107,6 @@ t_argv	*lstnew_arg(t_chain *cmd)
 	new->back = NULL;
 	new->next = NULL;
 	new->type = -1;
-	new->wildcard = cmd->wildcard;
-	new->dollar = cmd->dollar;
 	new->content = ft_strdup(cmd->content, SOUJAOUR); // should it be strdup or not? s
 	return (new);
 }

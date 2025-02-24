@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:38 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/13 11:11:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:05:43 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,17 +108,11 @@ void	find_type(t_chain *list)
 	list->type = WORD;
 	if (ft_strchr(list->content, '*') && is_wildcard(list->content))
 	{
-		list->wildcard = WILDCARD;
-		if (handle_dollar(list->content))
-			list->dollar = DOLLAR;
 	}
 	else if (*list->content == '"' || *list->content == '\'')
 	{
-		if (handle_dollar(list->content))
-			list->dollar = DOLLAR;
 	}
 	else if (list->content[0] == '$' || handle_dollar(list->content))
 	{
-		list->dollar = DOLLAR;
 	}
 }

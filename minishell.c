@@ -6,46 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 09:20:55 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:14:23 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	print_tree(t_ast *root)
-{
-	if (root == NULL)
-		return ;
-	print_tree(root->left);
-	printf("CONTENT:[%s]\t SIDE:[%d]\n", root->data->content, root->side);
-	print_tree(root->right);
-}
-
-# define IS_ROOT 1
-# define IS_CHILD 0
-
-void	link_parent_child(t_ast *root, t_ast *parent, int type)
-{
-	if (root == NULL)
-		return ;
-	if (type)
-		root->parent = NULL;
-	else
-		root->parent = parent;
-	link_parent_child(root->left, root, IS_CHILD);
-	link_parent_child(root->right, root, IS_CHILD);
-}
-
-void	assign_nodes_sides(t_ast *tree, int side)
-{
-	if (tree == NULL)
-		return ;
-	tree->side = side;
-	assign_nodes_sides(tree->left, LEFT);
-	assign_nodes_sides(tree->right, RIGHT);
-}
-
-
 
 void	print_with_args(t_chain *ptr);
 int	open_heredocs(t_chain *list)
@@ -79,7 +44,6 @@ t_ast	*parse_line(char *line)
 	tokenize_list(list);
 	check_syntax(list, line, 0, 0);
 	prioritize_list(list);
-	assign_depth(list); // migh not be needed
 
 	join_redirs(list);
 	join_commands(list);
@@ -104,8 +68,6 @@ t_ast	*parse_line(char *line)
 	}
 	post = convert_infix(list);
 	root = build_tree(post);
-	link_parent_child(root, NULL, IS_ROOT);
-	assign_nodes_sides(root, ROOT);
 	return (root);
 }
 

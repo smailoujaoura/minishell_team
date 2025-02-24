@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:23 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/15 08:31:43 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:09:18 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,48 +75,6 @@ t_chain	*create_redirs_chain(t_chain *list)
 		list = list->next;
 	}
 	return (redirs);
-}
-
-void	add_files(t_chain *list, t_chain *new)
-{
-	t_chain	*ptr;
-	t_chain	*last;
-
-	ptr = list->blk_f;
-	if (ptr && ptr->blk_f)
-	{
-		last = lstlast(ptr->blk_f);
-		last->next = new;
-		new->back = last;
-	}
-	else
-		list->blk_f = new;
-}
-
-void	create_all_redirs(t_chain *list, t_chain *ptr, int f)
-{
-	t_chain	*redirs_lvl_one;
-	t_chain	*last;
-
-	redirs_lvl_one = create_redirs_chain(ptr);
-	while (is_redir(ptr, IN + OR + OUT))
-		ptr = ptr->next;
-	while (ptr)
-	{
-		if (ptr->back->type == R_PAREN && is_redir(ptr, IN + OR + OUT) && f - 1 > ptr->depth)
-		{
-			if (redirs_lvl_one)
-			{
-				last = lstlast(redirs_lvl_one);
-				last->next = create_redirs_chain(ptr);
-				last->next->back = last;
-			}
-			else
-				redirs_lvl_one = create_redirs_chain(ptr);
-		}
-		ptr = ptr->next;
-	}
-	list->blk_f = redirs_lvl_one;
 }
 
 char	*copy_if(char *str, char *s, char *f)

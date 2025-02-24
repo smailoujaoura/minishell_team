@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 10:09:28 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 11:07:47 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,32 +38,6 @@ void	remove_if(t_chain *list)
 		list = list->next;
 		if (tmp->type == REMOVE || tmp->removable == REMOVE)
 			delete_any(tmp, 0);
-	}
-}
-
-void	assign_block_redirs(t_chain *list)
-{
-	t_chain	*ptr;
-	int		f;
-
-	f = -1;
-	while (list)
-	{
-		if (list->type == WORD && list->depth > 0)
-		{
-			ptr = list;
-			f = ptr->depth;
-			while (ptr && !(ptr->type == R_PAREN && ptr->depth == f)) // maybe ptr->next->depth
-				ptr = ptr->next;
-			if (is_redir(ptr->next, IN + OR + OUT))
-			{
-				if (f > 1)
-					create_all_redirs(list, ptr->next, f);
-				else
-					add_files(list, create_redirs_chain(ptr->next));
-			}
-		}
-		list = list->next;
 	}
 }
 

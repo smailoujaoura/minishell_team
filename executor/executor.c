@@ -141,29 +141,29 @@ int	ft_open(char *path, int mode, int permissions)
 
 void	create_adj_files(t_chain *adj)
 {
-	t_chain	*ptr;
+	// t_chain	*ptr;
 
-	ptr = adj;
-	while (ptr)
-	{
-		if (ptr->type != HEREDOC)
-		{
-			if (ptr->type == REDIR_OUT)
-			{
-				ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if (ptr->fd == -1)
-					return ;
-			}
-		}
-		ptr = ptr->next;
-	}
+	// ptr = adj;
+	(void)adj;
+	// while (ptr)
+	// {
+	// 	if (ptr->type != HEREDOC)
+	// 	{
+	// 		if (ptr->type == REDIR_OUT)
+	// 		{
+	// 			ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	// 			if (ptr->fd == -1)
+	// 				return ;
+	// 		}
+	// 	}
+	// 	ptr = ptr->next;
+	// }
 }
 
 
 int run_empty_cmd(t_ast *tree, t_env *env)
 {
-	expand_redirs(tree->data->adj_f, tree->data->blk_f, env);
-	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
+	expand_redirs(tree->data->adj_f, NULL, env);
 	create_adj_files(tree->data->adj_f);
 	return (0);
 }
@@ -173,7 +173,6 @@ void	run_cmd(t_ast *tree, t_env *env)
 {
 	char			**argv;
 	char			**envp;
-	static int		status;
 
 	if (tree->data->empty)
 	{
@@ -182,19 +181,20 @@ void	run_cmd(t_ast *tree, t_env *env)
 	}
 	argv = expand_cmd(tree->data, tree->data->argv, env);
 	envp = generate_env_tab(env);
-	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
+	(void)envp;
+	(void)argv;
 	
-	if ((tree->parent && tree->parent->type == PIPE) || !check_buildin(argv[0]))
-	{
-		create_proc_if(tree, env, argv, envp);
-		status = tree->exit_status;
-	}
-	else
-	{
-		buildin_excutor(argv, env, &status);
-		tree->exit_status = status;
-	}
+	// // if ((tree->parent && tree->parent->type == PIPE) || !check_buildin(argv[0]))
+	// // {
+	// // 	create_proc_if(tree, env, argv, envp);
+	// // 	status = tree->exit_status;
+	// // }
+	// else
+	// {
+	// 	buildin_excutor(argv, env, &status);
+	// 	tree->exit_status = status;
+	// }
 }
 
 void	run_pipe(t_ast *tree)
@@ -206,14 +206,15 @@ void	run_pipe(t_ast *tree)
 		perror("minishell");
 		return ;
 	}
-	tree->pipe = pipe_pair;
+	(void)tree;
+	(void)pipe_pair;
 }
 
 void	executor(t_ast *tree, t_env *env)
 {
-	// // detect_in_wich_pipe(tree);
-	// if (tree == NULL)
-	// 	return ;
+	if (tree == NULL)
+		return ;
+	(void)env;
 	// if (tree->type == WORD)
 	// {
 	// 	run_cmd(tree, env);
