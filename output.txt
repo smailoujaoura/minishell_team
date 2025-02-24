@@ -1,0 +1,7 @@
+This will go into the file before forking
+Hello from parent process!
+This will go into the file before forking
+Hello from child process!
+This will go into the file before forking
+Hello from child process!
+Another 1337

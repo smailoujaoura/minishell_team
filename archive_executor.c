@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
+/*   archive_executor.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/24 22:50:14 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/24 21:59:11 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,9 +172,7 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	}
 	if (pid == 0)
 	{
-		printf("OUT: %d\n", STDOUT_FILENO);
-		printf("IN: %d\n", STDOUT_FILENO);
-		printf("CMD: %s\n", argv[0]);
+		printf("FDOUT: %d\n", STDOUT_FILENO);
 		if (tree->in_fd > 2)
 			dup2(STDIN_FILENO, tree->in_fd);
 		if (tree->out_fd > 2)
@@ -245,8 +243,13 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 {
 	int	pipe_pair[2];
 	pid_t pid_left;
-	pid_t pid_right;
+	// pid_t pid_right;
+	char buff[100000];
+	char	*argv[3] = {"ls", "-la", NULL};
+	char	**envp;
+	char *cmd_path;
 
+	envp = generate_env_tab(mini->env);
 	if (pipe(pipe_pair) == -1)
 	{
 		perror("6: ");
@@ -256,24 +259,44 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 	if (pid_left == 0)
 	{
 		close(pipe_pair[0]);
-		dup2(pipe_pair[1], STDOUT_FILENO);
-		close(pipe_pair[1]);
-		executor(tree->left, mini);
-		exit(0);
+		dup2(STDOUT_FILENO, pipe_pair[1]);
+		// executor(tree->left, mini);
+		if (tree->in_fd > 2)
+			dup2(STDIN_FILENO, tree->in_fd);
+		if (tree->out_fd > 2)
+			dup2(STDOUT_FILENO, tree->out_fd);
+		if (ft_strchr(argv[0], '/'))
+		{
+			if (execve(argv[0], argv, envp) == -1)
+			{
+				perror("4: ");
+				exit(EXIT_FAILURE);
+			}	
+		}
+		else
+		{
+			cmd_path = construct_cmd_path(argv, mini->env);
+			if (execve(cmd_path, argv, envp) == -1)
+			{
+				perror("5: ");
+				exit(EXIT_FAILURE);
+			}
+		}
 	}
-	pid_right = fork();
-	if (pid_right == 0)
-	{
-		close(pipe_pair[1]);
-		dup2(pipe_pair[0], STDIN_FILENO);
-		close(pipe_pair[0]);
-		executor(tree->right, mini);
-		exit(0);
-	}
-	waitpid(-1, NULL, 0);
-	waitpid(-1, NULL, 0);
-	close(pipe_pair[0]);
 	close(pipe_pair[1]);
+	wait(NULL);
+	read(pipe_pair[0], buff, 1337);
+	printf("Here%s\n", buff);
+	// pid_right = fork();
+	// if (pid_right == 0)
+	// {
+	// 	close(pipe_pair[1]);
+	// 	dup2(STDIN_FILENO, pipe_pair[0]);
+	// 	executor(tree->right, mini);
+	// }
+	// waitpid(-1, NULL, 0);
+	// waitpid(-1, NULL, 0);
+	close(pipe_pair[0]);
 }
 
 void	run_sub(t_ast *tree, t_shell *mini)

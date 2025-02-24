@@ -11,7 +11,6 @@ SRCS =	main.c \
 		parser/parsing/syntax_validator.c \
 		parser/parsing/ast_tree.c \
 		executor/builtins.c \
-		bkolani.c \
 		garbage_collector.c \
 		bkol_garb_coll.c \
 		utils/libft/allocator.c \
@@ -23,7 +22,7 @@ SRCS =	main.c \
 OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)
 COMP = cc -Wall -Wextra -Werror -g -fsanitize=address
-FLAGS = -lreadline
+FLAGS = -lreadline -lncurses
 LIBS = ./utils/libft/libft.a
 
 all: $(NAME)

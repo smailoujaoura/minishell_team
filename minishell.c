@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 12:29:09 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 14:36:25 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,18 +103,7 @@ void	exit_shell(void)
 	exit(0);
 }
 
-// char	*get_line(t_env *env)
-// {
-// 	char    *line;
-
-// 	line = readline("Minishell: ");
-// 	if (line[0])
-// 		add_history(line);
-// 	return (line);
-// 	(void)env;
-// }
-
-void	loop_minishell(t_env *env)
+void	loop_minishell(t_shell *mini)
 {
 	char	*line;
 	t_ast	*root;
@@ -125,7 +114,7 @@ void	loop_minishell(t_env *env)
 		if (line == NULL)
 			break ;
 		root = parse_line(line);
-		executor(root, env);
+		executor(root, mini);
 		free(line);
 		ft_malloc(0, DEALLOCATE);
 	}

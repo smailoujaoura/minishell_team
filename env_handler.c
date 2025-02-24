@@ -72,7 +72,7 @@ static t_env *create_new_env(const char *line)
 }
 
 // Function to convert every line of envp as env node
-t_env *handle_env(const char **envp)
+t_env *handle_env(char **envp)
 {
     int i = -1;
     t_env *head;

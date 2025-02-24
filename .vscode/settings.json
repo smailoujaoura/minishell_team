@@ -6,6 +6,8 @@
 		"errno.h": "c",
 		"stdint.h": "c",
 		"cstdint": "cpp",
-		"limits": "c"
+		"limits": "c",
+		"cstdlib": "c",
+		"wait.h": "c"
 	}
 }

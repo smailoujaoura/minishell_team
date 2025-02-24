@@ -16,6 +16,7 @@
 # include <sys/wait.h>
 #include <dirent.h>
 #include <sys/types.h>
+#include <stdbool.h>
 
 // General Macros
 # define MEMORY_ERROR "Memory Error!"
@@ -31,7 +32,7 @@
 # define READ_END 0
 # define WRITE_END 1
 
-// Types for recognized by tokenizer except for SUB; AST nodes have types: SUB, OR, AND, WORD, PIPE
+// Types for recognized by tokenizer except for SUB and CMD; AST nodes have types: SUB, OR, AND, CMD, PIPE
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -46,6 +47,7 @@
 # define WILDCARD 1012
 # define QUOTES 1013
 # define SUB 1016
+# define CMD 1027
 # define WILDCARDS 1020
 
 // Identify redir mode
@@ -126,6 +128,7 @@ typedef struct s_chain
 	int				ambiguous;
 	struct s_chain	*next;
 	struct s_chain	*back;
+	int				fd;
 }	t_chain;
 
 // Struct for the abstract syntax tree
@@ -133,6 +136,9 @@ typedef struct s_ast
 {
 	int				type;
 	struct s_chain	*data;
+	char			**argv;
+	int				out_fd;
+	int				in_fd;
 	struct s_ast	*left;
 	struct s_ast	*right;
 	int				exit_status;
@@ -151,8 +157,8 @@ typedef struct s_env
 typedef struct	s_shell
 {
 	t_env	*env;
-	int		exit;
-	int		last;
+	int		last_exit;
+	bool	should_execute;
 }	t_shell;
 
 // Garbage Collectors
@@ -217,7 +223,7 @@ t_ast	*build_tree(t_chain *post);
 
 
 //env
-t_env	*handle_env(const char **envp);
+t_env	*handle_env(char **envp);
 t_env *get_env_var(t_env *env, const char *key);
 char *expand_env_var(t_env *env, char *exp_env);
 
@@ -250,10 +256,13 @@ void    here_doc(t_chain *data);
 
 // EXPANDING
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
-void	executor(t_ast *tree, t_env *env);
+void	executor(t_ast *tree, t_shell *mini);
 void	expand_redirs(t_chain *ptr, t_env *env);
 
 
 char	*get_value(char *var, t_env *env);
+
+// 
+void	loop_minishell(t_shell *mini);
 
 #endif

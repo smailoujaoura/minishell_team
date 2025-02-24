@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_tree.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 10:33:44 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 21:21:53 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_ast	*construct_tree(t_chain **node)
 	if (!node || !*node)
 		return (NULL);
 	else if ((*node)->type == WORD)
-		return (make_tree_node(node,  WORD));
+		return (make_tree_node(node,  CMD));
 	else if ((*node)->type == PIPE)
 		return (make_tree_node(node, PIPE));
 	else if ((*node)->type == AND)
@@ -122,6 +122,5 @@ t_ast	*build_tree(t_chain *post)
 	root = construct_tree(&list);
 	if (list)
 		fill_tree_recursively(root, &list);
-	print_tree_with(root);
 	return (root);
 }
