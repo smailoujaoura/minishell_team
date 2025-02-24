@@ -38,23 +38,23 @@
 # define WRITE_END 1
 
 
-enum e_enums
-{
-	L_PAREN = 1001,
-	R_PAREN,
-	OR,
-	PIPE,
-	AND,
-	REDIR_APPEND,
-	REDIR_OUT,
-	HEREDOC,
-	REDIR_IN,
-	wORD,
-	DOLLAR,
-	WILDCARD,
-	QUOTES,
-	REMOVE
-};
+// enum e_enums
+// {
+// 	L_PAREN = 1001,
+// 	R_PAREN,
+// 	OR,
+// 	PIPE,
+// 	AND,
+// 	REDIR_APPEND,
+// 	REDIR_OUT,
+// 	HEREDOC,
+// 	REDIR_IN,
+// 	WORD,
+// 	DOLLAR,
+// 	WILDCARD,
+// 	QUOTES,
+// 	REMOVE
+// };
 
 
 # define L_PAREN 1001
@@ -71,6 +71,7 @@ enum e_enums
 # define WILDCARD 1012
 # define QUOTES 1013
 # define REMOVE 1015
+# define SUB 1016
 
 # define WILDCARDS 1020
 

@@ -37,16 +37,6 @@ void	init_process(t_ast *tree, const char *cmd_path, char *argv[], char *envp[])
 	}
 	if (pid == 0)
 	{
-		// if (tree->parent == PIPE)
-		// {
-		// 	if (tree->side == LEFT)
-		// 	{
-		// 		close(tree->parent->pipe[0]);
-		// 		dup2(tree->parent->pipe[1], STDOUT_FILENO);
-		// 		close(tree->parent->pipe[1]);
-		// 	}
-			
-		// }
 		if (execve(cmd_path, argv, envp) == -1)
 		{
 			perror("minishell");
@@ -148,31 +138,6 @@ int	ft_open(char *path, int mode, int permissions)
 	return (fd);
 }
 
-void	create_blk_files(t_chain *blk, int deepest)
-{
-	int		current;
-	t_chain	*ptr;
-
-	current = 0;
-	while (current <= deepest)
-	{
-		ptr = blk;
-		while (ptr)
-		{
-			if (ptr->type != HEREDOC && ptr->depth == current)
-			{
-				if (ptr->type == REDIR_OUT)
-				{
-					ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-					if (ptr->fd == -1)
-						return ;
-				}
-			}
-			ptr = ptr->next;
-		}
-		current++;
-	}
-}
 
 void	create_adj_files(t_chain *adj)
 {
@@ -194,18 +159,6 @@ void	create_adj_files(t_chain *adj)
 	}
 }
 
-int find_deepest(t_chain *ptr)
-{
-	int deepest = -1;
-
-	while (ptr)
-	{
-		if (ptr->depth > deepest)
-			deepest = ptr->depth;
-		ptr = ptr->next;
-	}
-	return (deepest);
-}
 
 int run_empty_cmd(t_ast *tree, t_env *env)
 {
@@ -215,41 +168,6 @@ int run_empty_cmd(t_ast *tree, t_env *env)
 	return (0);
 }
 
-void	create_proc_if(t_ast *tree, t_env *env, char **argv, char **envp)
-{
-	external_cmd(tree, env, argv, envp);
-}
-
-// void	detect_in_wich_pipe(t_ast *tree)
-// {
-// 	t_ast	*tmp;
-// 	// t_ast	*tmp_1;
-
-// 	// if (!tree->parent)
-// 	// 	return ;
-// 	tmp = NULL;
-// 	if (tree->parent)
-// 		printf("Parent: %s\n", tree->parent->data->content);
-// 	if (tree->left)
-// 		printf("Left: %s\n", tree->left->data->content);
-// 	printf("node: %s\n", tree->data->content);
-// 	if (tree->right)
-// 		printf("Right: %s\n", tree->right->data->content);
-// 	// return ;
-// 	// while (tmp)
-// 	// {
-// 	// 	if (tmp->type == PIPE
-// 	// 	&& tmp->data->depth != tree->data->depth
-// 	// 	&& ft_strncmp(tree->data->next->content, 
-// 	// 		"&&", ft_strlen(tree->data->content)) != 0)
-// 	// 		break ;
-// 	// 	tmp = tmp->parent;
-// 	// }
-// 	// printf("Pipe depth: %d\n", tmp->data->depth);
-// 	// printf("Pipe: %s\n", tmp->data->content);
-// 	// tree->pipe = tmp->pipe;
-// 	return ;
-// }
 
 void	run_cmd(t_ast *tree, t_env *env)
 {
@@ -267,8 +185,6 @@ void	run_cmd(t_ast *tree, t_env *env)
 	create_blk_files(tree->data->blk_f, find_deepest(tree->data->blk_f));
 	create_adj_files(tree->data->adj_f);
 	
-
-
 	if ((tree->parent && tree->parent->type == PIPE) || !check_buildin(argv[0]))
 	{
 		create_proc_if(tree, env, argv, envp);
@@ -295,31 +211,32 @@ void	run_pipe(t_ast *tree)
 
 void	executor(t_ast *tree, t_env *env)
 {
-	// detect_in_wich_pipe(tree);
-	if (tree == NULL)
-		return ;
-	if (tree->type == WORD)
-	{
-		run_cmd(tree, env);
-		executor(tree->left, env);
-		executor(tree->right, env);
-	}
-	if (tree->type == PIPE)
-	{
-		run_pipe(tree);
-		executor(tree->left, env);
-		executor(tree->right, env);
-	}
-	if (tree->type == AND)
-	{
-		executor(tree->left, env);
-		if (tree->left->exit_status == 0)
-			executor(tree->right, env);
-	}
-	if (tree->type == OR)
-	{
-		executor(tree->left, env);
-		if (tree->left->exit_status != 0)
-			executor(tree->right, env);
-	}
+	// // detect_in_wich_pipe(tree);
+	// if (tree == NULL)
+	// 	return ;
+	// if (tree->type == WORD)
+	// {
+	// 	run_cmd(tree, env);
+	// 	executor(tree->left, env);
+	// 	executor(tree->right, env);
+	// }
+	// if (tree->type == PIPE)
+	// {
+	// 	run_pipe(tree);
+	// 	executor(tree->left, env);
+	// 	executor(tree->right, env);
+	// }
+	// if (tree->type == AND)
+	// {
+	// 	executor(tree->left, env);
+	// 	if (tree->left->exit_status == 0)
+	// 		executor(tree->right, env);
+	// }
+	// if (tree->type == OR)
+	// {
+	// 	executor(tree->left, env);
+	// 	if (tree->left->exit_status != 0)
+	// 		executor(tree->right, env);
+	// }
+	
 }

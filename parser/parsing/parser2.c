@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/23 13:37:34 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 10:09:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	assign_adjacent_redirs(t_chain *list, t_chain *ptr)
 			list->adj_f = create_redirs_chain(ptr->next);
 			remove_adjacent_redirs(list, ptr->next, 1);
 		}
-		if (list->type == WORD && is_redir(list->next, IN + OR + OUT))
+		if ((list->type == WORD || list->type == R_PAREN) && is_redir(list->next, IN + OR + OUT))
 		{
 			ptr = list->next;
 			if (list->adj_f)
@@ -138,12 +138,15 @@ t_chain	*assign_inputs_edges(t_chain *list)
 	return (list);
 }
 
+// void	organize_sub(t_chain *r_paren)
+// {
+// 	r_paren->type = SUBSHELL;
+// }
 
 t_chain	*convert_infix(t_chain *infix)
 {
 	t_chain	*post;
 	t_chain	*ops;
-	t_chain	*strain;
 
 	post = NULL;
 	ops = NULL;
@@ -165,19 +168,18 @@ t_chain	*convert_infix(t_chain *infix)
 			{
 				while (ops && ops->type != L_PAREN)
 					move_item(&ops, &post, 0);
-				delete_one(&infix, 1);
+				move_item(&infix, &post, 0);
 				delete_one(&ops, 1);
 			}
 			else if (ops->type == L_PAREN)
 				move_item(&infix, &ops, 1);
 			else
 			{
-				printf("handle this shit ls unclosed parenthesis *\n");
-				move_item(&infix, &strain, 1); // STRAIN SHOULD BE NULL AT THE END OR WE HAVE SOMETHING WRONG IN INFIX POSTFIX CONVERTER
+				printf("handle this shit ls unclosed parenthesis *\n"); // it should never ever reach here 
 			}
 		}
 	}
 	while (ops)
-		move_item(&ops, &post, 0);
+		move_item(&ops, &post, 0); // there might be some case where we move left parenthesis to the post fix list
 	return (post);
 }

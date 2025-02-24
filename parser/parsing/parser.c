@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/23 13:36:33 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/24 09:24:21 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
 {
 	list = assign_inputs_edges(list);
 	assign_adjacent_redirs(list, ptr);
-	assign_block_redirs(list);
+	// assign_block_redirs(list);
 	remove_if(list);
 	return (list);
 }
@@ -173,7 +173,6 @@ void	join_redirs(t_chain *list)
 			list->wildcard = list->next->wildcard;
 			list->dollar = list->next->dollar;
 			delete_any(list->next, 0);
-			// handle ambiguous syntax when given * if it expands to more than it should.
 		}
 		if (list->type == HEREDOC)
 		{

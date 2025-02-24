@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/23 18:38:06 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/24 09:20:55 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,11 @@ t_ast	*parse_line(char *line)
 	tokenize_list(list);
 	check_syntax(list, line, 0, 0);
 	prioritize_list(list);
-	assign_depth(list);
-	// strip_words(list);
+	assign_depth(list); // migh not be needed
 
-	join_redirs(list); // list =  did not assign returned to list!
-	join_commands(list);// did not assign returned to list!
-	
-	// 
+	join_redirs(list);
+	join_commands(list);
+
 	if (open_heredocs(list))
 		return (NULL);
 
@@ -135,7 +133,7 @@ char	*get_line(t_env *env)
 	char    *line;
 
 	line = readline("Minishell: ");
-	if (line)
+	if (line[0])
 		add_history(line);
 	return (line);
 	(void)env;
