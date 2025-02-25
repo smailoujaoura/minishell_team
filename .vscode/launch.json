@@ -21,6 +21,10 @@
                 {
                     "description": "Follow child process after fork",
                     "text": "-gdb-set follow-fork-mode child"
+                },
+                {
+                    "description": "Do not detach from parent after fork",
+                    "text": "-gdb-set detach-on-fork off"
                 }
             ],
             "preLaunchTask": "build",
@@ -32,4 +36,4 @@
             }
         }
     ]
-}
+}q

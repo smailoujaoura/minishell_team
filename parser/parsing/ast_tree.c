@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ast_tree.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 21:21:53 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/25 11:03:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_ast	*construct_tree(t_chain **node)
 
 void	fill_tree_recursively(t_ast	*parent, t_chain **node)
 {
-	if (node == NULL || *node == NULL || parent->type == WORD)
+	if (node == NULL || *node == NULL || parent->type == CMD)
 		return ;
 	if (parent->type != R_PAREN)
 	{
