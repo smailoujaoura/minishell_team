@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 11:20:47 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/25 08:40:53 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -517,7 +517,6 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 	}
 	actual = remove_quotes(actual, flags, 0, 0);
 	arr = ft_split_if(actual, SPLIT, store_wilds(NULL, -1, RETRIEVE));
-	arr = expand_wildcards(arr, NULL, NULL, 0);
 	return (expand_wildcards(arr, NULL, NULL, 0));
 }
 

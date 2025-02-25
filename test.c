@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -19,8 +18,6 @@ int main(int ac, char **av, char **envp)
     char *argv_1[2] = {"/bin/ls", NULL};
     char *argv_2[2] = {"/bin/wc", NULL};
 
-    // char *env[1] = {NULL};
-
     pipe(fd);
     l_pid = fork();
     if (l_pid == 0)
@@ -31,11 +28,13 @@ int main(int ac, char **av, char **envp)
         pid_t one = fork();
         if (one == 0)
         {
-            // printf("%d\n", STDOUT_FILENO);
             execve(argv_1[0], argv_1, envp);
         }
-        exit(0);
+        wait(NULL);  // doing this makes everything break including bad input errors 
+        // exit(0);    // Doing this makes everything run smoothly, but 
+        // omitting both makes everything hang 
     }
+    printf("Bloody hell\n");
     r_pid = fork();
     if (r_pid == 0)
     {
@@ -45,15 +44,15 @@ int main(int ac, char **av, char **envp)
         pid_t two = fork();
         if (two == 0)
         {
-            // printf("%d\n", STDIN_FILENO);
             execve(argv_2[0], argv_2, envp);
-            // read(STDIN_FILENO, buff, 1337);
-            // printf("Right received: %s", buff);
         }
-        exit(0);
+        wait(NULL);
+        // exit(0);
     }
-    
-    close(fd[0]);
+     printf("Bat shit\n");
     close(fd[1]);
+    close(fd[0]);
+    wait(NULL);
+    wait(NULL);
     return 0;
 }

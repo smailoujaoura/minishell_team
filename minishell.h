@@ -265,4 +265,6 @@ char	*get_value(char *var, t_env *env);
 // 
 void	loop_minishell(t_shell *mini);
 
+void	panic_exit(char *ptr, int place);
+
 #endif

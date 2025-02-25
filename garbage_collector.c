@@ -3,20 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   garbage_collector.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 17:39:12 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 20:17:48 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/25 10:38:09 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	panic_exit(char *s)
-{
-	printf("%s\n", s);
-	exit(1);
-}
 
 void	garbage_collector(t_list *allocs, void *one, void *two)
 {
@@ -55,7 +49,7 @@ void	*ft_malloc(size_t size, int flag)
 		{
 			garbage_collector(allocs, ptr, new);
 			ft_malloc_bkol(0, DEALLOCATE);
-			panic_exit(MEMORY_ERROR);
+			panic_exit(MEMORY_ERROR, 100);
 		}
 		new->content = ptr;
 		new->next = NULL;
