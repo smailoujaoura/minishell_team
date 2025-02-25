@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 14:36:25 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/25 15:25:12 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ t_ast	*parse_line(char *line)
 	t_ast	*root;
 
 	list = convert_str(line);
+	if (list == NULL)
+		return (NULL);
 	tokenize_list(list);
 	check_syntax(list, line, 0, 0);
 	prioritize_list(list);

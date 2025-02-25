@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/25 10:37:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/25 15:54:03 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	panic_exit(char *ptr, int place)
 {
 	printf("Reason: [%s]\tPlace [%d]\n", ptr, place);
-	perror("minishell: ");
+	printf("%s: command not found\n", ptr);
 	exit(EXIT_FAILURE);
 }
 
@@ -41,30 +41,6 @@ char	**generate_env_tab(t_env *envp)
 	}
 	env[i] = NULL;
 	return (env);
-}
-
-void	init_process(t_ast *tree, const char *cmd_path, char *argv[], char *envp[])
-{
-	pid_t	pid;
-	int		proc_stat;
-
-	pid = fork();
-	if (pid == -1)
-	{
-		tree->exit_status = EXIT_FAILURE;
-		return ;
-	}
-	if (pid == 0)
-	{
-		if (execve(cmd_path, argv, envp) == -1)
-		{
-			perror("SHHHHSHS: ");
-			exit(127);
-		}
-	}
-	wait(&proc_stat);
-	tree->exit_status = WEXITSTATUS(proc_stat);
-	return ;
 }
 
 char	*construct_cmd_path(char **argv, t_env *envp)
@@ -145,22 +121,21 @@ int	ft_open(char *path, int mode, int permissions)
 bool	create_adj_files(t_chain *adj)
 {
 	t_chain	*ptr;
-	int		fd;
 
 	ptr = adj;
-	fd = -1;
 	while (ptr)
 	{
 		if (ptr->type != HEREDOC)
 		{
 			if (ptr->type == REDIR_OUT)
-				fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			else if (ptr->type == REDIR_APPEND)
-				fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+				ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 			else if (ptr->type == REDIR_IN)
-				fd = ft_open(ptr->file, O_RDONLY , 0644);
+				ptr->fd = ft_open(ptr->file, O_RDONLY , 0644);
 		}
-		return (!(ptr->fd = fd == -1));
+		if (ptr->fd == -1)
+			return (false);
 		ptr = ptr->next;
 	}
 	return (true);
@@ -176,19 +151,22 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 		panic_exit("Forking a cmd for execve", 46);
 	if (pid == 0)
 	{
-		// printf("OUT: %d\n", STDOUT_FILENO);
-		// printf("IN: %d\n", STDOUT_FILENO);
-		// printf("CMD: %s\n", argv[0]);
-		if (tree->in_fd > 2)
-			dup2(STDIN_FILENO, tree->in_fd);
-		if (tree->out_fd > 2)
-			dup2(STDOUT_FILENO, tree->out_fd);
+		if (tree->in_fd != -1)
+		{
+			dup2(tree->in_fd, STDIN_FILENO);
+			close(tree->in_fd);
+		}
+		if (tree->out_fd != -1)
+		{
+			dup2(tree->out_fd, STDOUT_FILENO);
+			close(tree->out_fd);
+		}
 		if (ft_strchr(argv[0], '/'))
 			cmd_path = argv[0];
 		else
 			cmd_path = construct_cmd_path(argv, mini->env);
 		if (execve(cmd_path, argv, envp) == -1)
-				panic_exit("Execving failed", 47);
+				panic_exit(argv[0], 47);
 	}
 	wait(&mini->last_exit);
 	mini->last_exit = WEXITSTATUS(mini->last_exit);
@@ -219,7 +197,6 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 	envp = generate_env_tab(mini->env);
 	expand_redirs(tree->data->adj_f, mini->env);
 	should_execute = create_adj_files(tree->data->adj_f);
-
 	if (tree->data->empty)
 		mini->last_exit = 0;
 	if (should_execute && !tree->data->empty)
@@ -275,22 +252,31 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 void	run_sub(t_ast *tree, t_shell *mini)
 {
 	pid_t	pid;
-	
+	bool	should_execute;
+
 	expand_redirs(tree->data->adj_f, mini->env);
+	should_execute = create_adj_files(tree->data->adj_f);
 	assign_fds(tree);
 	pid = fork();
 	if (pid == 0)
 	{
-		if (tree->in_fd > 2)
-			dup2(STDIN_FILENO, tree->in_fd);
-		if (tree->out_fd > 2)
-			dup2(STDOUT_FILENO, tree->out_fd);
+		if (tree->in_fd != -1)
+		{
+			dup2(tree->in_fd, STDIN_FILENO);
+			close(tree->in_fd);
+		}
+		if (tree->out_fd != -1)
+		{
+			dup2(tree->out_fd, STDOUT_FILENO);
+			close(tree->out_fd);
+		}
 		executor(tree->left, mini);
 		wait(NULL); // should get the exit status
 		exit(0); // report the exit status
 	}
-	if (pid == -1)
+	else if (pid == -1)
 		panic_exit("Forking subshell", 45);
+	wait(NULL);
 }
 
 void	executor(t_ast *tree, t_shell *mini)
