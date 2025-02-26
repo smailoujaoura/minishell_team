@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 11:07:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:31:17 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ void	loop_minishell(t_shell *mini)
 		executor(root, mini);
 		free(line);
 		ft_malloc(0, DEALLOCATE);
+		list = NULL;
 	}
 	ft_malloc_bkol(0, DEALLOCATE);
 }

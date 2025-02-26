@@ -21,7 +21,7 @@ SRCS =	main.c \
 
 OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)
-COMP = cc -Wall -Wextra -Werror -g #-fsanitize=address
+COMP = cc -Wall -Wextra -Werror -g -fsanitize=address
 FLAGS = -lreadline -lncurses
 LIBS = ./utils/libft/libft.a
 
