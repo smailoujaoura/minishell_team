@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 07:20:29 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 16:57:33 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -563,27 +563,123 @@ char	**expand_files(t_chain *node, t_env *env)
 	char	*flags;
 	char	**result;
 
+	flags = NULL;
 	var_values = expand_str(node->file, 0, &flags, env);
 	var_values = remove_quotes(var_values, flags, 0, 0);
 	result = ft_split_if(var_values, SPLIT, store_wilds(NULL, -1, RETRIEVE));
 	return (expand_wildcards(result, NULL, NULL, 0));
 }
 
-int	expand_heredoc(t_chain *node)
+void	open_files(char *old, char *new, int *source_fd, int *expand_fd)
 {
-	printf("Delimiter: [%s]\n", node->delim);
+	*source_fd = open(old, O_RDONLY);
+	if (*source_fd == -1)
+		panic_exit("Temp file removed!", 9734921);
+	*expand_fd = open(new, O_WRONLY | O_APPEND | O_CREAT, 0600);
+	if (*expand_fd == -1)
+		panic_exit(strerror(errno), 9273112);
+}
+
+int	check_var_existence(char current, char next)
+{
+	if (current == '$')
+	{
+		if (next == '?')
+			return (1);
+		else if (ft_isalpha(next) || next == '_')
+			return (2);
+	}
 	return (0);
 }
 
-void	expand_redirs(t_chain *ptr, t_env *env)
+char	*get_var_key(char *key, int *i)
 {
+	int	start;
+
+	start = *i;
+	while (key[*i] && check_var_existence('$', key[*i]))
+	{
+		(*i)++;
+	}
+	return (ft_substr(&key[start], 0, (*i) - start, SOUJAOUR));
+}
+
+char	*just_copy_until(char *line, t_shell *mini)
+{
+	int		i;
+	int		start;
+	char	*key;
+	char	*value;
+	char	*new_line;
+
+	i = 0;
+	new_line = NULL;
+	while (line[i])
+	{
+		if (check_var_existence(line[i], line[i + 1]))
+		{
+			i++;
+			key = get_var_key(line, &i);
+			value = get_value_wrapper(key, mini->env);
+			new_line = ft_strjoin(new_line, value, SOUJAOUR);
+		}
+		else
+		{
+			start = i;
+			i++;
+			while (line[i] && !check_var_existence(line[i], line[i + 1]))
+				i++;
+			value = ft_substr(&line[start], 0, i - start, SOUJAOUR);
+			new_line = ft_strjoin(new_line, value, SOUJAOUR);
+		}
+	}
+	return (new_line);
+}
+
+int	expand_heredoc(t_shell *mini, char *old, char *new)
+{
+	char	*line;
+	char	*new_line;
+	int		source_fd;
+	int		expand_fd;
+
+	open_files(old, new, &source_fd, &expand_fd);
+	line = get_next_line(source_fd);
+	while (line)
+	{
+		new_line = just_copy_until(line, mini);
+		write(expand_fd, new_line, ft_strlen(new_line));
+		free(line);
+		line = get_next_line(source_fd);
+	}
+	close(source_fd);
+	close(expand_fd);
+	expand_fd = open(new, O_RDONLY);
+	if (expand_fd == -1)
+		panic_exit("Temp file removed!", 9734921);
+	return (expand_fd);
+}
+
+int	just_open_old_name(char *old)
+{
+	int fd;
+
+	fd = open(old, O_RDONLY);
+	if (fd == -1)
+		panic_exit("Temp file removed!", 2738271);
+	return (fd);
+}
+
+void	expand_redirs(t_chain *ptr, t_shell *mini)
+{
+	char	*new_name;
 	char	**result;
 
 	while (ptr)
 	{
 		if (ptr->type != HEREDOC)
 		{
-			result = expand_files(ptr, env);
+			result = expand_files(ptr, mini->env);
 			if (result[1] != NULL) // || is_spaces(result[0])
 			{
 				printf("minishell: %s: ambiguous redirect\n", ptr->file);
@@ -592,7 +688,13 @@ void	expand_redirs(t_chain *ptr, t_env *env)
 			ptr->file = result[0];
 		}
 		else
-			ptr->fd = expand_heredoc(ptr);
+		{
+			new_name = generate_random_name();
+			if (ptr->delim_in_quotes)
+				ptr->fd = just_open_old_name(ptr->file);
+			else
+				ptr->fd = expand_heredoc(mini, ptr->file, new_name);
+		}
 		ptr = ptr->next;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 11:57:24 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/26 13:35:44 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,25 +111,6 @@ t_ast	*parse_line(char *line, t_chain **list, int *num)
 	return (build_tree(post));
 }
 
-void	handle_interrupt(int signum)
-{
-	(void)signum;
-	write(2, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	handle_signals(void)
-{
-	signal(SIGINT, handle_interrupt);
-}
-
-void	exit_shell(void)
-{
-	exit(0);
-}
-
 void	loop_minishell(t_shell *mini)
 {
 	t_chain	*list;
@@ -141,15 +122,16 @@ void	loop_minishell(t_shell *mini)
 	list = NULL;
 	while (1337)
 	{
+		num++;
 		line = readline("Minishell: ");
 		if (line == NULL)
 			break ;
 		root = parse_line(line, &list, &num);
+		store_line(NULL, -1);
 		executor(root, mini);
 		free(line);
-		ft_malloc(0, DEALLOCATE);
 		list = NULL;
-		store_line(NULL, -1);
+		ft_malloc(0, DEALLOCATE);
 	}
 	ft_malloc_bkol(0, DEALLOCATE);
 }

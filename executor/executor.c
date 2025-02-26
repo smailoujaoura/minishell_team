@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/26 11:41:30 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/26 16:47:33 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,8 @@ void	assign_fds(t_ast *tree)
 			tree->out_fd = ptr->fd;
 		if (ptr->type == REDIR_IN)
 			tree->in_fd = ptr->fd;
+		if (ptr->type == HEREDOC)
+			tree->in_fd = ptr->fd;
 		ptr = ptr->next;
 	}
 }
@@ -197,7 +199,7 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 
 	argv = expand_cmd(tree->data, tree->data->argv, mini->env);
 	envp = generate_env_tab(mini->env);
-	expand_redirs(tree->data->adj_f, mini->env);
+	expand_redirs(tree->data->adj_f, mini);
 	should_execute = create_adj_files(tree->data->adj_f);
 	if (tree->data->empty)
 		mini->last_exit = 0;
@@ -256,7 +258,7 @@ void	run_sub(t_ast *tree, t_shell *mini)
 	pid_t	pid;
 	bool	should_execute;
 
-	expand_redirs(tree->data->adj_f, mini->env);
+	expand_redirs(tree->data->adj_f, mini);
 	should_execute = create_adj_files(tree->data->adj_f);
 	assign_fds(tree);
 	if (should_execute)

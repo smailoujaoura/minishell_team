@@ -265,7 +265,7 @@ void    here_doc(t_chain *data, int num);
 // EXPANDING
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
 void	executor(t_ast *tree, t_shell *mini);
-void	expand_redirs(t_chain *ptr, t_env *env);
+void	expand_redirs(t_chain *ptr, t_shell *mini);
 
 
 char	*get_value(char *var, t_env *env);
@@ -274,5 +274,9 @@ char	*get_value(char *var, t_env *env);
 void	loop_minishell(t_shell *mini);
 
 void	panic_exit(char *ptr, int place);
+
+
+
+char	*generate_random_name(void);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/26 10:07:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 13:33:19 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,24 @@ char	*generate_random_name(void)
 void    prompt_here_doc(const char *limiter, int fd, int num)
 {
 	char    *line;
+	char	*save;
 
 	line = NULL;
 	while (1337)
 	{
 		line = readline("> ");
 		if (!line)
-			printf("minishell: warning: here-document at %d\n", num);
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		{
+			printf("minishell: warning: here-document at line %d \
+				delimited by end-of-file (wanted `%s')\n", num, limiter);
 			break ;
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		}
+		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		{
+			break ;
+		}
+		save = ft_strjoin(line, ft_strdup("\n", SOUJAOUR), SOUJAOUR);
+		write(fd, save, ft_strlen(save));
 		free(line);
 	}
 	free(line);
@@ -65,10 +72,11 @@ void    here_doc(t_chain *data, int num)
 	int		fd;
 
 	filename = generate_random_name();
-	fd = open(filename, O_RDWR | O_CREAT, 0600);
+	fd = open(filename, O_WRONLY | O_CREAT, 0600);
 	if (fd == -1)
 		panic_exit("Open failed\n", 1338);
-	data->fd = fd;
-	data->file = filename;
+	printf("[%s]\n", filename);
 	prompt_here_doc(data->delim, fd, num);
+	data->file = filename;
+	close(fd);
 }

@@ -1,0 +1,33 @@
+8
+Makefile
+README.md
+archive
+archive_executor.c
+bkol_garb_coll.c
+bkol_garb_coll.o
+consider.md
+custom_split.c
+env_handler.c
+env_handler.o
+executor
+f0
+f1
+f3
+file
+file2
+garbage_collector.c
+garbage_collector.o
+here.txt
+main.c
+main.o
+mermaid.md
+minishell.c
+minishell.h
+minishell.o
+parser
+rand.c
+test.c
+testi* test.
+testi* test.c
+testing.c
+utils

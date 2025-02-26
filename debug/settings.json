@@ -1,0 +1,15 @@
+{
+	"files.associations": {
+		"minishell.h": "c",
+		"libft.h": "c",
+		"readline.h": "c",
+		"errno.h": "c",
+		"stdint.h": "c",
+		"cstdint": "cpp",
+		"limits": "c",
+		"cstdlib": "c",
+		"wait.h": "c",
+		"type_traits": "c",
+		"typeinfo": "c"
+	}
+}
