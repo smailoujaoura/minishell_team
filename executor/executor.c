@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/26 11:27:35 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:41:30 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*construct_cmd_path(char **argv, t_env *envp)
 int check_buildin(const char *cmd)
 {
 	
-	if (ft_strncmp("echo", cmd, ft_strlen("echo")) == 0
+	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0
 		|| ft_strncmp("cd", cmd, ft_strlen("cd")) == 0
 		|| ft_strncmp("pwd", cmd, ft_strlen("pwd")) == 0
 		|| ft_strncmp("export", cmd, ft_strlen("export")) == 0

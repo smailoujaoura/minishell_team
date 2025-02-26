@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 11:31:17 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:57:24 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,30 @@ int	open_heredocs(t_chain *list, int num)
 	return (execute_or_not);
 }
 
+void	store_line(char *new, int flag)
+{
+	static char	*store;
+	
+	if (flag == -1)
+	{
+		store = NULL;
+		return ;
+	}
+	store = ft_strjoin(store, new, SOUJAOUR);
+	if (flag)
+	{
+		if (store[0])
+			add_history(store);
+	}
+}
+
 int	complete_line(t_chain *last, char *line, int *num, char **rest)
 {
 	char			*temp;
-	static char		*history;
 
 	if (last->type == PIPE || last->type == AND || last->type == OR)
 	{
+		store_line(line, 0);
 		temp = readline("> ");
 		(*num)++;
 		if (temp == NULL)
@@ -57,16 +74,12 @@ int	complete_line(t_chain *last, char *line, int *num, char **rest)
 			printf("exit\n");
 			exit(1);
 		}
-		*rest = ft_strdup(temp, SOUJAOUR);
-		history = ft_strjoin(history, " ", SOUJAOUR);
-		history = ft_strjoin(line, temp, SOUJAOUR);
+		*rest = ft_strjoin(" ", *rest, SOUJAOUR);
+		*rest = ft_strjoin(*rest, temp, SOUJAOUR);
 		free(temp);
 		return (1);
 	}
-	if (history)
-		add_history(history);
-	else if (line[0])
-		add_history(line);
+	store_line(line, 1);
 	return (0);
 }
 
@@ -136,6 +149,7 @@ void	loop_minishell(t_shell *mini)
 		free(line);
 		ft_malloc(0, DEALLOCATE);
 		list = NULL;
+		store_line(NULL, -1);
 	}
 	ft_malloc_bkol(0, DEALLOCATE);
 }
