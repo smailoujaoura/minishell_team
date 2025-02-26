@@ -32,7 +32,7 @@
 # define READ_END 0
 # define WRITE_END 1
 
-// Types for recognized by tokenizer except for SUB and CMD; AST nodes have types: SUB, OR, AND, CMD, PIPE
+// Types recognized by tokenizer except for SUB and CMD; AST nodes have types: SUB, OR, AND, CMD, PIPE
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -153,6 +153,15 @@ typedef struct s_env
     struct s_env *next;
 } t_env;
 
+// // Structure for saving the heredoc contents in a file
+// typedef struct s_heredocs
+// {
+// 	int					fd;
+// 	int					expand;
+// 	char				*filename;
+// 	struct s_heredocs	*next;
+// }	t_heredocs;
+
 // this struct will be sent around in execution better than keeping sending env
 typedef struct	s_shell
 {
@@ -169,7 +178,7 @@ void	*ft_malloc_bkol(size_t size, int flag);
 void	print_with_files(t_chain *ptr);
 
 // Lexing
-t_chain	*convert_str(char *str);
+void	convert_str(char *str, t_chain **list);
 void	tokenize_list(t_chain *list);
 
 void	find_type(t_chain *list);
@@ -178,7 +187,6 @@ void	handle_quotes(char **start, char target, char opposite);
 // PARSER
 void	prioritize_list(t_chain *list);
 void	assign_depth(t_chain *list);
-void	strip_words(t_chain *list);
 void	join_redirs(t_chain *list);
 void	join_commands(t_chain *list);
 t_chain	*assign_inputs(t_chain *list, t_chain *ptr);
@@ -243,7 +251,7 @@ void    builtin_unset(t_env *env, char **argv);
 
 
 // here_doc
-void    here_doc(t_chain *data);
+void    here_doc(t_chain *data, int num);
 
 // Execution
 

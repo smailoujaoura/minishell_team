@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/25 15:54:03 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/25 22:42:12 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,32 +76,32 @@ char	*construct_cmd_path(char **argv, t_env *envp)
 int check_buildin(const char *cmd)
 {
 	
-	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0
-		|| ft_strncmp("cd", cmd, ft_strlen(cmd)) == 0
-		|| ft_strncmp("pwd", cmd, ft_strlen(cmd)) == 0
-		|| ft_strncmp("export", cmd, ft_strlen(cmd)) == 0
-		|| ft_strncmp("unset", cmd, ft_strlen(cmd)) == 0
-		|| ft_strncmp("env", cmd, ft_strlen(cmd)) == 0
-		|| ft_strncmp("exit", cmd, ft_strlen(cmd)) == 0)
+	if (ft_strncmp("echo", cmd, ft_strlen("echo")) == 0
+		|| ft_strncmp("cd", cmd, ft_strlen("cd")) == 0
+		|| ft_strncmp("pwd", cmd, ft_strlen("pwd")) == 0
+		|| ft_strncmp("export", cmd, ft_strlen("export")) == 0
+		|| ft_strncmp("unset", cmd, ft_strlen("unset")) == 0
+		|| ft_strncmp("env", cmd, ft_strlen("env")) == 0
+		|| ft_strncmp("exit", cmd, ft_strlen("exit")) == 0)
 		return (1);
 	return (0);
 }
 
 void    buildin_excutor(char **argv, t_shell *mini)
 {
-	if (ft_strncmp("echo", argv[0], ft_strlen(argv[0])) == 0)
+	if (ft_strncmp("echo", argv[0], ft_strlen("echo")) == 0)
 		builtin_echo(argv, &mini->last_exit);
-	if (ft_strncmp("cd", argv[0], ft_strlen(argv[0])) == 0)
+	if (ft_strncmp("cd", argv[0], ft_strlen("cd")) == 0)
 		builtin_cd(mini->env, argv, &mini->last_exit);
-	if (ft_strncmp("pwd", argv[0], ft_strlen(argv[0])) == 0)
+	if (ft_strncmp("pwd", argv[0], ft_strlen("pwd")) == 0)
 		builtin_pwd();
-	if (ft_strncmp("export", argv[0], ft_strlen(argv[0])) == 0)
+	if (ft_strncmp("export", argv[0], ft_strlen("export")) == 0)
 		builtin_export(mini->env, argv);
-	if (ft_strncmp("unset", argv[0], ft_strlen(argv[0])) == 0)
+	if (ft_strncmp("unset", argv[0], ft_strlen("unset")) == 0)
 		builtin_unset(mini->env, argv);
-	if (ft_strncmp("env", argv[0], ft_strlen(argv[0])) == 0)
+	if (ft_strncmp("env", argv[0], ft_strlen("env")) == 0)
 		builtin_env(mini->env, argv);
-	if (ft_strncmp("exit", argv[0], ft_strlen(argv[0])) == 0)
+	if (ft_strncmp("exit", argv[0], ft_strlen("exit")) == 0)
 		builtin_exit(argv, &mini->last_exit);
 }
 
@@ -125,6 +125,8 @@ bool	create_adj_files(t_chain *adj)
 	ptr = adj;
 	while (ptr)
 	{
+		if (ptr->ambiguous)
+			break ;
 		if (ptr->type != HEREDOC)
 		{
 			if (ptr->type == REDIR_OUT)
@@ -257,26 +259,29 @@ void	run_sub(t_ast *tree, t_shell *mini)
 	expand_redirs(tree->data->adj_f, mini->env);
 	should_execute = create_adj_files(tree->data->adj_f);
 	assign_fds(tree);
-	pid = fork();
-	if (pid == 0)
+	if (should_execute)
 	{
-		if (tree->in_fd != -1)
+		pid = fork();
+		if (pid == 0)
 		{
-			dup2(tree->in_fd, STDIN_FILENO);
-			close(tree->in_fd);
+			if (tree->in_fd != -1)
+			{
+				dup2(tree->in_fd, STDIN_FILENO);
+				close(tree->in_fd);
+			}
+			if (tree->out_fd != -1)
+			{
+				dup2(tree->out_fd, STDOUT_FILENO);
+				close(tree->out_fd);
+			}
+			executor(tree->left, mini);
+			wait(NULL); // should get the exit status
+			exit(0); // report the exit status
 		}
-		if (tree->out_fd != -1)
-		{
-			dup2(tree->out_fd, STDOUT_FILENO);
-			close(tree->out_fd);
-		}
-		executor(tree->left, mini);
-		wait(NULL); // should get the exit status
-		exit(0); // report the exit status
+		else if (pid == -1)
+			panic_exit("Forking subshell", 45);
+		wait(NULL);
 	}
-	else if (pid == -1)
-		panic_exit("Forking subshell", 45);
-	wait(NULL);
 }
 
 void	executor(t_ast *tree, t_shell *mini)

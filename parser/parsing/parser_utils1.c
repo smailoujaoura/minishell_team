@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:23 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 11:09:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 08:00:03 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ t_chain	*create_redirs_chain(t_chain *list)
 	return (redirs);
 }
 
-char	*copy_if(char *str, char *s, char *f)
+char	*copy_if(char *new, char *str, char *flag)
 {
 	int	i;
 	int	k;
@@ -86,53 +86,42 @@ char	*copy_if(char *str, char *s, char *f)
 	k = 0;
 	while (str[i])
 	{
-		if (s[i] == 0)
+		if (flag[i] == 1)
 		{
-			f[k] = str[i];
+			new[k] = str[i];
 			k++;
 		}
 		i++;
 	}
-	f[k] = '\0';
-	return (f);
+	new[k] = '\0';
+	return (new);
 }
 
-int	count_removables(char *s)
+char	*remove_occurences(char *str, int i, int one, int two)
 {
-	int i;
-	int	rem;
+	char	*flag;
+	char	*new;
+	int		removables;
 
-	i = 0;
-	rem = 0;
-	while (s[i])
-	{
-		if (s[i] == 1)
-			rem++;
-		i++;
-	}
-	return (rem);
-}
-
-char	*remove_occurences(char *str, int i, int singles, int doubles)
-{
-	char	*s;
-	char	*f;
-
-	s = ft_calloc(ft_strlen(str) + 1, 1, SOUJAOUR);
+	removables = 0;
+	flag = ft_calloc(ft_strlen(str) + 1, sizeof(char), SOUJAOUR);
 	while (str[i])
 	{
-		if (str[i] == '"' && singles != 1)
-			doubles++;
-		if (str[i] == '\'' && doubles != 1)
-			singles++;
-		if (doubles == 2)
-			doubles = 0;
-		if (singles == 2)
-			singles = 0;
-		if (singles != 1 && doubles != 2 && (str[i] == '"' || str[i] == '\''))
-			s[i] = 1;
+		if (str[i] == '"' && one != 1)
+			two++;
+		else if (str[i] == '\'' && two != 1)
+			one++;
+		else
+			flag[i] = 1;
+		if (two == 2 || one == 2)
+			removables += 2;
+		if (two == 2)
+			two = 0;
+		if (one == 2)
+			one = 0;
 		i++;
 	}
-	f = ft_malloc(ft_strlen(str) - count_removables(s) + 1, ALLOCATE);
-	return (copy_if(str, s, f));
+	new = ft_malloc(ft_strlen(str) - removables + 1, ALLOCATE);
+	copy_if(new, str, flag);
+	return (new);
 }

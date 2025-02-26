@@ -3,17 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/25 15:25:12 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/26 11:07:03 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	strip_heredoc(t_chain *node, char *delim)
+{
+	if (ft_strchr(delim, '"') || ft_strchr(delim, '\''))
+		node->delim_in_quotes = 1;
+	node->delim = remove_occurences(delim, 0, 0, 0);
+}
 
-int	open_heredocs(t_chain *list)
+int	open_heredocs(t_chain *list, int num)
 {
 	int	execute_or_not;
 
@@ -26,64 +32,70 @@ int	open_heredocs(t_chain *list)
 			break ; 
 		}
 		if (list->type == HEREDOC)
-			here_doc(list);
+		{
+			strip_heredoc(list, list->next->content);
+			delete_any(list->next, 0);
+			here_doc(list, num);
+		}
 		list = list->next;
 	}
 	return (execute_or_not);
 }
 
-t_ast	*parse_line(char *line);
-
-int	complete_line(t_chain *last, char **line)
+int	complete_line(t_chain *last, char *line, int *num, char **rest)
 {
-	char		*temp;
+	char			*temp;
+	static char		*history;
 
 	if (last->type == PIPE || last->type == AND || last->type == OR)
 	{
 		temp = readline("> ");
+		(*num)++;
 		if (temp == NULL)
 		{
 			printf("minishell: syntax error: unexpected end of file\n");
 			printf("exit\n");
 			exit(1);
 		}
-		*line = ft_strjoin(*line, " ", SOUJAOUR);
-		*line = ft_strjoin(*line, temp, SOUJAOUR);
+		*rest = ft_strdup(temp, SOUJAOUR);
+		history = ft_strjoin(history, " ", SOUJAOUR);
+		history = ft_strjoin(line, temp, SOUJAOUR);
 		free(temp);
 		return (1);
 	}
-	else
-	{
-		if (line[0])
-			add_history(*line);
-		return (0);
-	}
+	if (history)
+		add_history(history);
+	else if (line[0])
+		add_history(line);
+	return (0);
 }
 
-t_ast	*parse_line(char *line)
-{
-	t_chain	*list;
-	t_chain	*last;
-	t_chain	*post;
-	t_ast	*root;
 
-	list = convert_str(line);
-	if (list == NULL)
+t_ast	*parse_line(char *line, t_chain **list, int *num)
+{
+	t_chain	*post;
+	char	*rest;
+
+	rest = NULL;
+	convert_str(line, list);
+	if (*list == NULL)
 		return (NULL);
-	tokenize_list(list);
-	check_syntax(list, line, 0, 0);
-	prioritize_list(list);
-	join_redirs(list);
-	join_commands(list);
-	if (open_heredocs(list))
+	tokenize_list(*list);
+	check_syntax(*list, line, 0, 0);
+	if (open_heredocs(*list, *num))
+	{
+		add_history(line);
 		return (NULL);
-	list = assign_inputs(list, NULL);
-	last = lstlast(list);
-	if (complete_line(last, &line))
-		return (parse_line(line));
-	post = convert_infix(list);
-	root = build_tree(post);
-	return (root);
+	}
+	prioritize_list(*list);
+	join_redirs(*list);
+	join_commands(*list);
+	*list = assign_inputs(*list, NULL);
+
+	if (complete_line(lstlast(*list), line, num, &rest))
+		return (parse_line(rest, list, num));
+	post = convert_infix(*list);
+	return (build_tree(post));
 }
 
 void	handle_interrupt(int signum)
@@ -107,15 +119,19 @@ void	exit_shell(void)
 
 void	loop_minishell(t_shell *mini)
 {
-	char	*line;
+	t_chain	*list;
 	t_ast	*root;
+	char	*line;
+	int		num;
 	
+	num = 0;
+	list = NULL;
 	while (1337)
 	{
 		line = readline("Minishell: ");
 		if (line == NULL)
 			break ;
-		root = parse_line(line);
+		root = parse_line(line, &list, &num);
 		executor(root, mini);
 		free(line);
 		ft_malloc(0, DEALLOCATE);

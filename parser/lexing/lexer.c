@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:51 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/13 11:11:55 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 10:04:51 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	tokenize_list(t_chain *list)
 		else if (list->content[0] == '<')
 			list->type = REDIR_IN;
 		else
-			find_type(list);
+			list->type = WORD;
 		list = list->next;
 	}
 }
@@ -95,14 +95,11 @@ int	get_token(char **start, char **tok_start, char **tok_end)
 	return (1);
 }
 
-t_chain	*convert_str(char *str)
+void	convert_str(char *str, t_chain **list)
 {
 	char	*tok_start;
 	char	*tok_end;
-	t_chain	*list;
 
-	list = NULL;
 	while (get_token(&str, &tok_start, &tok_end))
-		lstadd_back(&list, lstnew(ft_substr(tok_start, 0, tok_end - tok_start, SOUJAOUR)));
-	return (list);
+		lstadd_back(list, lstnew(ft_substr(tok_start, 0, tok_end - tok_start, SOUJAOUR)));
 }

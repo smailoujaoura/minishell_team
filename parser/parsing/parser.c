@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/24 11:41:29 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 07:36:23 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,27 +88,6 @@ void	join_redirs(t_chain *list)
 			list->file = list->next->content;
 			delete_any(list->next, 0);
 		}
-		if (list->type == HEREDOC)
-		{
-			list->delim = list->next->content;
-			list->delim_in_quotes = list->next->delim_in_quotes;
-			delete_any(list->next, 0);
-		}
-		list = list->next;
-	}
-}
-
-void	strip_words(t_chain *list)
-{
-	while (list)
-	{
-		if (list->type == HEREDOC && list->next && list->next->type == WORD)
-		{
-			if (ft_strchr(list->next->content, '"') || ft_strchr(list->next->content, '\''))
-				list->delim_in_quotes = 1;
-		}
-		if (list->type == WORD)
-			list->content = remove_occurences(list->content, 0, 0, 0);
 		list = list->next;
 	}
 }

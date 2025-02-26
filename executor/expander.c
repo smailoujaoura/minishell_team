@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/25 08:40:53 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 07:20:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,35 +128,6 @@ void	construct_flags(char *str, char flag, char **flags)
 		*flags = new_flag;
 	else
 		*flags = ft_strjoin(*flags, new_flag, SOUJAOUR);
-}
-
-char	*expand_str(char *str, int i, char **flags, t_env *env)
-{
-	char	*new;
-	char	*value;
-	int		singles;
-	int		doubles;
-
-	new = NULL;
-	singles = 0;
-	doubles = 0;
-	while (str[i])
-	{
-		if (is_var(str, i))
-		{
-			value = expand_var(str, &i, &singles, &doubles);
-			value = get_value_wrapper(value, env);
-			construct_flags(value, FROM_VAR, flags);
-			new = ft_strjoin(new, value, SOUJAOUR);
-		}
-		else
-		{
-			value = just_copy(str, &i, &singles, &doubles);
-			construct_flags(value, LITERAL, flags);
-			new = ft_strjoin(new, value, SOUJAOUR);
-		}
-	}
-	return (new);
 }
 
 char	*store_wilds(char *wilds, int index, int action)
@@ -300,12 +271,14 @@ int	count_remainings(char *quotes_flag)
 	return (len);
 }
 
-void	assign_flag(char *flag, char c, int one, int two)
+void	assign_flag(char *edit, char which, int one, int two)
 {
-	if (c == '"' && one == 0 && (two == 1 || two == 0))
-		*flag = QUOTE;
-	if (c == '\'' && two == 0 && (one == 1 || one == 0))
-		*flag = QUOTE;
+	if (which == '"' && one == 0)
+		*edit = QUOTE;
+	else if (which == '\'' && two == 0)
+		*edit = QUOTE;
+	else
+		*edit = NOT_QUOTE;
 }
 
 char	*remove_quotes(char *str, char *flags, int one, int two)
@@ -498,28 +471,6 @@ char	**expand_wildcards(char **arr, char **result, char *is_wild, int i)
 	return (result);
 }
 
-char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
-{
-	char	*temp;
-	char	*flags;
-	char	*actual;
-	char	**arr;
-
-	flags = NULL;
-	actual = expand_str(cmd->content, 0, &flags, env);
-	while (args)
-	{
-		actual = ft_strjoin(actual, " ", SOUJAOUR);
-		flags = ft_strjoin(flags, "s", SOUJAOUR);
-		temp = expand_str(args->content, 0, &flags, env);
-		actual = ft_strjoin(actual, temp, SOUJAOUR);
-		args = args->next;
-	}
-	actual = remove_quotes(actual, flags, 0, 0);
-	arr = ft_split_if(actual, SPLIT, store_wilds(NULL, -1, RETRIEVE));
-	return (expand_wildcards(arr, NULL, NULL, 0));
-}
-
 int	is_spaces(char *str)
 {
 	int	i;
@@ -535,33 +486,113 @@ int	is_spaces(char *str)
 	return (1);
 }
 
-void	expand_redirs(t_chain *ptr, t_env *env)
+char	*handle_var_values(char *value, char *new, char **flags)
 {
-	char	*pattern[2];
+	char	**var_values;
+	int		i;
+
+	i = 0;
+	var_values = ft_split(value, ' ', SOUJAOUR);
+	while (var_values[i])
+	{
+		new = ft_strjoin(new, var_values[i], SOUJAOUR);
+		construct_flags(var_values[i], FROM_VAR, flags);
+		if (var_values[i + 1])
+		{
+			new = ft_strjoin(new, " ", SOUJAOUR);
+			*flags = ft_strjoin(*flags, "s", SOUJAOUR);
+		}
+		i++;
+	}
+	return (new);
+}
+
+char	*expand_str(char *str, int i, char **flags, t_env *env)
+{
+	char	*new;
+	char	*value;
+	int		singles;
+	int		doubles;
+
+	new = NULL;
+	singles = 0;
+	doubles = 0;
+	while (str[i])
+	{
+		if (is_var(str, i))
+		{
+			value = expand_var(str, &i, &singles, &doubles);
+			value = get_value_wrapper(value, env);
+			new = handle_var_values(value, new, flags);
+		}
+		else
+		{
+			value = just_copy(str, &i, &singles, &doubles);
+			construct_flags(value, LITERAL, flags);
+			new = ft_strjoin(new, value, SOUJAOUR);
+		}
+	}
+	return (new);
+}
+
+char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
+{
+	char	*temp;
+	char	*flags;
 	char	*actual;
+	char	**arr;
+
+	flags = NULL;
+	actual = expand_str(cmd->content, 0, &flags, env);
+	while (args)
+	{
+		flags = ft_strjoin(flags, "s", SOUJAOUR);
+		actual = ft_strjoin(actual, " ", SOUJAOUR);
+		temp = expand_str(args->content, 0, &flags, env);
+		actual = ft_strjoin(actual, temp, SOUJAOUR);
+		args = args->next;
+	}
+	actual = remove_quotes(actual, flags, 0, 0);
+	arr = ft_split_if(actual, SPLIT, store_wilds(NULL, -1, RETRIEVE));
+	return (expand_wildcards(arr, NULL, NULL, 0));
+}
+
+char	**expand_files(t_chain *node, t_env *env)
+{
+	char	*var_values;
 	char	*flags;
 	char	**result;
 
-	pattern[1] = NULL;
+	var_values = expand_str(node->file, 0, &flags, env);
+	var_values = remove_quotes(var_values, flags, 0, 0);
+	result = ft_split_if(var_values, SPLIT, store_wilds(NULL, -1, RETRIEVE));
+	return (expand_wildcards(result, NULL, NULL, 0));
+}
+
+int	expand_heredoc(t_chain *node)
+{
+	printf("Delimiter: [%s]\n", node->delim);
+	return (0);
+}
+
+void	expand_redirs(t_chain *ptr, t_env *env)
+{
+	char	**result;
+
 	while (ptr)
 	{
 		if (ptr->type != HEREDOC)
 		{
-			flags = NULL;
-			actual = expand_str(ptr->file, 0, &flags, env);
-			actual = remove_quotes(actual, flags, 0, 0);
-			pattern[0] = actual;
-			result = expand_wildcards(pattern, NULL, NULL, 0);
-			if (result[1] != NULL || is_spaces(result[0]))
+			result = expand_files(ptr, env);
+			if (result[1] != NULL) // || is_spaces(result[0])
 			{
-				if (ft_strlen(result[0]) == 0)
-					printf("minishell: %s: ambiguous redirect\n", ptr->file);
-				else
-					printf("minishell: %s: ambiguous redirect\n", pattern[0]);
+				printf("minishell: %s: ambiguous redirect\n", ptr->file);
 				ptr->ambiguous = 1;
 			}
 			ptr->file = result[0];
 		}
+		else
+			ptr->fd = expand_heredoc(ptr);
 		ptr = ptr->next;
 	}
 }
