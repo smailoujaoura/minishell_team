@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/26 16:47:33 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 19:53:55 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,18 @@ void	panic_exit(char *ptr, int place)
 	printf("Reason: [%s]\tPlace [%d]\n", ptr, place);
 	printf("%s: command not found\n", ptr);
 	exit(EXIT_FAILURE);
+}
+
+void	finish_exec(t_ast *tree)
+{
+	t_chain	*ptr;
+
+	ptr = tree->data->adj_f;
+	while (ptr)
+	{
+		if (ptr->fd > 2)
+			close(ptr->fd);
+	}
 }
 
 char	**generate_env_tab(t_env *envp)
@@ -76,33 +88,64 @@ char	*construct_cmd_path(char **argv, t_env *envp)
 int check_buildin(const char *cmd)
 {
 	
-	if (ft_strncmp("echo", cmd, ft_strlen(cmd)) == 0
-		|| ft_strncmp("cd", cmd, ft_strlen("cd")) == 0
-		|| ft_strncmp("pwd", cmd, ft_strlen("pwd")) == 0
-		|| ft_strncmp("export", cmd, ft_strlen("export")) == 0
-		|| ft_strncmp("unset", cmd, ft_strlen("unset")) == 0
-		|| ft_strncmp("env", cmd, ft_strlen("env")) == 0
-		|| ft_strncmp("exit", cmd, ft_strlen("exit")) == 0)
+	if ((ft_strlen(cmd) == 4 && ft_strncmp("echo", cmd, 4) == 0)
+		|| (ft_strlen(cmd) == 2 && ft_strncmp("cd", cmd, 2) == 0)
+		|| (ft_strlen(cmd) == 3 && ft_strncmp("pwd", cmd, 3) == 0)
+		|| (ft_strlen(cmd) == 6 && ft_strncmp("export", cmd, 6) == 0)
+		|| (ft_strlen(cmd) == 5 && ft_strncmp("unset", cmd, 5) == 0)
+		|| (ft_strlen(cmd) == 3 && ft_strncmp("env", cmd, 3) == 0)
+		|| (ft_strlen(cmd) == 4 && ft_strncmp("exit", cmd, 4) == 0))
 		return (1);
 	return (0);
 }
 
-void    buildin_excutor(char **argv, t_shell *mini)
+void	assign_fds_builtins(t_ast *tree, int action)
 {
-	if (ft_strncmp("echo", argv[0], ft_strlen("echo")) == 0)
-		builtin_echo(argv, &mini->last_exit);
-	if (ft_strncmp("cd", argv[0], ft_strlen("cd")) == 0)
+	static int	original_in;
+	static int	original_out;
+
+	if (action)
+	{
+		original_in = dup(STDIN_FILENO);
+		original_out = dup(STDOUT_FILENO);
+		if (tree->in_fd != -1)
+		{
+			dup2(tree->in_fd, STDIN_FILENO);
+			close(tree->in_fd);
+		}
+		if (tree->out_fd != -1)
+		{
+			dup2(tree->out_fd, STDOUT_FILENO);
+			close(tree->out_fd);
+		}
+	}
+	else
+	{
+		dup2(original_in, STDIN_FILENO);
+		// close(original_in);
+		dup2(original_out, STDOUT_FILENO);
+		// close(original_out);
+	}	
+}
+
+void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
+{
+	assign_fds_builtins(tree, 1);
+	if (ft_strlen(argv[0]) == 4 && ft_strncmp("echo", argv[0], 4) == 0)
+		builtin_echo(argv, &mini->last_exit);	
+	if (ft_strlen(argv[0]) == 2 && ft_strncmp("cd", argv[0], 2) == 0)
 		builtin_cd(mini->env, argv, &mini->last_exit);
-	if (ft_strncmp("pwd", argv[0], ft_strlen("pwd")) == 0)
+	if (ft_strlen(argv[0]) == 3 && ft_strncmp("pwd", argv[0], 3) == 0)
 		builtin_pwd();
-	if (ft_strncmp("export", argv[0], ft_strlen("export")) == 0)
-		builtin_export(mini->env, argv);
-	if (ft_strncmp("unset", argv[0], ft_strlen("unset")) == 0)
+	if (ft_strlen(argv[0]) == 6 && ft_strncmp("export", argv[0], 6) == 0)
+		builtin_export(mini->env, argv, 1);
+	if (ft_strlen(argv[0]) == 5 && ft_strncmp("unset", argv[0], 5) == 0)
 		builtin_unset(mini->env, argv);
-	if (ft_strncmp("env", argv[0], ft_strlen("env")) == 0)
-		builtin_env(mini->env, argv);
-	if (ft_strncmp("exit", argv[0], ft_strlen("exit")) == 0)
-		builtin_exit(argv, &mini->last_exit);
+	if (ft_strlen(argv[0]) == 3 && ft_strncmp("env", argv[0], 3) == 0)
+		builtin_env(mini->env, argv);	
+	if (ft_strlen(argv[0]) == 4 && ft_strncmp("exit", argv[0], 4) == 0)
+		builtin_exit(argv, &mini->last_exit);	
+	assign_fds_builtins(tree, 0);
 }
 
 int	ft_open(char *path, int mode, int permissions)
@@ -126,7 +169,7 @@ bool	create_adj_files(t_chain *adj)
 	while (ptr)
 	{
 		if (ptr->ambiguous)
-			break ;
+			return (false);
 		if (ptr->type != HEREDOC)
 		{
 			if (ptr->type == REDIR_OUT)
@@ -207,12 +250,13 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 	{
 		assign_fds(tree);
 		if (check_buildin(argv[0]))
-			buildin_excutor(argv, mini);
+			buildin_excutor(tree, argv, mini);
 		else
 			external_cmd(tree, argv, envp, mini);
 	}
 	else
 		mini->last_exit = 1;
+	// finish_exec(tree);
 }
 
 void	run_pipe(t_ast *tree, t_shell *mini)

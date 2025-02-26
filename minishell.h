@@ -236,17 +236,12 @@ t_env *get_env_var(t_env *env, const char *key);
 char *expand_env_var(t_env *env, char *exp_env);
 
 // Builtins
-// void    pwd(t_chain *data);
-// void    cd(t_env *env, t_chain *data, int *status);
 void    builtin_pwd(void);
 void	builtin_echo(char **argv, int *status);
-// void    builtin_exit(t_chain *data, int *status);
 void    builtin_exit(char **argv, int *status);
-// void	builtin_env(t_env *env, t_chain *data);
 void	builtin_env(t_env *env, char **argv);
 void    builtin_cd(t_env *env, char **argv, int *status);
-void   	builtin_export(t_env *env, char **argv);
-// void    builtin_unset(t_env *env, t_chain *data);
+void   	builtin_export(t_env *env, char **argv, int flag);
 void    builtin_unset(t_env *env, char **argv);
 
 
@@ -254,13 +249,6 @@ void    builtin_unset(t_env *env, char **argv);
 void    here_doc(t_chain *data, int num);
 
 // Execution
-
-// Builtins utils
-// int		builtins_redir_fd(t_chain *file);
-// void    builtins_redir(t_chain *redir_file, char *buff, int create_only);
-// void    create_files_only(t_chain *data);
-// void    redir_output(t_chain *data, char *output);
-
 
 // EXPANDING
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
@@ -278,5 +266,18 @@ void	panic_exit(char *ptr, int place);
 
 
 char	*generate_random_name(void);
+
+
+// ENV UTILS FUNCTIONS
+void    add_new_env(t_env *env, t_env *new_env, const char *line, char *str);
+void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str);
+void    update_env_trunc(t_env *env, t_env *new_env, const char *line, const char *str);
+void    update_env_concat(t_env *env, t_env *new_env, const char *str);
+t_env	*handle_env(char **envp);
+t_env	*get_env_var(t_env *env, const char *key);
+int		check_env_str(const char *line, char **str_tab);
+void	ft_lstadd_back_env(t_env **lst, t_env *new);
+int		check_env(t_env *env, char *key);
+char	*expand_env_var(t_env *env, char *exp_env);
 
 #endif

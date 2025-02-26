@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 16:57:33 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:53:50 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -657,6 +657,7 @@ int	expand_heredoc(t_shell *mini, char *old, char *new)
 	expand_fd = open(new, O_RDONLY);
 	if (expand_fd == -1)
 		panic_exit("Temp file removed!", 9734921);
+	unlink(old);
 	return (expand_fd);
 }
 
