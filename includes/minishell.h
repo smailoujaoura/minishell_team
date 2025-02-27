@@ -10,13 +10,14 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 # include <errno.h>
 # include <stddef.h>
 # include <dirent.h>
 # include <sys/wait.h>
-#include <dirent.h>
-#include <sys/types.h>
-#include <stdbool.h>
+# include <dirent.h>
+# include <sys/types.h>
+# include <stdbool.h>
 
 // General Macros
 # define MEMORY_ERROR "Memory Error!"
