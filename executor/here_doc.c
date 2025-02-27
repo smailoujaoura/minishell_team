@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 07:57:02 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 08:31:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,22 @@ void    prompt_here_doc(const char *limiter, int fd, int num)
 void    here_doc(t_chain *data, int num)
 {
 	char	*filename;
-	int		fd;
+	int		fd1;
+	int		fd2;
 
 	filename = generate_random_name();
-	fd = open(filename, O_WRONLY | O_CREAT, 0600);
-	if (fd == -1)
+	fd1 = open(filename, O_WRONLY | O_CREAT, 0600);
+	if (fd1 == -1)
 		panic_exit("Open failed\n", 1338);
-	printf("[%s]\n", filename);
-	prompt_here_doc(data->delim, fd, num);
-	data->file = filename;
-	close(fd);
+	fd2 = open(filename, O_RDONLY);
+	if (fd2 == -1)
+		panic_exit("Open failed\n", 7232);
+	unlink(filename);
+	prompt_here_doc(data->delim, fd1, num);
+	close(fd1);
+	data->fd = fd2;
+	printf("Heredoc temp file created: [%s]\n", filename);
 }
+
+
+// handling ^ + C in delimiter ??? !

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 07:57:22 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 09:07:34 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -331,50 +331,6 @@ int	match_wildcard(const char *pattern, const char *str, const char *is_wild)
 	return (*str == '\0');
 }
 
-void	swap_contents(t_list *one, t_list *two)
-{
-	char	*tmp;
-
-	tmp = one->content;
-	one->content = two->content;
-	two->content = tmp;
-}
-
-
-char	**ft_split_if(char *str, char sep, char *delim_place)
-{
-	char	**arr;
-	char	*ptr;
-	int		count_words;
-	int		i;
-
-	i = 0;
-	count_words = 0;
-	while (delim_place[i])
-	{
-		if (delim_place[i] == sep)
-			count_words++;
-		i++;
-	}
-	count_words += 1;
-	arr = ft_calloc(count_words + 1, sizeof(char *), SOUJAOUR);
-	i = 0;
-	while (i < count_words)
-	{
-		while (*ptr && *ptr == sep)
-			ptr++;
-		ptr = delim_place;
-		while (*ptr && *ptr != sep)
-			ptr++;
-		arr[i] = ft_calloc(ptr - delim_place + 1, 1, SOUJAOUR);
-		ft_strlcpy(arr[i], str, ptr - delim_place + 1);
-		str += (ptr - delim_place + 1);
-		delim_place += (ptr - delim_place + 1);
-		i++;
-	}
-	return (arr);
-}
-
 char	**dynamic_array(char **arr, char *new)
 {
 	char	**result;
@@ -537,6 +493,51 @@ char	*expand_str(char *str, int i, char **flags, t_env *env)
 	return (new);
 }
 
+int	count_words(char *delims, char sep)
+{
+	int	i;
+	int	counter;
+
+	i = 0;
+	counter = 0;
+	while (delims[i])
+	{
+		if (delims[i] != sep && (delims[i + 1] == sep || !delims[i + 1]))
+			counter++;
+		i++;
+	}
+	return (counter);
+}
+
+char	**ft_split_if(char *str, char *delims, char sep)
+{
+	int		i;
+	int		words;
+	char	*trail;
+	char	**arr;
+
+	i = 0;
+	words = count_words(delims, sep);
+	arr = ft_calloc(words + 1, sizeof(char *), SOUJAOUR);
+	i = 0;
+	while (i < words)
+	{
+		while (*delims == sep && *str)
+		{
+			str++;
+			delims++;
+		}
+		trail = delims;
+		while (*delims && *delims != sep)
+			delims++;
+		arr[i] = ft_calloc(delims - trail + 1, 1, SOUJAOUR);
+		ft_strlcpy(arr[i], str, delims - trail + 1);
+		str += delims - trail;
+		i++;
+	}
+	return (arr);
+}
+
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 {
 	char	*temp;
@@ -555,7 +556,7 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 		args = args->next;
 	}
 	actual = remove_quotes(actual, flags, 0, 0);
-	arr = ft_split_if(actual, SPLIT, store_wilds(NULL, -1, RETRIEVE));
+	arr = ft_split_if(actual, store_wilds(NULL, -1, RETRIEVE), SPLIT);
 	return (expand_wildcards(arr, NULL, NULL, 0));
 }
 
@@ -568,18 +569,22 @@ char	**expand_files(t_chain *node, t_env *env)
 	flags = NULL;
 	var_values = expand_str(node->file, 0, &flags, env);
 	var_values = remove_quotes(var_values, flags, 0, 0);
-	result = ft_split_if(var_values, SPLIT, store_wilds(NULL, -1, RETRIEVE));
+	result = ft_split_if(var_values, store_wilds(NULL, -1, RETRIEVE), SPLIT);
 	return (expand_wildcards(result, NULL, NULL, 0));
 }
 
-void	open_files(char *old, char *new, int *source_fd, int *expand_fd)
+int	open_files(char *new, int *expand_fd)
 {
-	*source_fd = open(old, O_RDONLY);
-	if (*source_fd == -1)
-		panic_exit("Temp file removed!", 9734921);
-	*expand_fd = open(new, O_WRONLY | O_APPEND | O_CREAT, 0600);
+	int	expand_read_fd;
+
+	*expand_fd = open(new, O_WRONLY | O_CREAT, 0600);
 	if (*expand_fd == -1)
 		panic_exit(strerror(errno), 9273112);
+	expand_read_fd = open(new, O_RDONLY);
+	if (expand_read_fd == -1)
+		panic_exit(strerror(errno), 982723);
+	unlink(new);
+	return (expand_read_fd);	
 }
 
 int	check_var_existence(char current, char next)
@@ -638,29 +643,28 @@ char	*just_copy_until(char *line, t_shell *mini)
 	return (new_line);
 }
 
-int	expand_heredoc(t_shell *mini, char *old, char *new)
+void	expand_heredoc(t_chain *ptr, t_shell *mini, char *new, int source_fd)
 {
 	char	*line;
 	char	*new_line;
-	int		source_fd;
 	int		expand_fd;
 
-	open_files(old, new, &source_fd, &expand_fd);
-	line = get_next_line(source_fd);
-	while (line)
+	if (ptr->delim_in_quotes)
+		return ;
+	else
 	{
-		new_line = just_copy_until(line, mini);
-		write(expand_fd, new_line, ft_strlen(new_line));
-		free(line);
+		ptr->fd = open_files(new, &expand_fd);
 		line = get_next_line(source_fd);
+		while (line)
+		{
+			new_line = just_copy_until(line, mini);
+			write(expand_fd, new_line, ft_strlen(new_line));
+			free(line);
+			line = get_next_line(source_fd);
+		}
+		close(source_fd);
+		close(expand_fd);
 	}
-	close(source_fd);
-	close(expand_fd);
-	expand_fd = open(new, O_RDONLY);
-	if (expand_fd == -1)
-		panic_exit("Temp file removed!", 9734921);
-	unlink(old);
-	return (expand_fd);
 }
 
 int	just_open_old_name(char *old)
@@ -693,15 +697,13 @@ void	expand_redirs(t_chain *ptr, t_shell *mini)
 		else
 		{
 			new_name = generate_random_name();
-			if (ptr->delim_in_quotes)
-				ptr->fd = just_open_old_name(ptr->file);
-			else
-				ptr->fd = expand_heredoc(mini, ptr->file, new_name);
+			expand_heredoc(ptr, mini, new_name, ptr->fd);
 		}
 		ptr = ptr->next;
 	}
 }
 
-// add to exit status when signal some integer 128 why   ?
+// add to exit status when signal some integer 128, wh?
 // $var ls
-// 
+// unlink the file when 
+// ambiguous redirect when var expands to nothing
