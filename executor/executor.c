@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 16:09:15 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 18:01:07 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 	if (should_execute && !tree->data->empty)
 	{
 		assign_fds(tree);
-		if (check_buildin(argv[0]))
+		if (argv && check_buildin(argv[0]))
 			buildin_excutor(tree, argv, mini);
-		else
+		else if (argv)
 			external_cmd(tree, argv, envp, mini);
 	}
 	else

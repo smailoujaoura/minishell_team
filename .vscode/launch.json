@@ -32,7 +32,7 @@
             "logging": {
                 "trace": true,
                 "traceResponse": true,
-                "engineLogging": true
+                "engineLogging": true 
             }
         }
     ]

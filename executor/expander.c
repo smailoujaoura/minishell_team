@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 09:07:34 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 17:44:43 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -555,6 +555,8 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 		actual = ft_strjoin(actual, temp, SOUJAOUR);
 		args = args->next;
 	}
+	if (actual == NULL)
+		return (NULL);
 	actual = remove_quotes(actual, flags, 0, 0);
 	arr = ft_split_if(actual, store_wilds(NULL, -1, RETRIEVE), SPLIT);
 	return (expand_wildcards(arr, NULL, NULL, 0));

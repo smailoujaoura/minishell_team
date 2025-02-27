@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 16:18:05 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 18:01:00 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	main(int argc, char *argv[], char *envp[])
 	signals.sa_sigaction = handle_signals;
 	sigaction(SIGINT, &signals, NULL);
 	loop_minishell(&data);
-	(void)argc;
 	(void)argv;
+	(void)argc;
 	return (0);
 }
