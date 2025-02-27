@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:36:59 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 17:10:16 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 18:06:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,6 @@
 # define MIDDLE "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
 # define START "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?"
 
-char	*get_value_wrapper(char *var, t_env *env)
-{
-	t_env	*node;
-
-	node = get_env_var(env, var);
-	if (node == NULL)
-		return (ft_strdup("", SOUJAOUR)); // MAYBE THIS IS WHERE THE TRICK FOR THOSE ALL SEGFAULS
-	else
-		return (node->value);
-}
 
 int	is_var(char current, char next, char *set)
 {
@@ -87,14 +77,4 @@ char	*expand_var(char *str, char **flags, t_shell *mini)
 		}
 	}
 	return (result);
-}
-
-char	**expand_cmd(t_chain *cmd, t_shell *mini)
-{
-	char	**result;
-	char	*flags;
-
-	result = NULL;
-	flags = NULL;
-	char *expanded = expand_var(cmd->content, &flags, mini);
 }

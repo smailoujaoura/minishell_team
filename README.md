@@ -5,8 +5,9 @@ Good research should lead to an immaculate all-encapsulating code, making the pr
 Almost the first thought-of path for solution will not be the best one, breaking all the rules above.
 
 
-- segfault: "$not_exit"
-- expand $? 
+- segfault: "$not_exit" // FIXED BUT STILL 
+	- still have this issue: "$NOT"
+- expand $?
 - heredoc signals: ^C in heredoc
 - wildcard expansions: .*
 - ambiguous redirection when $not expands to nothing

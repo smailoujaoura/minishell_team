@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 17:44:43 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 19:40:23 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,20 @@
 # define RECORD 9327
 # define SORT 1232
 
-int	is_var(char *str, int i)
+# define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+# define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?"
+
+
+int	is_var(char current, char next, char *set)
 {
-	if (str[i] == '$' && (str[i + 1] == '_' || ft_isalpha(str[i + 1])))
+	if (current == '$')
 	{
-		return (1);
+		if (ft_strchr(set, next))
+		{
+			if (next == '?')
+				return (2);
+			return (1);
+		}
 	}
 	return (0);
 }
@@ -58,7 +67,7 @@ char	*just_copy(char *str, int *i, int *singles, int *doubles)
 			break ;
 		else
 		{
-			while (str[*i + len] && (*singles || !is_var(str, *i + len) ))
+			while (str[*i + len] && (*singles || !is_var(str[*i + len], str[*i + len + 1], STRT)))
 			{
 				len++;
 				singles_doubles(singles, doubles, str[*i + len]);
@@ -69,32 +78,6 @@ char	*just_copy(char *str, int *i, int *singles, int *doubles)
 		}
 	}
 	return (new);
-}
-
-char	*expand_var(char *str, int *i, int *singles, int *doubles)
-{
-	int		len;
-	char	*value;
-
-	len = 0;
-	value = NULL;
-	while (str[*i + len])
-	{
-		singles_doubles(singles, doubles, str[*i + len]);
-		if (!*singles && str[*i + len] == '$')
-		{
-			while (str[*i + len + 1] && (str[*i + len + 1] == '_' || ft_isalnum(str[*i + len + 1])))
-			{
-				len++;
-			}
-			value = ft_substr(str, *i + 1, len, SOUJAOUR);
-			(*i) += ++len;
-			break ;
-		}
-		else
-			break ;
-	}
-	return (value);
 }
 
 char	*get_value_wrapper(char *var, t_env *env)
@@ -465,7 +448,32 @@ char	*handle_var_values(char *value, char *new, char **flags)
 	return (new);
 }
 
-char	*expand_str(char *str, int i, char **flags, t_env *env)
+char	*get_value(char *str, int *i, t_shell *mini)
+{
+	char	*key;
+	char	*value;
+	int		type;
+	int		j;
+
+	type = is_var('$', str[*i + 1], STRT);
+	if (type == 2)
+	{
+		key = ft_itoa(mini->last_exit);
+		value = ft_strdup(key, SOUJAOUR);
+		free(key);
+		return (value);
+	}
+	j = *i + 1;
+	(*i) += 2;
+	while (str[*i] && is_var('$', str[*i], MID))
+	{
+		(*i)++;
+	}
+	key = ft_substr(&str[j], 0, *i - j, SOUJAOUR);
+	return (get_value_wrapper(key, mini->env));
+}
+
+char	*expand_str(char *str, int i, char **flags, t_shell *mini)
 {
 	char	*new;
 	char	*value;
@@ -477,10 +485,9 @@ char	*expand_str(char *str, int i, char **flags, t_env *env)
 	doubles = 0;
 	while (str[i])
 	{
-		if (is_var(str, i))
+		if (!singles && is_var(str[i], str[i + 1], STRT))
 		{
-			value = expand_var(str, &i, &singles, &doubles);
-			value = get_value_wrapper(value, env);
+			value = get_value(str, &i, mini);
 			new = handle_var_values(value, new, flags);
 		}
 		else
@@ -538,7 +545,7 @@ char	**ft_split_if(char *str, char *delims, char sep)
 	return (arr);
 }
 
-char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
+char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini)
 {
 	char	*temp;
 	char	*flags;
@@ -546,12 +553,12 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 	char	**arr;
 
 	flags = NULL;
-	actual = expand_str(cmd->content, 0, &flags, env);
+	actual = expand_str(cmd->content, 0, &flags, mini);
 	while (args)
 	{
 		flags = ft_strjoin(flags, "s", SOUJAOUR);
 		actual = ft_strjoin(actual, " ", SOUJAOUR);
-		temp = expand_str(args->content, 0, &flags, env);
+		temp = expand_str(args->content, 0, &flags, mini);
 		actual = ft_strjoin(actual, temp, SOUJAOUR);
 		args = args->next;
 	}
@@ -562,14 +569,14 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env)
 	return (expand_wildcards(arr, NULL, NULL, 0));
 }
 
-char	**expand_files(t_chain *node, t_env *env)
+char	**expand_files(t_chain *node, t_shell *mini)
 {
 	char	*var_values;
 	char	*flags;
 	char	**result;
 
 	flags = NULL;
-	var_values = expand_str(node->file, 0, &flags, env);
+	var_values = expand_str(node->file, 0, &flags, mini);
 	var_values = remove_quotes(var_values, flags, 0, 0);
 	result = ft_split_if(var_values, store_wilds(NULL, -1, RETRIEVE), SPLIT);
 	return (expand_wildcards(result, NULL, NULL, 0));
@@ -688,7 +695,7 @@ void	expand_redirs(t_chain *ptr, t_shell *mini)
 	{
 		if (ptr->type != HEREDOC)
 		{
-			result = expand_files(ptr, mini->env);
+			result = expand_files(ptr, mini);
 			if (result[1] != NULL) // || is_spaces(result[0])
 			{
 				printf("minishell: %s: ambiguous redirect\n", ptr->file);

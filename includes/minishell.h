@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 11:36:33 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 19:38:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,9 +230,9 @@ char	*generate_random_name(void);
 void	here_doc(t_chain *data, int num);
 
 // Expanding
-char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
+char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini);
 void	expand_redirs(t_chain *ptr, t_shell *mini);
-char	*get_value(char *var, t_env *env);
+char	*get_value(char *str, int *i, t_shell *mini);
 
 // Env functions and their utils
 t_env	*handle_env(char **envp);
