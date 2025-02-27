@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
+/*   Updated: 2025/02/27 10:52:53 by soujaour         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -7,7 +19,6 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -33,7 +44,7 @@
 # define READ_END 0
 # define WRITE_END 1
 
-// Types recognized by tokenizer except for SUB and CMD; AST nodes have types: SUB, OR, AND, CMD, PIPE
+// Tokenizer types: all except SUB/CMD; AST types: SUB, OR, AND, CMD, PIPE
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -89,8 +100,6 @@ this to apply the Shunting Yard algorithm
 # define NOT_QUOTE '!'
 # define QUOTE 'q'
 
-
-
 // Struct for arguments which is a assigned to a variable in t_chain
 typedef struct s_argv
 {
@@ -101,17 +110,19 @@ typedef struct s_argv
 }	t_argv;
 
 /*
-	Struct for each token but as the algorithm progresses, the list will be compacted until only these are recognized:
-		- Command, this token will absorb the nodes before/after it that are redirections or arguments,
-			and point to them with adj_f for redirs and heredoc, and with argv for arguments 
-		- Pipe (does not absorb any adjacent nodes)
-		- && (does not absorb any adjacent nodes)
-		- || (does not absorb any adjacent nodes)
-		- ( (does not absorb any adjacent nodes)
-		- ) (does not absorb any adjacent nodes)
-			these nodes that don't absorb any nodes adjacent to them will waste memory, and will make code prone errors like derefrencing NULLs/ Bad design
-	This means that the nodes that had tokens like ">", ">>", "<", "file", "<<", "EOF",
-		will be compacted starting [<<]->[EOF] and ending in [<< EOF]
+	Each token takes a node. Then, the list is compacted to only these types:
+	
+	1) first:
+		- Redirections absorb their filesnames/delimiters
+
+	2) second:
+		- Command, this node absorbs nodes of args and redirs adjacent to it
+		- Pipe 
+		- && 
+		- ||
+		- (
+		- )
+		Bad design but works.
 */
 typedef struct s_chain
 {
@@ -148,53 +159,43 @@ typedef struct s_ast
 // Struct for list of the environment's variables
 typedef struct s_env
 {
-    char    *key;
-    char    *value;
-    char    *full;
-    struct s_env *next;
-} t_env;
+	char			*key;
+	char			*value;
+	char			*full;
+	struct s_env	*next;
+}	t_env;
 
-// // Structure for saving the heredoc contents in a file
-// typedef struct s_heredocs
-// {
-// 	int					fd;
-// 	int					expand;
-// 	char				*filename;
-// 	struct s_heredocs	*next;
-// }	t_heredocs;
-
-// this struct will be sent around in execution better than keeping sending env
-typedef struct	s_shell
+// Struct that will be sent around in function calls
+typedef struct s_shell
 {
 	t_env	*env;
 	int		last_exit;
 	bool	should_execute;
 }	t_shell;
 
+// General
+void	panic_exit(char *ptr, int place);
+
 // Garbage Collectors
 void	*ft_malloc(size_t size, int flag);
-void	garbage_collector(t_list *allocs, void *one, void *two);
 void	*ft_malloc_bkol(size_t size, int flag);
-
-void	print_with_files(t_chain *ptr);
+void	garbage_collector(t_list *allocs, void *one, void *two);
 
 // Lexing
 void	convert_str(char *str, t_chain **list);
 void	tokenize_list(t_chain *list);
-
-void	find_type(t_chain *list);
 void	handle_quotes(char **start, char target, char opposite);
+void	handle_redirs(char **start);
 
-// PARSER
+// Parser
+t_ast	*parse_line(char *line, t_chain **list, int *num);
 void	prioritize_list(t_chain *list);
-void	assign_depth(t_chain *list);
 void	join_redirs(t_chain *list);
 void	join_commands(t_chain *list);
 t_chain	*assign_inputs(t_chain *list, t_chain *ptr);
 void	pick_left_redirs(t_chain *list);
 t_chain	*convert_infix(t_chain *infix);
-void	handle_redirs(char **start);
-int	is_redir(t_chain *ptr, int f);
+int		is_redir(t_chain *ptr, int f);
 void	assign_block_redirs(t_chain *list);
 void	assign_adjacent_redirs(t_chain *list, t_chain *ptr);
 t_chain	*assign_inputs_edges(t_chain *list);
@@ -204,9 +205,11 @@ char	*remove_occurences(char *str, int i, int singles, int doubles);
 void	create_all_redirs(t_chain *list, t_chain *ptr, int f);
 void	add_files(t_chain *list, t_chain *new);
 void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f);
+int		check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
+t_ast	*build_tree(t_chain *post);
+void	store_line(char *new, int flag);
 
-
-// list utilities
+// List utils for parser
 t_chain	*lstnew(char *content);
 t_chain	*lstlast(t_chain *lst);
 void	lstadd_back(t_chain **lst, t_chain *new);
@@ -216,69 +219,46 @@ void	lstadd_back_arg(t_argv **lst, t_argv *new);
 t_argv	*lstlast_arg(t_argv *lst);
 t_argv	*lstnew_arg(t_chain *cmd);
 
-// Syntax Validator
-int	check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
-
-// redir utils
-int	is_redir(t_chain *ptr, int f);
+// Redirections
+int		is_redir(t_chain *ptr, int f);
 t_chain	*assign_inputs_edges(t_chain *list);
 t_chain	*create_redirs_chain(t_chain *list);
 t_ast	*free_list(t_chain *list);
 
+// Heredoc
+char	*generate_random_name(void);
+void	here_doc(t_chain *data, int num);
 
-
-// convert Post to AST
-t_ast	*build_tree(t_chain *post);
-
-
-//env
-t_env	*handle_env(char **envp);
-t_env *get_env_var(t_env *env, const char *key);
-char *expand_env_var(t_env *env, char *exp_env);
-
-// Builtins
-void    builtin_pwd(void);
-void	builtin_echo(char **argv, int *status);
-void    builtin_exit(char **argv, int *status);
-void	builtin_env(t_env *env, char **argv);
-void    builtin_cd(t_env *env, char **argv, int *status);
-void   	builtin_export(t_env *env, char **argv, int flag);
-void    builtin_unset(t_env *env, char **argv);
-
-
-// here_doc
-void    here_doc(t_chain *data, int num);
-
-// Execution
-
-// EXPANDING
+// Expanding
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
 void	executor(t_ast *tree, t_shell *mini);
 void	expand_redirs(t_chain *ptr, t_shell *mini);
-
-
 char	*get_value(char *var, t_env *env);
 
-// 
-void	loop_minishell(t_shell *mini);
+// Env functions and their utils
+t_env	*handle_env(char **envp);
+t_env	*get_env_var(t_env *env, const char *key);
+char	*expand_env_var(t_env *env, char *exp_env);
 
-void	panic_exit(char *ptr, int place);
-
-
-
-char	*generate_random_name(void);
-
-
-// ENV UTILS FUNCTIONS
-void    add_new_env(t_env *env, t_env *new_env, const char *line, char *str);
-void    add_new_env_with_plus(t_env *env, t_env *new_env, const char *str);
-void    update_env_trunc(t_env *env, t_env *new_env, const char *line, const char *str);
-void    update_env_concat(t_env *env, t_env *new_env, const char *str);
+void	add_new_env(t_env *env, t_env *new_env, const char *line, char *str);
+void	add_new_env_with_plus(t_env *env, t_env *new_env, const char *str);
+void	update_env_trunc(t_env *env, t_env *new_env,
+			const char *line, const char *str);
+void	update_env_concat(t_env *env, t_env *new_env, const char *str);
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
 int		check_env_str(const char *line, char **str_tab);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 int		check_env(t_env *env, char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
+
+// Builtins
+void	builtin_pwd(void);
+void	builtin_echo(char **argv, int *status);
+void	builtin_exit(char **argv, int *status);
+void	builtin_env(t_env *env, char **argv);
+void	builtin_cd(t_env *env, char **argv, int *status);
+void	builtin_export(t_env *env, char **argv, int flag);
+void	builtin_unset(t_env *env, char **argv);
 
 #endif

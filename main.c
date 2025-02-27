@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 10:10:57 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 10:51:44 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,33 @@ void	handle_signals(int signum, siginfo_t *info, void *ptr)
 {
 	(void)info;
 	(void)ptr;
-	printf("here\n");
-	sleep(1);
 	if (signum == SIGINT)
 		handle_interrupt();
 }
 
-void	exit_shell(void)
+void	loop_minishell(t_shell *mini)
 {
-	exit(0);
+	t_chain	*list;
+	t_ast	*root;
+	char	*line;
+	int		num;
+	
+	num = 0;
+	list = NULL;
+	while (1337)
+	{
+		num++;
+		line = readline("Minishell: ");
+		if (line == NULL)
+			break ;
+		root = parse_line(line, &list, &num);
+		store_line(NULL, -1);
+		executor(root, mini);
+		free(line);
+		list = NULL;
+		ft_malloc(0, DEALLOCATE);
+	}
+	ft_malloc_bkol(0, DEALLOCATE);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -41,12 +59,11 @@ int	main(int argc, char *argv[], char *envp[])
 	struct sigaction	signals;
 
 	sigfillset(&signals.sa_mask);
-
 	data.env = handle_env(envp);
 	signals.sa_sigaction = handle_signals;
+	sigaction(SIGINT, &signals, NULL);
 	loop_minishell(&data);
-	
 	(void)argc;
 	(void)argv;
-
+	return (0);
 }

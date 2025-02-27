@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 07:53:17 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 10:51:38 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	open_heredocs(t_chain *list, int num)
 		if (list->error == 1)
 		{
 			execute_or_not = 1;
-			break ; 
+			break ;
 		}
 		if (list->type == HEREDOC)
 		{
@@ -45,7 +45,7 @@ int	open_heredocs(t_chain *list, int num)
 void	store_line(char *new, int flag)
 {
 	static char	*store;
-	
+
 	if (flag == -1)
 	{
 		store = NULL;
@@ -83,7 +83,6 @@ int	complete_line(t_chain *last, char *line, int *num, char **rest)
 	return (0);
 }
 
-
 t_ast	*parse_line(char *line, t_chain **list, int *num)
 {
 	t_chain	*post;
@@ -104,34 +103,8 @@ t_ast	*parse_line(char *line, t_chain **list, int *num)
 	join_redirs(*list);
 	join_commands(*list);
 	*list = assign_inputs(*list, NULL);
-
 	if (complete_line(lstlast(*list), line, num, &rest))
 		return (parse_line(rest, list, num));
 	post = convert_infix(*list);
 	return (build_tree(post));
-}
-
-void	loop_minishell(t_shell *mini)
-{
-	t_chain	*list;
-	t_ast	*root;
-	char	*line;
-	int		num;
-	
-	num = 0;
-	list = NULL;
-	while (1337)
-	{
-		num++;
-		line = readline("Minishell: ");
-		if (line == NULL)
-			break ;
-		root = parse_line(line, &list, &num);
-		store_line(NULL, -1);
-		executor(root, mini);
-		free(line);
-		list = NULL;
-		ft_malloc(0, DEALLOCATE);
-	}
-	ft_malloc_bkol(0, DEALLOCATE);
 }
