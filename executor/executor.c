@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 07:57:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 11:13:39 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,115 +17,6 @@ void	panic_exit(char *ptr, int place)
 	printf("Reason: [%s]\tPlace [%d]\n", ptr, place);
 	printf("%s: command not found\n", ptr);
 	exit(EXIT_FAILURE);
-}
-
-void	finish_exec(t_ast *tree)
-{
-	t_chain	*ptr;
-
-	ptr = tree->data->adj_f;
-	while (ptr)
-	{
-		if (ptr->fd > 2)
-			close(ptr->fd);
-	}
-}
-
-char	**generate_env_tab(t_env *envp)
-{
-	int		i;
-	char	**env;
-	t_env	*tmp;
-
-	i = 0;
-	tmp = envp;
-	while (tmp)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	env = ft_malloc_bkol((sizeof(char *) * (i + 1)), ALLOCATE);
-	i = -1;
-	while (envp)
-	{
-		env[++i] = ft_strdup(envp->full, BKOLANI);
-		envp = envp->next;
-	}
-	env[i] = NULL;
-	return (env);
-}
-
-char	*construct_cmd_path(char **argv, t_env *envp)
-{
-	char *path;
-	int		i;
-	char	**spl_path;
-	char	*tmp_cmd;
-	char	*new_cmd;
-
-	i = -1;
-	tmp_cmd = NULL;
-	while (envp)
-	{
-		if (ft_strncmp(envp->full, "PATH=", 5) == 0)
-			break ;
-		envp = envp->next;
-	}
-	path = ft_strdup(envp->full + 5, BKOLANI);
-	spl_path = ft_split(path, ':', BKOLANI);
-	while (spl_path[++i])
-	{
-		new_cmd = ft_strjoin("/", argv[0], BKOLANI);
-		tmp_cmd = ft_strjoin(spl_path[i], new_cmd, BKOLANI);
-		if (access(tmp_cmd, X_OK) == 0)
-			return (tmp_cmd);
-		// else
-		// 	perror("2: ");
-	}
-	return (NULL);
-}
-
-int check_buildin(const char *cmd)
-{
-	
-	if ((ft_strlen(cmd) == 4 && ft_strncmp("echo", cmd, 4) == 0)
-		|| (ft_strlen(cmd) == 2 && ft_strncmp("cd", cmd, 2) == 0)
-		|| (ft_strlen(cmd) == 3 && ft_strncmp("pwd", cmd, 3) == 0)
-		|| (ft_strlen(cmd) == 6 && ft_strncmp("export", cmd, 6) == 0)
-		|| (ft_strlen(cmd) == 5 && ft_strncmp("unset", cmd, 5) == 0)
-		|| (ft_strlen(cmd) == 3 && ft_strncmp("env", cmd, 3) == 0)
-		|| (ft_strlen(cmd) == 4 && ft_strncmp("exit", cmd, 4) == 0))
-		return (1);
-	return (0);
-}
-
-void	assign_fds_builtins(t_ast *tree, int action)
-{
-	static int	original_in;
-	static int	original_out;
-
-	if (action)
-	{
-		original_in = dup(STDIN_FILENO);
-		original_out = dup(STDOUT_FILENO);
-		if (tree->in_fd != -1)
-		{
-			dup2(tree->in_fd, STDIN_FILENO);
-			close(tree->in_fd);
-		}
-		if (tree->out_fd != -1)
-		{
-			dup2(tree->out_fd, STDOUT_FILENO);
-			close(tree->out_fd);
-		}
-	}
-	else
-	{
-		dup2(original_in, STDIN_FILENO);
-		// close(original_in);
-		dup2(original_out, STDOUT_FILENO);
-		// close(original_out);
-	}	
 }
 
 void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
@@ -146,44 +37,6 @@ void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 	if (ft_strlen(argv[0]) == 4 && ft_strncmp("exit", argv[0], 4) == 0)
 		builtin_exit(argv, &mini->last_exit);	
 	assign_fds_builtins(tree, 0);
-}
-
-int	ft_open(char *path, int mode, int permissions)
-{
-	int fd;
-
-	fd = open(path, mode, permissions);
-	if (fd == -1)
-	{
-		printf("minishell: %s: %s\n", path, strerror(errno));
-	}
-	return (fd);
-}
-
-
-bool	create_adj_files(t_chain *adj)
-{
-	t_chain	*ptr;
-
-	ptr = adj;
-	while (ptr)
-	{
-		if (ptr->ambiguous)
-			return (false);
-		if (ptr->type != HEREDOC)
-		{
-			if (ptr->type == REDIR_OUT)
-				ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			else if (ptr->type == REDIR_APPEND)
-				ptr->fd = ft_open(ptr->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			else if (ptr->type == REDIR_IN)
-				ptr->fd = ft_open(ptr->file, O_RDONLY , 0644);
-		}
-		if (ptr->fd == -1)
-			return (false);
-		ptr = ptr->next;
-	}
-	return (true);
 }
 
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
@@ -215,23 +68,6 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	}
 	wait(&mini->last_exit);
 	mini->last_exit = WEXITSTATUS(mini->last_exit);
-}
-
-void	assign_fds(t_ast *tree)
-{
-	t_chain	*ptr;
-
-	ptr = tree->data->adj_f;
-	while (ptr)
-	{
-		if (ptr->type == REDIR_APPEND || ptr->type == REDIR_OUT)
-			tree->out_fd = ptr->fd;
-		if (ptr->type == REDIR_IN)
-			tree->in_fd = ptr->fd;
-		if (ptr->type == HEREDOC)
-			tree->in_fd = ptr->fd;
-		ptr = ptr->next;
-	}
 }
 
 void	run_cmd(t_ast *tree, t_shell *mini)
