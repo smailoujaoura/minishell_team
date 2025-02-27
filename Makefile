@@ -15,6 +15,8 @@ SRCS =	main.c \
 		./executor/here_doc.c \
 		./executor/executor.c \
 		./executor/expander.c \
+		./executor/executor_other.c \
+		./executor/executor_redirs.c \
 		./builtins/cd.c \
 		./builtins/echo.c \
 		./builtins/env.c \
@@ -24,7 +26,7 @@ SRCS =	main.c \
 		./builtins/unset.c \
 		./builtins/utils_1.c \
 		./builtins/utils_2.c \
-		./builtins/utils_3.c
+		./builtins/utils_3.c 
 
 OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 10:52:53 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 11:36:33 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,7 +231,6 @@ void	here_doc(t_chain *data, int num);
 
 // Expanding
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_env *env);
-void	executor(t_ast *tree, t_shell *mini);
 void	expand_redirs(t_chain *ptr, t_shell *mini);
 char	*get_value(char *var, t_env *env);
 
@@ -261,4 +260,14 @@ void	builtin_cd(t_env *env, char **argv, int *status);
 void	builtin_export(t_env *env, char **argv, int flag);
 void	builtin_unset(t_env *env, char **argv);
 
+// Executor
+void	executor(t_ast *tree, t_shell *mini);
+void	assign_fds_builtins(t_ast *tree, int action);
+void	assign_fds(t_ast *tree);
+void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
+void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
+char	*construct_cmd_path(char **argv, t_env *envp);
+char	**generate_env_tab(t_env *envp);
+int		check_buildin(const char *cmd);
+bool	create_adj_files(t_chain *adj);
 #endif
