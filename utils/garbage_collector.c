@@ -6,11 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/09 17:39:12 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/25 10:38:09 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 07:56:24 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 void	garbage_collector(t_list *allocs, void *one, void *two)
 {

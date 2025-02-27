@@ -6,11 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:23 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 08:00:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 07:54:18 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../../includes/minishell.h"
 
 int	is_redir(t_chain *ptr, int f)
 {

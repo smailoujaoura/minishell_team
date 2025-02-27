@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 17:53:50 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 07:57:22 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../includes/minishell.h"
 
 # define RECORD 9327
 # define SORT 1232
@@ -361,6 +361,8 @@ char	**ft_split_if(char *str, char sep, char *delim_place)
 	i = 0;
 	while (i < count_words)
 	{
+		while (*ptr && *ptr == sep)
+			ptr++;
 		ptr = delim_place;
 		while (*ptr && *ptr != sep)
 			ptr++;
@@ -699,4 +701,7 @@ void	expand_redirs(t_chain *ptr, t_shell *mini)
 		ptr = ptr->next;
 	}
 }
- 
+
+// add to exit status when signal some integer 128 why   ?
+// $var ls
+// 

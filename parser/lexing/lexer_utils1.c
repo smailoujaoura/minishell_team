@@ -6,11 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:38 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 07:22:39 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 07:53:53 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../../includes/minishell.h"
 
 void	handle_quotes(char **start, char target, char opposite)
 {

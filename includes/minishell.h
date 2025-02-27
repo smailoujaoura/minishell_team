@@ -1,7 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "./utils/libft/libft.h"
+# include "../utils/libft/libft.h"
 
 # include <fcntl.h>
 # include <unistd.h>

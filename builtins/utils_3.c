@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:05:20 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/26 21:28:49 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 07:58:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../includes/minishell.h"
 
 static t_env	*ft_lstlast_env(t_env *env)
 {

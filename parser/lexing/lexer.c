@@ -6,11 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:51 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/26 10:04:51 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 07:53:46 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
+#include "../../includes/minishell.h"
 
 int	peek(char *s, char *tokens)
 {

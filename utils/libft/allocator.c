@@ -1,5 +1,5 @@
 #include "libft.h"
-#include "../../minishell.h"
+#include "../../includes/minishell.h"
 
 void	*check_collectors(size_t size, int flag)
 {
