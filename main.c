@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 10:51:44 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 16:18:05 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ int	main(int argc, char *argv[], char *envp[])
 
 	sigfillset(&signals.sa_mask);
 	data.env = handle_env(envp);
+	if (!data.env)
+		return (1);
 	signals.sa_sigaction = handle_signals;
 	sigaction(SIGINT, &signals, NULL);
 	loop_minishell(&data);

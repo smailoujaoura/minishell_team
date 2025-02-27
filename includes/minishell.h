@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 11:36:33 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 16:10:40 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,4 +270,9 @@ char	*construct_cmd_path(char **argv, t_env *envp);
 char	**generate_env_tab(t_env *envp);
 int		check_buildin(const char *cmd);
 bool	create_adj_files(t_chain *adj);
+void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
+void	fds_dup(t_ast *tree);
+void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag);
+void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
+
 #endif

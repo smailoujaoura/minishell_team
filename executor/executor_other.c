@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 11:11:34 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 16:16:02 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,3 +77,22 @@ int	check_buildin(const char *cmd)
 	return (0);
 }
 
+void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
+{
+	assign_fds_builtins(tree, 1);
+	if (ft_strlen(argv[0]) == 4 && ft_strncmp("echo", argv[0], 4) == 0)
+		builtin_echo(argv, &mini->last_exit);	
+	if (ft_strlen(argv[0]) == 2 && ft_strncmp("cd", argv[0], 2) == 0)
+		builtin_cd(mini->env, argv, &mini->last_exit);
+	if (ft_strlen(argv[0]) == 3 && ft_strncmp("pwd", argv[0], 3) == 0)
+		builtin_pwd();
+	if (ft_strlen(argv[0]) == 6 && ft_strncmp("export", argv[0], 6) == 0)
+		builtin_export(mini->env, argv, 1);
+	if (ft_strlen(argv[0]) == 5 && ft_strncmp("unset", argv[0], 5) == 0)
+		builtin_unset(mini->env, argv);
+	if (ft_strlen(argv[0]) == 3 && ft_strncmp("env", argv[0], 3) == 0)
+		builtin_env(mini->env, argv);	
+	if (ft_strlen(argv[0]) == 4 && ft_strncmp("exit", argv[0], 4) == 0)
+		builtin_exit(argv, &mini->last_exit);	
+	assign_fds_builtins(tree, 0);
+}
