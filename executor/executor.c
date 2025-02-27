@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 11:29:12 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 11:54:22 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,28 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 	// finish_exec(tree);
 }
 
+void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
+{
+	if (!flag)
+	{
+		close(pipe_fd[0]);
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		close(pipe_fd[1]);
+		executor(tree->left, mini);
+		wait(NULL);
+		exit(0);
+	}
+	else
+	{
+		close(pipe_fd[1]);
+		dup2(pipe_fd[0], STDIN_FILENO);
+		close(pipe_fd[0]);
+		executor(tree->right, mini);
+		wait(NULL);
+		exit(0);
+	}
+}
+
 void	run_pipe(t_ast *tree, t_shell *mini)
 {
 	int		pipe_pair[2];
@@ -105,32 +127,32 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		panic_exit("Pipe wasn't created\n", 42);
 	pid_left = fork();
 	if (pid_left == 0)
-	{
-		close(pipe_pair[0]);
-		dup2(pipe_pair[1], STDOUT_FILENO);
-		close(pipe_pair[1]);
-		executor(tree->left, mini);
-		wait(NULL);
-		exit(0);
-	}
+		pipe_child(tree, mini, pipe_pair, 0);
 	else if (pid_left == -1)
 		panic_exit("Forking left", 43);
 	pid_right = fork();
 	if (pid_right == 0)
-	{
-		close(pipe_pair[1]);
-		dup2(pipe_pair[0], STDIN_FILENO);
-		close(pipe_pair[0]);
-		executor(tree->right, mini);
-		wait(NULL);
-		exit(0);
-	}
+		pipe_child(tree, mini, pipe_pair, 1);
 	if (pid_right == -1)
 		panic_exit("Forking left", 44);
 	close(pipe_pair[1]);
 	close(pipe_pair[0]);
 	waitpid(-1, NULL, 0);
 	waitpid(-1, NULL, 0);
+}
+
+void	fds_dup(t_ast *tree)
+{
+	if (tree->in_fd != -1)
+	{
+		dup2(tree->in_fd, STDIN_FILENO);
+		close(tree->in_fd);
+	}
+	if (tree->out_fd != -1)
+	{
+		dup2(tree->out_fd, STDOUT_FILENO);
+		close(tree->out_fd);
+	}
 }
 
 void	run_sub(t_ast *tree, t_shell *mini)
@@ -146,16 +168,7 @@ void	run_sub(t_ast *tree, t_shell *mini)
 		pid = fork();
 		if (pid == 0)
 		{
-			if (tree->in_fd != -1)
-			{
-				dup2(tree->in_fd, STDIN_FILENO);
-				close(tree->in_fd);
-			}
-			if (tree->out_fd != -1)
-			{
-				dup2(tree->out_fd, STDOUT_FILENO);
-				close(tree->out_fd);
-			}
+			fds_dup(tree);
 			executor(tree->left, mini);
 			wait(NULL); // should get the exit status
 			exit(0); // report the exit status
