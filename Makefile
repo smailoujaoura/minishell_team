@@ -16,6 +16,7 @@ SRCS =	main.c \
 		./executor/executor.c \
 		./executor/executor_other.c \
 		./executor/executor_redirs.c \
+		./executor/executor_utils.c \
 		./builtins/cd.c \
 		./builtins/echo.c \
 		./builtins/env.c \
