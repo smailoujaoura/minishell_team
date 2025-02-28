@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   parser_utils_2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 18:16:02 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 22:14:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	join_commands(t_chain *list, t_argv *argv, t_argv *new)
 		{
 			ptr = list->next;
 			while (ptr && (ptr->type == WORD
-				|| ptr->type == WILDCARD || is_redir(ptr, IN + OR + OUT) ))
+					|| ptr->type == WILDCARD || is_redir(ptr, IN + OR + OUT)))
 			{
 				if (ptr->type == WORD || ptr->type == WILDCARD)
 				{
@@ -76,7 +76,6 @@ void	join_commands(t_chain *list, t_argv *argv, t_argv *new)
 		list = list->next;
 	}
 }
-
 
 void	join_redirs(t_chain *list)
 {

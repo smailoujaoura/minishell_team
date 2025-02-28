@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 18:28:50 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 22:10:27 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,6 @@ t_ast	*parse_line(char *line, t_chain **list, int *num)
 	*list = assign_inputs(*list, NULL);
 	if (complete_line(lstlast(*list), line, num, &rest))
 		return (parse_line(rest, list, num));
-	post = convert_infix(*list);
+	post = convert_infix(*list, NULL, NULL);
 	return (build_tree(post));
 }

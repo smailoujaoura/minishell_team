@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 18:17:30 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 22:15:31 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,4 +23,30 @@ int	is_redir(t_chain *ptr, int f)
 	else if (f == OUT && (ptr->type == REDIR_APPEND || ptr->type == REDIR_OUT))
 		return (1);
 	return (0);
+}
+
+void	delete_any(t_chain *ptr, int i)
+{
+	t_chain	*prev;
+
+	prev = NULL;
+	if (ptr->back != NULL)
+		prev = ptr->back;
+	prev->next = ptr->next;
+	if (ptr->next)
+		ptr->next->back = prev;
+	(void)i;
+}
+
+void	remove_if(t_chain *list)
+{
+	t_chain	*tmp;
+
+	while (list)
+	{
+		tmp = list;
+		list = list->next;
+		if (tmp->type == REMOVE || tmp->removable == REMOVE)
+			delete_any(tmp, 0);
+	}
 }
