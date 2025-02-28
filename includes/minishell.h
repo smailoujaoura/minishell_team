@@ -6,11 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/02/28 17:28:53 by soujaour         ###   ########.fr       */
-=======
-/*   Updated: 2025/02/27 21:19:59 by bkolani          ###   ########.fr       */
->>>>>>> b182c67a3ad762535b1bbcb6904695350fe84473
+/*   Updated: 2025/02/28 18:28:27 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,11 +201,10 @@ void	handle_redirs(char **start);
 t_ast	*parse_line(char *line, t_chain **list, int *num);
 void	prioritize_list(t_chain *list);
 void	join_redirs(t_chain *list);
-void	join_commands(t_chain *list);
+void	join_commands(t_chain *list, t_argv *argv, t_argv *new);
 t_chain	*assign_inputs(t_chain *list, t_chain *ptr);
 void	pick_left_redirs(t_chain *list);
 t_chain	*convert_infix(t_chain *infix);
-int		is_redir(t_chain *ptr, int f);
 void	assign_block_redirs(t_chain *list);
 void	assign_adjacent_redirs(t_chain *list, t_chain *ptr);
 t_chain	*assign_inputs_edges(t_chain *list);
@@ -222,6 +217,7 @@ void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f);
 int		check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
 t_ast	*build_tree(t_chain *post);
 void	store_line(char *new, int flag);
+int		is_redir(t_chain *ptr, int f);
 
 // List utils for parser
 t_chain	*lstnew(char *content);
@@ -234,7 +230,6 @@ t_argv	*lstlast_arg(t_argv *lst);
 t_argv	*lstnew_arg(t_chain *cmd);
 
 // Redirections
-int		is_redir(t_chain *ptr, int f);
 t_chain	*assign_inputs_edges(t_chain *list);
 t_chain	*create_redirs_chain(t_chain *list);
 t_ast	*free_list(t_chain *list);

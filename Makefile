@@ -4,19 +4,15 @@ SRCS =	main.c \
 		./utils/list_utils.c \
 		./parser/lexing/lexer.c \
 		./parser/lexing/lexer_utils1.c \
-		./parser/parsing/parser.c \
-		./parser/parsing/parser2.c \
-		./parser/parsing/parser_utils1.c \
+		./parser/parsing/parser_utils_1.c \
+		./parser/parsing/parser_utils_2.c \
+		./parser/parsing/parser_utils_3.c \
+		./parser/parsing/parser_utils_4.c \
 		./parser/parsing/syntax_validator.c \
 		./parser/parsing/ast_tree.c \
 		./utils/garbage_collector.c \
 		./utils/bkol_garb_coll.c \
 		./utils/libft/allocator.c \
-		./executor/here_doc.c \
-		./executor/executor.c \
-		./executor/executor_other.c \
-		./executor/executor_redirs.c \
-		./executor/executor_utils.c \
 		./builtins/cd.c \
 		./builtins/echo.c \
 		./builtins/env.c \
@@ -34,7 +30,12 @@ SRCS =	main.c \
 		./expander/expanding_utils_3.c \
 		./expander/expanding_utils_4.c \
 		./expander/expanding_utils_5.c \
-		./expander/expanding_utils_6.c
+		./expander/expanding_utils_6.c \
+		./executor/here_doc.c \
+		./executor/executor.c \
+		./executor/executor_other.c \
+		./executor/executor_redirs.c \
+		./executor/executor_utils.c
 
 OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)

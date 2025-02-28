@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser2.c                                          :+:      :+:    :+:   */
+/*   parser_utils_3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:48:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 18:29:18 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,10 +139,6 @@ t_chain	*convert_infix(t_chain *infix)
 			}
 			else if (ops->type == L_PAREN)
 				move_item(&infix, &ops, 1);
-			else
-			{
-				printf("handle this shit ls unclosed parenthesis *\n");
-			}
 		}
 	}
 	while (ops)
