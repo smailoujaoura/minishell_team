@@ -6,7 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/02/28 17:30:46 by soujaour         ###   ########.fr       */
+=======
+/*   Updated: 2025/02/27 22:51:37 by bkolani          ###   ########.fr       */
+>>>>>>> b182c67a3ad762535b1bbcb6904695350fe84473
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +98,21 @@ void	run_sub(t_ast *tree, t_shell *mini)
 
 void	executor(t_ast *tree, t_shell *mini)
 {
+	static int i;
+	i++;
 	if (tree == NULL)
 		return ;
 	else if (tree->type == CMD)
+	{
+		printf("cmd: %d\n", i);
 		run_cmd(tree, mini);
+		
+	}
 	else if (tree->type == PIPE)
+	{
+		printf("pipe: %d\n", i);
 		run_pipe(tree, mini);
+	}
 	else if (tree->type == SUB)
 		run_sub(tree, mini);
 	else if (tree->type == OR)

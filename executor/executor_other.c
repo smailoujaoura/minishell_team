@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 16:16:02 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 22:51:25 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 	if (ft_strlen(argv[0]) == 2 && ft_strncmp("cd", argv[0], 2) == 0)
 		builtin_cd(mini->env, argv, &mini->last_exit);
 	if (ft_strlen(argv[0]) == 3 && ft_strncmp("pwd", argv[0], 3) == 0)
-		builtin_pwd();
+		builtin_pwd(mini);
 	if (ft_strlen(argv[0]) == 6 && ft_strncmp("export", argv[0], 6) == 0)
 		builtin_export(mini->env, argv, 1);
 	if (ft_strlen(argv[0]) == 5 && ft_strncmp("unset", argv[0], 5) == 0)

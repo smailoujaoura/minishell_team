@@ -3,25 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:38 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 07:58:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:13:03 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void    builtin_pwd(void)
+void    builtin_pwd(t_shell *mini)
 {
-    char *path;
+	char    *path;
+	t_env	*pwd_str;
 
-    path = getcwd(NULL, 0);
-    if (!path)
-    {
-        perror("pwd");
-        return ;
-    }
-    printf("%s\n", path);
-    free(path);
+	path = getcwd(NULL, 0);
+	pwd_str = NULL;
+	if (!path)
+	{
+		// perror("pwd");
+		pwd_str = get_env_var(mini->env, "PWD");
+		printf("%s\n", pwd_str->value);
+		return ;
+	}
+	printf("%s\n", path);
+	free(path);
 }

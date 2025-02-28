@@ -10,6 +10,7 @@
 		"cstdlib": "c",
 		"wait.h": "c",
 		"type_traits": "c",
-		"typeinfo": "c"
+		"typeinfo": "c",
+		"signal.h": "c"
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:50:59 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 07:57:49 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 22:32:55 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ void    check_exit_status(char *str, int *status)
 
 void    builtin_exit(char **argv, int *status)
 {
-    int exit_status;
+    int     exit_status;
 
-    write(1, "exit\n", 5);
     if (!argv[1])
     {
         *status = 0;
+        write(STDOUT_FILENO, "exit\n", 5);
         exit(EXIT_SUCCESS);
     }
     if (argv[2])
@@ -45,6 +45,7 @@ void    builtin_exit(char **argv, int *status)
         return ;
     }
     check_exit_status(argv[1], status);
+    write(STDOUT_FILENO, "exit\n", 5);
     exit_status = ft_atoi(argv[1]);
     exit_status = exit_status % 256;
     *status = exit_status;
