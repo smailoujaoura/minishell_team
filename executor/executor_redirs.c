@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redirs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 11:13:33 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/27 22:46:36 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	assign_fds_builtins(t_ast *tree, int action)
 	static int	original_in;
 	static int	original_out;
 
+	printf("%d\n", tree->out_fd);
 	if (action)
 	{
 		original_in = dup(STDIN_FILENO);

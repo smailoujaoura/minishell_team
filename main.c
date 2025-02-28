@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 18:01:00 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/27 19:23:54 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,27 @@ void	handle_interrupt(void)
 	rl_redisplay();
 }
 
+// void	sig_handler(int signal)
+// {
+// 	if (signal == SIGINT)
+// 		printf("^C\n");
+// 	else if (signal == SIGQUIT)
+// 		printf("^\\Quit (core dumped)\n");
+// }
+
+// void	set_signal_action(void)
+// {
+// 	struct sigaction act;
+
+// 	ft_bzero(&act, sizeof(act));
+// 	act.sa_handler = sig_handler()	
+// }
+
 void	handle_signals(int signum, siginfo_t *info, void *ptr)
 {
 	(void)info;
 	(void)ptr;
+ 
 	if (signum == SIGINT)
 		handle_interrupt();
 }

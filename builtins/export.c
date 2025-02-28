@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 07:57:53 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:23:12 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void   builtin_export(t_env *env, char **argv, int flag)
         export_with_no_args(env);
         return ;
     }
-    i = 0;
+    i = -1;
     while (argv[++i])
         check_export_env(env, argv[i]);
 }
