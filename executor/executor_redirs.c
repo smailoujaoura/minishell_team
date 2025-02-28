@@ -41,7 +41,6 @@ void	assign_fds_builtins(t_ast *tree, int action)
 	static int	original_in;
 	static int	original_out;
 
-	printf("%d\n", tree->out_fd);
 	if (action)
 	{
 		original_in = dup(STDIN_FILENO);

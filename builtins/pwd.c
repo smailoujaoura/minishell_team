@@ -23,9 +23,9 @@ void    builtin_pwd(t_shell *mini)
 	{
 		pwd_str = get_env_var(mini->env, "PWD");
 		printf("%s\n", pwd_str->value);
+		// perror("pwd");
 		return ;
 	}
-	system("ls -la");
 	printf("%s\n", path);
 	free(path);
 }

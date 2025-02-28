@@ -94,23 +94,20 @@ void	run_sub(t_ast *tree, t_shell *mini)
 
 void	executor(t_ast *tree, t_shell *mini)
 {
-	static int i;
-	i++;
 	if (tree == NULL)
 		return ;
 	else if (tree->type == CMD)
 	{
-		printf("cmd: %d\n", i);
 		run_cmd(tree, mini);
-		
 	}
 	else if (tree->type == PIPE)
 	{
-		printf("pipe: %d\n", i);
 		run_pipe(tree, mini);
 	}
 	else if (tree->type == SUB)
+	{
 		run_sub(tree, mini);
+	}
 	else if (tree->type == OR)
 	{
 		executor(tree->left, mini);
@@ -123,6 +120,4 @@ void	executor(t_ast *tree, t_shell *mini)
 		if (mini->last_exit == 0)
 			executor(tree->right, mini);
 	}
-	else
-		printf("Minishell: Parse again\n");
 }
