@@ -12,6 +12,19 @@
 
 #include "../includes/minishell.h"
 
+static int  handle_err(const char *path)
+{
+    if (!path)
+    {
+        write(2, "cd: error retrieving current directory: "
+            "getcwd: cannot access parent directories: "
+            "No such file or directory\n", 108);
+        chdir("..");
+        return (1);
+    }
+    return (0);
+}
+
 static  int cd_executor(const char *cd_arg, char *path, int *status)
 {
     if (chdir(cd_arg) == -1)
@@ -58,14 +71,19 @@ static void    cd_with_args(t_env *env, char **argv, int *status)
     updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
     updated_pwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
     path = getcwd(NULL, 0);
+    if (handle_err(path))
+        return ;
     updated_oldpwd[0] = ft_strjoin("OLDPWD=", path, BKOLANI);
     updated_oldpwd[1] = NULL;
     builtin_export(env, updated_oldpwd, 0);
     if (cd_executor(argv[1], path, status))
         return ;
     path = getcwd(NULL, 0);
+    if (handle_err(path))
+        return ;
     updated_pwd[0] = ft_strjoin("PWD=", path, BKOLANI);
     updated_pwd[1] = NULL;
+    printf("%s\n", path);
     builtin_export(env, updated_pwd, 0);
     free(path);
     return ;
