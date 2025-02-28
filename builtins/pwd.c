@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:38 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/28 17:13:03 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/02/28 18:29:26 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ void    builtin_pwd(t_shell *mini)
 	pwd_str = NULL;
 	if (!path)
 	{
-		// perror("pwd");
 		pwd_str = get_env_var(mini->env, "PWD");
 		printf("%s\n", pwd_str->value);
 		return ;
 	}
+	system("ls -la");
 	printf("%s\n", path);
 	free(path);
 }
