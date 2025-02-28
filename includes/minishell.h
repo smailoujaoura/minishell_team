@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 19:38:42 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:23:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@
 
 // General Macros
 # define MEMORY_ERROR "Memory Error!"
+
+// Related to Expanding
+# define RECORD 9327
+# define SORT 1232
+
+# define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+# define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?"
+
+# define REMOV 'r'
+# define HANDLE 'h'
 
 // Macros for token recognization
 # define WHITESPACE "\t\n\v\f\r "
@@ -229,11 +239,6 @@ t_ast	*free_list(t_chain *list);
 char	*generate_random_name(void);
 void	here_doc(t_chain *data, int num);
 
-// Expanding
-char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini);
-void	expand_redirs(t_chain *ptr, t_shell *mini);
-char	*get_value(char *str, int *i, t_shell *mini);
-
 // Env functions and their utils
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
@@ -259,6 +264,31 @@ void	builtin_env(t_env *env, char **argv);
 void	builtin_cd(t_env *env, char **argv, int *status);
 void	builtin_export(t_env *env, char **argv, int flag);
 void	builtin_unset(t_env *env, char **argv);
+
+
+// Expanding
+char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini);
+void	expand_redirs(t_chain *ptr, t_shell *mini);
+
+char	*ultimate(char *str, char *flags, int one, int two);
+char	*remove_flags(char *flags, char **actual, char *str);
+void	expand_heredoc(t_chain *ptr, t_shell *mini, char *new, int source_fd);
+char	**ultimate_split(char *str, char *flags, char sep);
+
+char	*wild_shell(char *sources, char *quotes, char *str);
+
+int	is_var(char current, char next, char *set);
+char	*get_value(char *str, int *i, t_shell *mini);
+char	*handle_var_values(char *value, char *new, char **flags, int two);
+
+
+char	*just_copy(char *str, int *i, int *singles, int *doubles);
+void	construct_flags(char *str, char flag, char **flags);
+
+
+void	expand_wildcard(t_list **list, char *pattern, char *is_wild);
+
+char	*get_value_wrapper(char *var, t_env *env);
 
 // Executor
 void	executor(t_ast *tree, t_shell *mini);

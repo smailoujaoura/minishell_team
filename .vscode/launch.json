@@ -9,6 +9,7 @@
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -36,4 +37,8 @@
             }
         }
     ]
-}q
+}
+
+
+// {"DOTENV_CONFIG_PATH": "${workspaceFolder}/.env"},
+                // {"__DOTENV_LOAD": "true"}
