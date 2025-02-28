@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:51 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 13:31:33 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:39:32 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	peek(char *s, char *tokens)
 
 void	tokenize_list(t_chain *list)
 {
-	while(list)
+	while (list)
 	{
 		if (list->content[0] == '(')
 			list->type = L_PAREN;
@@ -58,14 +58,16 @@ void	tokenize_list(t_chain *list)
 
 void	handle_words(char **start)
 {
-	if (**start == '\0' || ft_strchr(WHITESPACE, **start) || peek(*start, "|<>()") || (**start == '&' && *(*start + 1) == '&'))
+	if (**start == '\0' || ft_strchr(WHITESPACE, **start)
+		|| peek(*start, "|<>()") || (**start == '&' && *(*start + 1) == '&'))
 		return ;
 	else if (**start == '"')
 		handle_quotes(start, '"', '\'');
 	else if (**start == '\'')
 		handle_quotes(start, '\'', '"');
 	else
-		while (!ft_strchr(WHITESPACE, **start) && !ft_strchr(SYMBOLS, **start) && !(**start == '&' && *(*start + 1) == '&'))
+		while (!ft_strchr(WHITESPACE, **start) && !ft_strchr(SYMBOLS, **start)
+			&& !(**start == '&' && *(*start + 1) == '&'))
 			(*start)++;
 	handle_words(start);
 }
@@ -101,5 +103,6 @@ void	convert_str(char *str, t_chain **list)
 	char	*tok_end;
 
 	while (get_token(&str, &tok_start, &tok_end))
-		lstadd_back(list, lstnew(ft_substr(tok_start, 0, tok_end - tok_start, SOUJAOUR)));
+		lstadd_back(list,
+			lstnew(ft_substr(tok_start, 0, tok_end - tok_start, SOUJAOUR)));
 }

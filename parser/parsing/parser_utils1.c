@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:23 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 07:54:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 17:45:59 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,11 @@ void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f)
 	{
 		list->next = non_redir;
 		if (non_redir)
-			non_redir->back = list; // if non_redir is valid 
+			non_redir->back = list;
 	}
 	while (is_redir(redirs, IN + OR + OUT))
 	{
 		tmp = redirs->next;
-		// free(redirs); // need to free content as well.
 		redirs = tmp;
 	}
 }
