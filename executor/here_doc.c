@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 08:31:42 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 15:52:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void    here_doc(t_chain *data, int num)
 	prompt_here_doc(data->delim, fd1, num);
 	close(fd1);
 	data->fd = fd2;
-	printf("Heredoc temp file created: [%s]\n", filename);
+	// printf("Heredoc temp file created: [%s]\n", filename);
 }
 
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser2.c                                          :+:      :+:    :+:   */
+/*   parser_utils_3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 07:54:09 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 18:29:18 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@ void	delete_any(t_chain *ptr, int i)
 	prev->next = ptr->next;
 	if (ptr->next)
 		ptr->next->back = prev;
-	// if (i)
-	// 	free(ptr->content);
-	// free(ptr);
 	(void)i;
 }
 
@@ -84,9 +81,9 @@ t_chain	*assign_inputs_edges(t_chain *list)
 		redirs = create_redirs_chain(list);
 		while (list && is_redir(list, IN + OR + OUT))
 			list = list->next;
-		if (list && list->type == WORD) // has to be word or else might be syntax error
+		if (list && list->type == WORD)
 		{
-			list->adj_f = redirs; // bastard redirections
+			list->adj_f = redirs;
 			remove_adjacent_redirs(list, tmp, 1);
 		}
 		else if (!list)
@@ -107,15 +104,10 @@ t_chain	*assign_inputs_edges(t_chain *list)
 			return (new);
 		}
 		else
-			printf("handle this very special case\n"); // there is nothing else just a bunch of redirs; bastard redirs are not adopted by any operator or command
+			printf("handle this very special case\n");
 	}
 	return (list);
 }
-
-// void	organize_sub(t_chain *r_paren)
-// {
-// 	r_paren->type = SUBSHELL;
-// }
 
 t_chain	*convert_infix(t_chain *infix)
 {
@@ -132,7 +124,7 @@ t_chain	*convert_infix(t_chain *infix)
 		{
 			if ((!ops || infix->lvl == NAN) && infix->type != R_PAREN)
 				move_item(&infix, &ops, 1);
-			else if (ops && ops->lvl && infix->type != R_PAREN) // should consolidate more these
+			else if (ops && ops->lvl && infix->type != R_PAREN)
 			{
 				while (ops && ops->lvl && ops->lvl >= infix->lvl)
 					move_item(&ops, &post, 0);
@@ -147,13 +139,9 @@ t_chain	*convert_infix(t_chain *infix)
 			}
 			else if (ops->type == L_PAREN)
 				move_item(&infix, &ops, 1);
-			else
-			{
-				printf("handle this shit ls unclosed parenthesis *\n"); // it should never ever reach here 
-			}
 		}
 	}
 	while (ops)
-		move_item(&ops, &post, 0); // there might be some case where we move left parenthesis to the post fix list
+		move_item(&ops, &post, 0);
 	return (post);
 }

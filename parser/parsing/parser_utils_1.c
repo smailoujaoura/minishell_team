@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_utils1.c                                    :+:      :+:    :+:   */
+/*   parser_utils_1.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:23 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/27 07:54:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/02/28 18:30:20 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	is_redir(t_chain *ptr, int f)
+void	remove_adjacent_redirs_helper(t_chain *non_redir, int f)
 {
-	if (!ptr)
-		return (0);
-	if (f == IN + OR + OUT && (is_redir(ptr, IN) || is_redir(ptr, OUT)))
-		return (1);
-	if (f == IN && (ptr->type == HEREDOC || ptr->type == REDIR_IN))
-		return (1);
-	else if (f == OUT && (ptr->type == REDIR_APPEND || ptr->type == REDIR_OUT))
-		return (1);
-	return (0);
+	while (non_redir && is_redir(non_redir, IN + OR + OUT))
+	{
+		if (f)
+			non_redir = non_redir->back;
+		else
+			non_redir = non_redir->next;
+	}
 }
 
 void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f)
@@ -31,13 +29,7 @@ void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f)
 	t_chain	*tmp;
 
 	non_redir = redirs;
-	while (non_redir && is_redir(non_redir, IN + OR + OUT))
-	{
-		if (f)
-			non_redir = non_redir->back;
-		else
-			non_redir = non_redir->next;
-	}
+	remove_adjacent_redirs_helper(redirs, f);
 	if (f)
 	{
 		if (non_redir)
@@ -48,12 +40,11 @@ void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f)
 	{
 		list->next = non_redir;
 		if (non_redir)
-			non_redir->back = list; // if non_redir is valid 
+			non_redir->back = list;
 	}
 	while (is_redir(redirs, IN + OR + OUT))
 	{
 		tmp = redirs->next;
-		// free(redirs); // need to free content as well.
 		redirs = tmp;
 	}
 }

@@ -4,13 +4,14 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "make",
-            "args": ["re", "clean"],
+            "command": "make re && make clean",
+            // "args": ["re", "clean"],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "problemMatcher": [],
+            "envFile": "${workspaceFolder}/.env",
             "detail": "Compiles the minishell project using Makefile"
         }
     ]
