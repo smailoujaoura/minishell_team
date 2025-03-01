@@ -1,5 +1,4 @@
 
-
 #include "../includes/minishell.h"
 
 void	garbage_coll_bkol(t_list *allocs, void *one, void *two)
@@ -34,9 +33,8 @@ void	*ft_malloc_bkol(size_t size, int flag)
 		new = malloc(sizeof(t_list));
 		if (ptr == NULL || new == NULL)
 		{
-			// garbage_collector(NULL, NULL, NULL);
 			garbage_coll_bkol(allocs, ptr, new);
-			printf("Panic exit\n");
+			panic_exit("Minishell", 7321);
 		}
 		new->content = ptr;
 		new->next = NULL;

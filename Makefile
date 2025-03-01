@@ -48,8 +48,8 @@ LIBS = ./utils/libft/libft.a
 
 all: $(NAME)
 
-%.o: %.c minishell.h
-	$(COMP) -c $< -o $@
+%.o: %.c ./includes/minishell.h ./utils/libft/libft.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(LIBS) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -lreadline -lncurses -o $(NAME)
