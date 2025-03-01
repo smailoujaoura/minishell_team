@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/28 18:27:24 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 14:01:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 void	panic_exit(char *ptr, int place)
 {
-	printf("Reason: [%s]\tPlace [%d]\n", ptr, place);
-	printf("%s: command not found\n", ptr);
+	(void)ptr;
+	(void)place;
+	perror("Minishell exit");
 	exit(EXIT_FAILURE);
 }
 
@@ -41,7 +42,6 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 	}
 	else
 		mini->last_exit = 1;
-	// finish_exec(tree);
 }
 
 void	run_pipe(t_ast *tree, t_shell *mini)
@@ -83,8 +83,8 @@ void	run_sub(t_ast *tree, t_shell *mini)
 		{
 			fds_dup(tree);
 			executor(tree->left, mini);
-			wait(NULL); // should get the exit status
-			exit(0); // report the exit status
+			wait(NULL);
+			exit(0);
 		}
 		else if (pid == -1)
 			panic_exit("Forking subshell", 45);

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 13:10:21 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 14:35:26 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <signal.h>
 # include <errno.h>
 # include <stddef.h>
 # include <dirent.h>
@@ -30,6 +29,7 @@
 # include <sys/types.h>
 # include <stdbool.h>
 # include <termios.h>
+# include <signal.h>
 
 // General Macros
 # define MEMORY_ERROR "Memory Error!"
