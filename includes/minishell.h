@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 13:08:17 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 13:10:21 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <dirent.h>
 # include <sys/types.h>
 # include <stdbool.h>
+# include <termios.h>
 
 // General Macros
 # define MEMORY_ERROR "Memory Error!"

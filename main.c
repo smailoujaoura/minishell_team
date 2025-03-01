@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 12:57:22 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 13:31:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,8 @@ void	setup_signals(void)
 	sigaction(SIGINT, &signals, NULL);
 }
 
-void	loop_minishell(t_shell *mini)
+int	loop_minishell(t_shell *mini, struct termios *tp_out, struct termios *tp_in)
 {
-	// struct termios	default;
 	t_chain			*list;
 	t_ast			*root;
 	char			*line;
@@ -59,21 +58,32 @@ void	loop_minishell(t_shell *mini)
 		free(line);
 		list = NULL;
 		ft_malloc(0, DEALLOCATE);
+		if (tcsetattr(STDOUT_FILENO, TCSANOW, tp_out) < 0
+			|| tcsetattr(STDIN_FILENO, TCSANOW, tp_in) < 0)
+			return (1);
 	}
 	ft_malloc_bkol(0, DEALLOCATE);
+	return (0);
 }
 
+// if (!data.env) 
+// should setup some envs even if the program strted with env -i gnore
+// return (1);
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_shell	data;
-	
+	t_shell			data;
+	struct termios	tp_out;
+	struct termios	tp_in;
+
 	if (!isatty(STDIN_FILENO))
 		return (1);
 	setup_signals();
 	data.env = handle_env(envp);
-	if (!data.env)
+	if (isatty(STDOUT_FILENO) && tcgetattr(STDOUT_FILENO, &tp_out) < 0)
 		return (1);
-	loop_minishell(&data);
+	if (tcgetattr(STDIN_FILENO, &tp_in) < 0)
+		return (1);
+	loop_minishell(&data, &tp_out, &tp_in);
 	(void)argv;
 	(void)argc;
 	return (0);
