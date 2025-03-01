@@ -2,6 +2,10 @@ NAME = minishell
 SRCS =	main.c \
 		minishell.c \
 		./utils/list_utils.c \
+		./utils/list_utils_arg.c \
+		./utils/garbage_collector.c \
+		./utils/bkol_garb_coll.c \
+		./utils/libft/allocator.c \
 		./parser/lexing/lexer.c \
 		./parser/lexing/lexer_utils1.c \
 		./parser/parsing/parser_utils_1.c \
@@ -11,9 +15,6 @@ SRCS =	main.c \
 		./parser/parsing/syntax_validator.c \
 		./parser/parsing/syntax_validator_helper.c \
 		./parser/parsing/ast_tree.c \
-		./utils/garbage_collector.c \
-		./utils/bkol_garb_coll.c \
-		./utils/libft/allocator.c \
 		./builtins/cd.c \
 		./builtins/echo.c \
 		./builtins/env.c \
