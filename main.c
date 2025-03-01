@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 14:33:57 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 14:41:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	setup_signals(void)
 	struct sigaction	signals;
 
 	sigfillset(&signals.sa_mask);
-	signals.sa_flags = SA_SIGINFO | SA_RESTART; 
+	signals.sa_flags = SA_SIGINFO | SA_RESTART;
 	signals.sa_sigaction = handler;
 	sigaction(SIGINT, &signals, NULL);
 }

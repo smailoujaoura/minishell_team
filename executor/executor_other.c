@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 22:51:25 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/01 15:07:35 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,13 @@ char	*construct_cmd_path(char **argv, t_env *envp)
 
 int	check_buildin(const char *cmd)
 {
-	if ((ft_strlen(cmd) == 4 && ft_strncmp("echo", cmd, 4) == 0)
-		|| (ft_strlen(cmd) == 2 && ft_strncmp("cd", cmd, 2) == 0)
-		|| (ft_strlen(cmd) == 3 && ft_strncmp("pwd", cmd, 3) == 0)
-		|| (ft_strlen(cmd) == 6 && ft_strncmp("export", cmd, 6) == 0)
-		|| (ft_strlen(cmd) == 5 && ft_strncmp("unset", cmd, 5) == 0)
-		|| (ft_strlen(cmd) == 3 && ft_strncmp("env", cmd, 3) == 0)
-		|| (ft_strlen(cmd) == 4 && ft_strncmp("exit", cmd, 4) == 0))
+	if (ft_strncmp("echo", cmd, SIZE_MAX) == 0
+		|| ft_strncmp("cd", cmd, SIZE_MAX) == 0
+		|| ft_strncmp("pwd", cmd, SIZE_MAX) == 0
+		||  ft_strncmp("export", cmd, SIZE_MAX) == 0
+		|| ft_strncmp("unset", cmd, SIZE_MAX) == 0
+		||  ft_strncmp("env", cmd, SIZE_MAX) == 0
+		|| ft_strncmp("exit", cmd, SIZE_MAX) == 0)
 		return (1);
 	return (0);
 }
@@ -80,19 +80,20 @@ int	check_buildin(const char *cmd)
 void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 {
 	assign_fds_builtins(tree, 1);
-	if (ft_strlen(argv[0]) == 4 && ft_strncmp("echo", argv[0], 4) == 0)
-		builtin_echo(argv, &mini->last_exit);	
-	if (ft_strlen(argv[0]) == 2 && ft_strncmp("cd", argv[0], 2) == 0)
+
+	if (ft_strncmp("echo", argv[0], SIZE_MAX) == 0)
+		builtin_echo(argv, &mini->last_exit);
+	if (ft_strncmp("cd", argv[0], SIZE_MAX) == 0)
 		builtin_cd(mini->env, argv, &mini->last_exit);
-	if (ft_strlen(argv[0]) == 3 && ft_strncmp("pwd", argv[0], 3) == 0)
+	if (ft_strncmp("pwd", argv[0], SIZE_MAX) == 0)
 		builtin_pwd(mini);
-	if (ft_strlen(argv[0]) == 6 && ft_strncmp("export", argv[0], 6) == 0)
+	if (ft_strncmp("export", argv[0], SIZE_MAX) == 0)
 		builtin_export(mini->env, argv, 1);
-	if (ft_strlen(argv[0]) == 5 && ft_strncmp("unset", argv[0], 5) == 0)
+	if (ft_strncmp("unset", argv[0], SIZE_MAX) == 0)
 		builtin_unset(mini->env, argv);
-	if (ft_strlen(argv[0]) == 3 && ft_strncmp("env", argv[0], 3) == 0)
-		builtin_env(mini->env, argv);	
-	if (ft_strlen(argv[0]) == 4 && ft_strncmp("exit", argv[0], 4) == 0)
-		builtin_exit(argv, &mini->last_exit);	
+	if (ft_strncmp("env", argv[0], SIZE_MAX) == 0)
+		builtin_env(mini->env, argv);
+	if (ft_strncmp("exit", argv[0], SIZE_MAX) == 0)
+		builtin_exit(argv, &mini->last_exit);
 	assign_fds_builtins(tree, 0);
 }

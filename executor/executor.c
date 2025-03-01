@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 14:01:13 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:21:32 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,14 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 {
 	char	**argv;
 	char	**envp;
-	bool	should_execute;
 
-	argv = expand_cmd(tree->data, tree->data->argv, mini);
 	envp = generate_env_tab(mini->env);
+	argv = expand_cmd(tree->data, tree->data->argv, mini);
 	expand_redirs(tree->data->adj_f, mini);
-	should_execute = create_adj_files(tree->data->adj_f);
-	if (tree->data->empty)
-		mini->last_exit = 0;
-	if (should_execute && !tree->data->empty)
-	{
-		assign_fds(tree);
-		if (argv && check_buildin(argv[0]))
-			buildin_excutor(tree, argv, mini);
-		else if (argv)
-			external_cmd(tree, argv, envp, mini);
-	}
+	if (check_buildin(argv[0]))
+		buildin_excutor(tree, argv, mini);
 	else
-		mini->last_exit = 1;
+		external_cmd(tree, argv, envp, mini);
 }
 
 void	run_pipe(t_ast *tree, t_shell *mini)
@@ -54,24 +44,25 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		panic_exit("Pipe wasn't created\n", 42);
 	pid_left = fork();
 	if (pid_left == 0)
-		pipe_child(tree, mini, pipe_pair, 0);
+		pipe_child(tree, mini, pipe_pair, 1);
 	else if (pid_left == -1)
 		panic_exit("Forking left", 43);
 	pid_right = fork();
 	if (pid_right == 0)
-		pipe_child(tree, mini, pipe_pair, 1);
+		pipe_child(tree, mini, pipe_pair, 0);
 	if (pid_right == -1)
 		panic_exit("Forking left", 44);
 	close(pipe_pair[1]);
 	close(pipe_pair[0]);
-	waitpid(-1, NULL, 0);
-	waitpid(-1, NULL, 0);
+	wait(NULL);
+	wait(NULL);
 }
 
 void	run_sub(t_ast *tree, t_shell *mini)
 {
 	pid_t	pid;
 	bool	should_execute;
+	
 
 	expand_redirs(tree->data->adj_f, mini);
 	should_execute = create_adj_files(tree->data->adj_f);
