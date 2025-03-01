@@ -19,7 +19,10 @@ int	match_wildcard(char *str, char *pattern, char *is_wild)
 		if (*pattern == '*' && *is_wild == IS_WILD)
 		{
 			while (*pattern == '*' && *is_wild == IS_WILD)
-				pattern++, is_wild++;
+			{
+				pattern++;
+				is_wild++;
+			}
 			if (!*pattern)
 				return (1);
 			while (*str)
@@ -29,7 +32,9 @@ int	match_wildcard(char *str, char *pattern, char *is_wild)
 		}
 		if (*pattern != *str || (*pattern == '*' && *is_wild == NOT_WILD))
 			return (0);
-		pattern++, str++, is_wild++;
+		pattern++;
+		str++;
+		is_wild++;
 	}
 	return (*str == '\0');
 }
@@ -101,7 +106,8 @@ void	check_entries(t_list **list, char *pattern, char *is_wild, int *found)
 		{
 			if (match_wildcard(entry->d_name, pattern, is_wild))
 			{
-				ft_lstadd_back(list, ft_lstnew(ft_strdup(entry->d_name, SOUJAOUR)));
+				ft_lstadd_back(list,
+					ft_lstnew(ft_strdup(entry->d_name, SOUJAOUR)));
 				*found = 1;
 			}
 			entry = readdir(dir);

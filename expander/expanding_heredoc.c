@@ -23,7 +23,7 @@ int	open_files(char *new, int *expand_fd)
 	if (expand_read_fd == -1)
 		panic_exit(strerror(errno), 982723);
 	unlink(new);
-	return (expand_read_fd);	
+	return (expand_read_fd);
 }
 
 int	check_var_existence(char current, char next)

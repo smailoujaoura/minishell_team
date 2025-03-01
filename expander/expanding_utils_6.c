@@ -37,18 +37,19 @@ void	handle_special_case(t_list **list, char *str, char *flags)
 	str++;
 }
 
-char	**ultimate_split(char *str, char *flags, char sep)
+char	**ultimate_split(char *str, char *flags, char sep, t_list *list)
 {
-	t_list	*list;
 	char	*trail;
 	char	*pattern;
 	char	*is_wild;
 
-	list = NULL;
 	while (*flags)
 	{
 		while (*flags == sep)
-			flags++, str++;
+		{
+			flags++;
+			str++;
+		}
 		if (*flags == HANDLE)
 			handle_special_case(&list, str, flags);
 		else if (*flags)

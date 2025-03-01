@@ -30,7 +30,6 @@ char	*get_value_wrapper(char *var, t_env *env)
 {
 	t_env	*node;
 
-
 	node = get_env_var(env, var);
 	if (node == NULL)
 		return (ft_strdup("", SOUJAOUR));

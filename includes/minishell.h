@@ -214,12 +214,19 @@ char	*remove_occurences(char *str, int i, int singles, int doubles);
 void	create_all_redirs(t_chain *list, t_chain *ptr, int f);
 void	add_files(t_chain *list, t_chain *new);
 void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f);
-int		check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
 t_ast	*build_tree(t_chain *post);
 void	store_line(char *new, int flag);
 int		is_redir(t_chain *ptr, int f);
 void	delete_any(t_chain *ptr, int i);
 void	remove_if(t_chain *list);
+int		check_paren(t_chain *prev, t_chain *next, int paren);
+int		check_redirs(t_chain *prev, t_chain *next);
+int		check_logicals(t_chain *prev, t_chain *next);
+int		check_pipe(t_chain *prev, t_chain *next);
+int		check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
+
+# define SYNTAXERR "Minishell: syntax error near unexpected token"
+# define ERR "Minishell: syntax error near unexpected token '%s'\n"
 
 // List utils for parser
 t_chain	*lstnew(char *content);
@@ -274,7 +281,7 @@ void	expand_redirs(t_chain *ptr, t_shell *mini);
 char	*ultimate(char *str, char *flags, int one, int two);
 char	*remove_flags(char *flags, char **actual, char *str);
 void	expand_heredoc(t_chain *ptr, t_shell *mini, char *new, int source_fd);
-char	**ultimate_split(char *str, char *flags, char sep);
+char	**ultimate_split(char *str, char *flags, char sep, t_list *list);
 
 char	*wild_shell(char *sources, char *quotes, char *str);
 

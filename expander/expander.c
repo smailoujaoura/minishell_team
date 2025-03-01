@@ -59,7 +59,7 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini)
 		return (NULL);
 	flags = ultimate(actual, flags, 0, 0);
 	flags = remove_flags(flags, &actual, actual);
-	return (ultimate_split(actual, flags, SPLIT));
+	return (ultimate_split(actual, flags, SPLIT, NULL));
 }
 
 char	**expand_files(t_chain *node, t_shell *mini)
@@ -73,7 +73,7 @@ char	**expand_files(t_chain *node, t_shell *mini)
 		return (NULL);
 	flags = ultimate(actual, flags, 0, 0);
 	flags = remove_flags(flags, &actual, actual);
-	return (ultimate_split(actual, flags, SPLIT));
+	return (ultimate_split(actual, flags, SPLIT, NULL));
 }
 
 void	expand_redirs(t_chain *ptr, t_shell *mini)

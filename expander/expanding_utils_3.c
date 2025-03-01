@@ -66,12 +66,10 @@ void	wild_shell_copy_helper(char *quotes, char *str, char *sources, int i)
 			inside_lvl_one++;
 		else if (inside_lvl_one && quotes[i] == QUOTE)
 			inside_lvl_one--;
-
 		if (!inside_lvl_two && inside_level_two(str, sources, i))
 			inside_lvl_two++;
 		else if (inside_lvl_two && (str[i] == '"' || str[i] == '\''))
 			inside_lvl_two--;
-			
 		if (str[i] == '*' && !inside_lvl_one && sources[i] == LITERAL)
 			quotes[i] = IS_WILD;
 		else if (str[i] == '*' && !inside_lvl_two && !inside_lvl_one)

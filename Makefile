@@ -9,6 +9,7 @@ SRCS =	main.c \
 		./parser/parsing/parser_utils_3.c \
 		./parser/parsing/parser_utils_4.c \
 		./parser/parsing/syntax_validator.c \
+		./parser/parsing/syntax_validator_helper.c \
 		./parser/parsing/ast_tree.c \
 		./utils/garbage_collector.c \
 		./utils/bkol_garb_coll.c \

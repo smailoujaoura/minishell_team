@@ -111,12 +111,14 @@ void	executor(t_ast *tree, t_shell *mini)
 	else if (tree->type == OR)
 	{
 		executor(tree->left, mini);
+		printf("OR:[%d]\n", mini->last_exit);
 		if (mini->last_exit != 0)
 			executor(tree->right, mini);
 	}
 	else if (tree->type == AND)
 	{
 		executor(tree->left, mini);
+		printf("AND:[%d]\n", mini->last_exit);
 		if (mini->last_exit == 0)
 			executor(tree->right, mini);
 	}

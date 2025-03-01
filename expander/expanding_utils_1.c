@@ -94,7 +94,8 @@ char	*just_copy(char *str, int *i, int *singles, int *doubles)
 			break ;
 		else
 		{
-			while (str[*i + len] && (*singles || !is_var(str[*i + len], str[*i + len + 1], STRT)))
+			while (str[*i + len] && (*singles
+					|| !is_var(str[*i + len], str[*i + len + 1], STRT)))
 			{
 				len++;
 				singles_doubles(singles, doubles, str[*i + len]);

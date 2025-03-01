@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../includes/minishell.h"
 
 int	count_len(char *str)
@@ -48,6 +47,7 @@ void	copy_helper(char *str, char *flags, char *new_str, char *new_flg)
 	}
 }
 
+// possible mistake here
 char	*remove_flags(char *flags, char **actual, char *str)
 {
 	char	*new_flg;
@@ -59,8 +59,8 @@ char	*remove_flags(char *flags, char **actual, char *str)
 	{
 		if (flags[i] != QUOTE)
 			flags[i] = flags[i];
-		else if (flags[i] == QUOTE && flags[i + 1] == QUOTE &&
-			(flags[i + 2] == SPLIT || !flags[i + 2])) // i think I made a mistake here i = 0 is actually correct
+		else if (flags[i] == QUOTE && flags[i + 1] == QUOTE
+			&& (flags[i + 2] == SPLIT || !flags[i + 2]))
 			flags[i] = HANDLE;
 		else
 			flags[i] = REMOV;
