@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 22:15:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:32:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ t_chain	*create_empty_cmd(t_chain *list, t_chain *redirs)
 		list->type = WORD;
 		list->empty = 1;
 		list->adj_f = redirs;
+		return (list);
 	}
 	else if (list)
 	{

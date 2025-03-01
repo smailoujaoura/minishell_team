@@ -4,6 +4,12 @@ Good research should lead to an immaculate all-encapsulating code, making the pr
 
 Almost the first thought-of path for solution will not be the best one, breaking all the rules above.
 
+- To be fixed:
+	- signals with child processes
+	- Minishell: Minishell:
+	- no solid error reporting
+	- heredoc signals
+
 - Norminette
 	- done for parser
 	- done for expander
