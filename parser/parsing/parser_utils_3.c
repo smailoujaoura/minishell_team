@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils_3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 16:32:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 18:19:03 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ t_chain	*assign_inputs_edges(t_chain *list)
 {
 	t_chain	*redirs;
 	t_chain	*tmp;
-	t_chain	*new;
 
 	if (is_redir(list, IN + OR + OUT))
 	{
@@ -93,9 +92,7 @@ t_chain	*assign_inputs_edges(t_chain *list)
 			remove_adjacent_redirs(list, tmp, 1);
 		}
 		else
-			new = create_empty_cmd(list, redirs);
-		if (new)
-			return (new);
+			return (create_empty_cmd(list, redirs));
 	}
 	return (list);
 }

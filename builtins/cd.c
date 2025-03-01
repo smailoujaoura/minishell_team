@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/28 17:18:20 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/01 18:23:25 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ static void    cd_with_args(t_env *env, char **argv, int *status)
         return ;
     updated_pwd[0] = ft_strjoin("PWD=", path, BKOLANI);
     updated_pwd[1] = NULL;
-    printf("%s\n", path);
     builtin_export(env, updated_pwd, 0);
     free(path);
     return ;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 17:48:27 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 20:51:03 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,25 @@ void	setup_child_signals(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
+void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
+{
+	if (open_and_assign(tree->data->adj_f))
+		exit(1);
+	if (tree->data->empty)
+	{
+		close(STDOUT_FILENO);
+		close(STDIN_FILENO);
+		exit(0);
+	}
+	setup_child_signals();
+	execve(find_path(argv, mini->env), argv, envp);
+	dup2(STDERR_FILENO, STDOUT_FILENO);
+	printf("minishell: %s: command not found\n", argv[0]);
+	close(STDOUT_FILENO);
+	close(STDIN_FILENO);
+	exit(EXIT_FAILURE);
+}
+
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 {
 	pid_t	pid;
@@ -73,21 +92,7 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	if (pid == -1)
 		panic_exit("Forking a cmd for execve", 46);
 	if (pid == 0)
-	{
-		if (open_and_assign(tree->data->adj_f))
-			exit(1);
-		if (tree->data->empty)
-		{
-			close(STDOUT_FILENO);
-			close(STDIN_FILENO);
-			exit(0);
-		}
-		setup_child_signals();
-		execve(find_path(argv, mini->env), argv, envp);
-		close(STDOUT_FILENO);
-		close(STDIN_FILENO);
-		exit(EXIT_FAILURE);
-	}
+		ext_proc(tree, argv, envp, mini);
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
 		mini->last_exit = WEXITSTATUS(mini->last_exit);
@@ -116,17 +121,3 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 		exit(0);
 	}
 }
-
-// void	fds_dup(t_ast *tree)
-// {
-// 	if (tree->in_fd != -1)
-// 	{
-// 		dup2(tree->in_fd, STDIN_FILENO);
-// 		close(tree->in_fd);
-// 	}
-// 	if (tree->out_fd != -1)
-// 	{
-// 		dup2(tree->out_fd, STDOUT_FILENO);
-// 		close(tree->out_fd);
-// 	}
-// }

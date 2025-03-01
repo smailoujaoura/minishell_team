@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 17:54:46 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 20:56:10 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,26 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 {
 	char	**argv;
 	char	**envp;
-
+	t_chain	*ptr;
+	
 	envp = generate_env_tab(mini->env);
 	argv = expand_cmd(tree->data, tree->data->argv, mini);
 	expand_redirs(tree->data->adj_f, mini);
 	if (check_buildin(argv[0]))
-		buildin_excutor(tree, argv, mini);
+	buildin_excutor(tree, argv, mini);
 	else
-		external_cmd(tree, argv, envp, mini);
+	external_cmd(tree, argv, envp, mini);
 	if (mini->last_exit == 131)
-		printf("Quit (core dumped)\n");
+	printf("Quit (core dumped)\n");
+	ptr = tree->data->adj_f;
+	while (ptr)
+	{
+		if (ptr->ambiguous)
+			break ;
+		if (ptr->type == HEREDOC)
+			close(ptr->fd);
+		ptr = ptr->next;
+	}
 }
 
 void	run_pipe(t_ast *tree, t_shell *mini)
@@ -63,6 +73,7 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 void	run_sub(t_ast *tree, t_shell *mini)
 {
 	pid_t	pid;
+	t_chain	*ptr;
 
 	expand_redirs(tree->data->adj_f, mini);
 	pid = fork();
@@ -76,6 +87,15 @@ void	run_sub(t_ast *tree, t_shell *mini)
 	}
 	else if (pid == -1)
 		panic_exit("Forking subshell", 45);
+	ptr = tree->data->adj_f;
+	while (ptr)
+	{
+		if (ptr->ambiguous)
+		break ;
+		if (ptr->type == HEREDOC)
+		close(ptr->fd);
+		ptr = ptr->next;
+	}
 	wait(NULL);
 }
 

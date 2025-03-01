@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 18:04:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 20:31:14 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,10 @@ void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 	if (ft_strncmp("env", argv[0], SIZE_MAX) == 0)
 		builtin_env(mini->env, argv);
 	if (ft_strncmp("exit", argv[0], SIZE_MAX) == 0)
+	{
+		if (!isatty(STDOUT_FILENO) || !isatty(STDIN_FILENO))
+			close(STDOUT_FILENO);
 		builtin_exit(argv, &mini->last_exit);
+	}
 	assign_fds_builtins(tree, argv[0], 0);
 }
