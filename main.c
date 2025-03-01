@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 14:41:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 16:46:55 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	setup_signals(void)
 	signals.sa_flags = SA_SIGINFO | SA_RESTART;
 	signals.sa_sigaction = handler;
 	sigaction(SIGINT, &signals, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 int	loop_minishell(t_shell *mini, struct termios *tp_out, struct termios *tp_in)

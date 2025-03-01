@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 16:21:32 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 17:54:46 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 		buildin_excutor(tree, argv, mini);
 	else
 		external_cmd(tree, argv, envp, mini);
+	if (mini->last_exit == 131)
+		printf("Quit (core dumped)\n");
 }
 
 void	run_pipe(t_ast *tree, t_shell *mini)
@@ -61,26 +63,20 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 void	run_sub(t_ast *tree, t_shell *mini)
 {
 	pid_t	pid;
-	bool	should_execute;
-	
 
 	expand_redirs(tree->data->adj_f, mini);
-	should_execute = create_adj_files(tree->data->adj_f);
-	assign_fds(tree);
-	if (should_execute)
+	pid = fork();
+	if (pid == 0)
 	{
-		pid = fork();
-		if (pid == 0)
-		{
-			fds_dup(tree);
-			executor(tree->left, mini);
-			wait(NULL);
-			exit(0);
-		}
-		else if (pid == -1)
-			panic_exit("Forking subshell", 45);
+		if (open_and_assign(tree->data->adj_f))
+			exit(1);
+		executor(tree->left, mini);
 		wait(NULL);
+		exit(0);
 	}
+	else if (pid == -1)
+		panic_exit("Forking subshell", 45);
+	wait(NULL);
 }
 
 void	executor(t_ast *tree, t_shell *mini)

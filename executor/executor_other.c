@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 15:07:35 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 18:04:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,35 @@ int	check_buildin(const char *cmd)
 	return (0);
 }
 
+int	assign_fds_builtins(t_ast *tree, char *cmd, int action)
+{
+	static int	original_in;
+	static int	original_out;
+
+	if (ft_strncmp("exit", cmd, SIZE_MAX) == 0)
+		return (0);
+	if (action)
+	{
+		original_in = dup(STDIN_FILENO);
+		original_out = dup(STDOUT_FILENO);
+		if (open_and_assign(tree->data->adj_f))
+			return (1);
+	}
+	else
+	{
+		dup2(original_in, STDIN_FILENO);
+		close(original_in);
+		dup2(original_out, STDOUT_FILENO);
+		close(original_out);
+	}
+	return (0);
+}
+
+
 void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 {
-	assign_fds_builtins(tree, 1);
-
+	if (assign_fds_builtins(tree, argv[0], 1))
+		return ;
 	if (ft_strncmp("echo", argv[0], SIZE_MAX) == 0)
 		builtin_echo(argv, &mini->last_exit);
 	if (ft_strncmp("cd", argv[0], SIZE_MAX) == 0)
@@ -95,5 +120,5 @@ void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 		builtin_env(mini->env, argv);
 	if (ft_strncmp("exit", argv[0], SIZE_MAX) == 0)
 		builtin_exit(argv, &mini->last_exit);
-	assign_fds_builtins(tree, 0);
+	assign_fds_builtins(tree, argv[0], 0);
 }

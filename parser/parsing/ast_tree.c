@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:45:19 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 17:47:18 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ t_ast	*make_tree_node(t_chain **node, int type)
 	tree = ft_calloc(1, sizeof(t_ast), SOUJAOUR);
 	tree->type = type;
 	tree->data = *node;
-	tree->in_fd = -1;
-	tree->out_fd = -1;
 	*node = (*node)->next;
 	return (tree);
 }

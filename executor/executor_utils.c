@@ -6,13 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 16:24:54 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 17:48:27 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-# define APPENDING_MODE O_WRONLY | O_CREAT | O_APPEND
 
 char	*find_path(char **argv, t_env *env)
 {
@@ -21,31 +19,40 @@ char	*find_path(char **argv, t_env *env)
 	return (construct_cmd_path(argv, env));
 }
 
+void	open_redir(t_chain *redir)
+{
+	if (redir->ambiguous)
+		return ;
+	if (redir->type == REDIR_IN)
+		redir->fd = open(redir->file, O_RDONLY);
+	if (redir->type == REDIR_OUT)
+		redir->fd = open(redir->file, O_WRONLY | O_CREAT, 0644);
+	if (redir->type == REDIR_APPEND)
+		redir->fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (redir->fd == -1)
+	{
+		dup2(STDERR_FILENO, STDOUT_FILENO);
+		printf("minishell: %s: %s\n", redir->file, strerror(errno));
+	}
+}
+
 int	open_and_assign(t_chain *redirs)
 {
 	while (redirs)
 	{
-		if (redirs->ambiguous)
-			return (1);
-		if (redirs->type == REDIR_IN)
+		open_redir(redirs);
+		if (redirs->ambiguous || redirs->fd == -1)
 		{
-			redirs->fd = open(redirs->file, O_RDONLY);
+			return (1);
+		}
+		if (redirs->type == HEREDOC || redirs->type == REDIR_IN)
+		{
 			dup2(redirs->fd, STDIN_FILENO);
 		}
-		else if (redirs->type == REDIR_OUT)
+		if (redirs->type == REDIR_APPEND || redirs->type == REDIR_OUT)
 		{
-			redirs->fd = open(redirs->file, O_WRONLY | O_CREAT, 0644);
 			dup2(redirs->fd, STDOUT_FILENO);
 		}
-		else if (redirs->type == REDIR_APPEND)
-		{
-			redirs->fd = open(redirs->file, APPENDING_MODE, 0644);
-			dup2(redirs->fd, STDOUT_FILENO);
-		}
-		else
-			dup2(redirs->fd, STDOUT_FILENO);
-		if (redirs->fd == -1)
-			return (1);
 		close(redirs->fd);
 		redirs = redirs->next;
 	}
@@ -55,6 +62,7 @@ int	open_and_assign(t_chain *redirs)
 void	setup_child_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
 
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
@@ -83,7 +91,7 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
 		mini->last_exit = WEXITSTATUS(mini->last_exit);
-	if (WIFSIGNALED(mini->last_exit))
+	else if (WIFSIGNALED(mini->last_exit))
 		mini->last_exit = WTERMSIG(mini->last_exit) + 128;
 }
 
@@ -109,16 +117,16 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 	}
 }
 
-void	fds_dup(t_ast *tree)
-{
-	if (tree->in_fd != -1)
-	{
-		dup2(tree->in_fd, STDIN_FILENO);
-		close(tree->in_fd);
-	}
-	if (tree->out_fd != -1)
-	{
-		dup2(tree->out_fd, STDOUT_FILENO);
-		close(tree->out_fd);
-	}
-}
+// void	fds_dup(t_ast *tree)
+// {
+// 	if (tree->in_fd != -1)
+// 	{
+// 		dup2(tree->in_fd, STDIN_FILENO);
+// 		close(tree->in_fd);
+// 	}
+// 	if (tree->out_fd != -1)
+// 	{
+// 		dup2(tree->out_fd, STDOUT_FILENO);
+// 		close(tree->out_fd);
+// 	}
+// }
