@@ -47,7 +47,8 @@ char	**ft_split(char const *s, char c, int f)
 	if (!s)
 		return (NULL);
 	alt_s = (char *)s;
-	arr = (char **)check_collectors((sizeof(char *) * (ft_words_counter(s, c) + 1)), f);
+	arr = (char **)check_collectors((sizeof(char *)
+				* (ft_words_counter(s, c) + 1)), f);
 	i = 0;
 	while (i < ft_words_counter(s, c))
 	{
