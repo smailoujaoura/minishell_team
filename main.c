@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 22:43:36 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 12:57:22 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,31 +20,40 @@ void	handle_interrupt(void)
 	rl_redisplay();
 }
 
-void	handle_signals(int signum, siginfo_t *info, void *ptr)
+void	handler(int signum, siginfo_t *info, void *ptr)
 {
 	(void)info;
 	(void)ptr;
- 
 	if (signum == SIGINT)
 		handle_interrupt();
 }
 
+void	setup_signals(void)
+{
+	struct sigaction	signals;
+
+	sigfillset(&signals.sa_mask);
+	signals.sa_sigaction = handler;
+	sigaction(SIGINT, &signals, NULL);
+}
+
 void	loop_minishell(t_shell *mini)
 {
-	t_chain	*list;
-	t_ast	*root;
-	char	*line;
-	int		num;
-	
-	num = 0;
+	// struct termios	default;
+	t_chain			*list;
+	t_ast			*root;
+	char			*line;
+	int				lines_num;
+
+	lines_num = 0;
 	list = NULL;
 	while (1337)
 	{
-		num++;
+		lines_num++;
 		line = readline("Minishell: ");
 		if (line == NULL)
 			break ;
-		root = parse_line(line, &list, &num);
+		root = parse_line(line, &list, &lines_num);
 		store_line(NULL, -1);
 		executor(root, mini);
 		free(line);
@@ -56,15 +65,14 @@ void	loop_minishell(t_shell *mini)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_shell				data;
-	struct sigaction	signals;
-
+	t_shell	data;
+	
+	if (!isatty(STDIN_FILENO))
+		return (1);
+	setup_signals();
 	data.env = handle_env(envp);
-	sigfillset(&signals.sa_mask);
 	if (!data.env)
 		return (1);
-	signals.sa_sigaction = handle_signals;
-	sigaction(SIGINT, &signals, NULL);
 	loop_minishell(&data);
 	(void)argv;
 	(void)argc;

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 11:03:41 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/01 13:08:17 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,7 +251,6 @@ void	here_doc(t_chain *data, int num);
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
-
 void	add_new_env(t_env *env, t_env *new_env, const char *line, char *str);
 void	add_new_env_with_plus(t_env *env, t_env *new_env, const char *str);
 void	update_env_trunc(t_env *env, t_env *new_env,
@@ -267,48 +266,39 @@ char	*expand_env_var(t_env *env, char *exp_env);
 // Builtins
 void	builtin_pwd(t_shell *mini);
 void	builtin_echo(char **argv, int *status);
-void    builtin_exit(char **argv, int *status);
+void	builtin_exit(char **argv, int *status);
 void	builtin_env(t_env *env, char **argv);
 void	builtin_cd(t_env *env, char **argv, int *status);
 void	builtin_export(t_env *env, char **argv, int flag);
 void	builtin_unset(t_env *env, char **argv);
 
-
 // Expanding
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini);
 void	expand_redirs(t_chain *ptr, t_shell *mini);
-
 char	*ultimate(char *str, char *flags, int one, int two);
 char	*remove_flags(char *flags, char **actual, char *str);
 void	expand_heredoc(t_chain *ptr, t_shell *mini, char *new, int source_fd);
 char	**ultimate_split(char *str, char *flags, char sep, t_list *list);
-
 char	*wild_shell(char *sources, char *quotes, char *str);
-
-int	is_var(char current, char next, char *set);
+int		is_var(char current, char next, char *set);
 char	*get_value(char *str, int *i, t_shell *mini);
 char	*handle_var_values(char *value, char *new, char **flags, int two);
-
-
 char	*just_copy(char *str, int *i, int *singles, int *doubles);
 void	construct_flags(char *str, char flag, char **flags);
-
-
 void	expand_wildcard(t_list **list, char *pattern, char *is_wild);
-
 char	*get_value_wrapper(char *var, t_env *env);
 
 // Executor
 void	executor(t_ast *tree, t_shell *mini);
 void	assign_fds_builtins(t_ast *tree, int action);
 void	assign_fds(t_ast *tree);
-void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
+void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 char	*construct_cmd_path(char **argv, t_env *envp);
 char	**generate_env_tab(t_env *envp);
 int		check_buildin(const char *cmd);
 bool	create_adj_files(t_chain *adj);
-void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
+void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
 void	fds_dup(t_ast *tree);
 void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);

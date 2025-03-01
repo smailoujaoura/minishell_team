@@ -1,4 +1,3 @@
-
 #include "../includes/minishell.h"
 
 void	garbage_coll_bkol(t_list *allocs, void *one, void *two)
