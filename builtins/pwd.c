@@ -12,9 +12,9 @@
 
 #include "../includes/minishell.h"
 
-void    builtin_pwd(t_shell *mini)
+void	builtin_pwd(t_shell *mini)
 {
-	char    *path;
+	char	*path;
 	t_env	*pwd_str;
 
 	path = getcwd(NULL, 0);
@@ -23,7 +23,6 @@ void    builtin_pwd(t_shell *mini)
 	{
 		pwd_str = get_env_var(mini->env, "PWD");
 		printf("%s\n", pwd_str->value);
-		// perror("pwd");
 		return ;
 	}
 	printf("%s\n", path);

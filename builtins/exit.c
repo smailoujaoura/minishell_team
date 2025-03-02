@@ -12,43 +12,43 @@
 
 #include "../includes/minishell.h"
 
-void    check_exit_status(char *str, int *status)
+void	check_exit_status(char *str, int *status)
 {
-    int i;
+	int	i;
 
-    i = -1;
-    while (str[++i])
-    {
-        if (str[i] < '0' || str[i] > 9)
-        {
-            printf("exit\n");
-            printf("exit: %s: numeric argument required\n", str);
-            *status = 2;
-            exit(2);
-        }
-    }
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] < '0' || str[i] > 9)
+		{
+			printf("exit\n");
+			printf("exit: %s: numeric argument required\n", str);
+			*status = 2;
+			exit(2);
+		}
+	}
 }
 
-void    builtin_exit(char **argv, int *status)
+void	builtin_exit(char **argv, int *status)
 {
-    int     exit_status;
+	int	exit_status;
 
-    if (!argv[1])
-    {
-        *status = 0;
-        write(STDOUT_FILENO, "exit\n", 5);
-        exit(EXIT_SUCCESS);
-    }
-    if (argv[2])
-    {
-        write(2, "exit: too many arguments\n", 25);
-        *status = 1;
-        return ;
-    }
-    check_exit_status(argv[1], status);
-    write(STDOUT_FILENO, "exit\n", 5);
-    exit_status = ft_atoi(argv[1]);
-    exit_status = exit_status % 256;
-    *status = exit_status;
-    exit(exit_status);
+	if (!argv[1])
+	{
+		*status = 0;
+		write(STDOUT_FILENO, "exit\n", 5);
+		exit(EXIT_SUCCESS);
+	}
+	if (argv[2])
+	{
+		write(2, "exit: too many arguments\n", 25);
+		*status = 1;
+		return ;
+	}
+	check_exit_status(argv[1], status);
+	write(STDOUT_FILENO, "exit\n", 5);
+	exit_status = ft_atoi(argv[1]);
+	exit_status = exit_status % 256;
+	*status = exit_status;
+	exit(exit_status);
 }

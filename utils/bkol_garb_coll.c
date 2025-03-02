@@ -2,7 +2,7 @@
 
 void	garbage_coll_bkol(t_list *allocs, void *one, void *two)
 {
-	t_list			*tmp;
+	t_list	*tmp;
 
 	if (one)
 		free(one);

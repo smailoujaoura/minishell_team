@@ -13,18 +13,18 @@
 #include "../includes/minishell.h"
 
 // Print env vars
-void    builtin_env(t_env *env, char **argv)
+void	builtin_env(t_env *env, char **argv)
 {
-    if (!env)
-        return ;
-    if (argv[1])
-    {
-        printf("env: '%s': No such file or directory\n", argv[1]);
-        return ;
-    }
-    while (env)
-    {
-        printf("%s\n", env->full);
-        env = env->next;
-    }
+	if (!env)
+		return ;
+	if (argv[1])
+	{
+		printf("env: '%s': No such file or directory\n", argv[1]);
+		return ;
+	}
+	while (env)
+	{
+		printf("%s\n", env->full);
+		env = env->next;
+	}
 }

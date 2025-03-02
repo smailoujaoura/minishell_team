@@ -25,7 +25,7 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 	char	**argv;
 	char	**envp;
 	t_chain	*ptr;
-	
+
 	envp = generate_env_tab(mini->env);
 	argv = expand_cmd(tree->data, tree->data->argv, mini);
 	expand_redirs(tree->data->adj_f, mini);
@@ -72,7 +72,7 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 	wait(NULL);
 }
 
-int run_sub(t_ast *tree, t_shell *mini, t_chain *files)
+int	run_sub(t_ast *tree, t_shell *mini, t_chain *files)
 {
 	pid_t	pid;
 
@@ -97,7 +97,7 @@ int run_sub(t_ast *tree, t_shell *mini, t_chain *files)
 	}
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
-        return WEXITSTATUS(mini->last_exit);
+		return (WEXITSTATUS(mini->last_exit));
 	return (1);
 }
 

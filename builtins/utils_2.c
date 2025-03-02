@@ -12,13 +12,10 @@
 
 #include "../includes/minishell.h"
 
-// Create a new env var node
-// Create a new env var received from the user input and add it
-// to the env var linked list
 static t_env	*create_new_env(const char *line)
 {
-	char **splited_line;
-	t_env *new_env;
+	char	**splited_line;
+	t_env	*new_env;
 
 	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
 	splited_line = ft_split(line, '=', BKOLANI);
@@ -30,13 +27,13 @@ static t_env	*create_new_env(const char *line)
 	return (new_env);
 }
 
-// Function to convert every line of envp as env node
 t_env	*handle_env(char **envp)
 {
-	int i = -1;
-	t_env *head;
-	t_env *new;
+	int		i;
+	t_env	*head;
+	t_env	*new;
 
+	i = -1;
 	head = NULL;
 	while (envp[++i])
 	{
@@ -57,16 +54,15 @@ t_env	*get_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
-// Function to check if an env var is valid
 int	check_env_str(const char *line, char **str_tab)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (str_tab[0][++i])
 	{
 		if (((str_tab[0][0] >= '0' && str_tab[0][0] <= '9')
-			&& str_tab[0][ft_strlen(str_tab[0]) - 1] )
+			&& str_tab[0][ft_strlen(str_tab[0]) - 1])
 			|| (!(str_tab[0][i] >= 'a' && str_tab[0][i] <= 'z')
 			&& !(str_tab[0][i] >= 'A' && str_tab[0][i] <= 'Z')
 			&& !(str_tab[0][i] >= '0' && str_tab[0][i] <= '9')

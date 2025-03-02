@@ -34,7 +34,7 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new)
 }
 
 // Function to check if an env_var already existed
-int check_env(t_env *env, char *key)
+int	check_env(t_env *env, char *key)
 {
 	if (!env)
 		return (0);
