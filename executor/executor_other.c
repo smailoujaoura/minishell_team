@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 09:04:02 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 16:39:11 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,15 @@ int	check_buildin(const char *cmd)
 	if (ft_strncmp("echo", cmd, SIZE_MAX) == 0
 		|| ft_strncmp("cd", cmd, SIZE_MAX) == 0
 		|| ft_strncmp("pwd", cmd, SIZE_MAX) == 0
-		||  ft_strncmp("export", cmd, SIZE_MAX) == 0
+		|| ft_strncmp("export", cmd, SIZE_MAX) == 0
 		|| ft_strncmp("unset", cmd, SIZE_MAX) == 0
-		||  ft_strncmp("env", cmd, SIZE_MAX) == 0
+		|| ft_strncmp("env", cmd, SIZE_MAX) == 0
 		|| ft_strncmp("exit", cmd, SIZE_MAX) == 0)
 		return (1);
 	return (0);
 }
 
-void    buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
+void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 {
 	if (assign_fds_builtins(tree, argv[0], 1))
 		return ;

@@ -6,13 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 15:27:25 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 16:47:24 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void loop_minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
+void	minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
 {
 	t_chain			*list;
 	t_ast			*root;
@@ -58,7 +58,7 @@ int	main(int argc, char *argv[], char *envp[])
 	setup_signals(-1);
 	data.env = handle_env(envp);
 	data.last_exit = 0;
-	loop_minishell(&data, &tp_out, &tp_in, 0);
+	minishell(&data, &tp_out, &tp_in, 0);
 	(void)argv;
 	(void)argc;
 	return (0);

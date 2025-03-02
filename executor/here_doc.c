@@ -6,14 +6,14 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 15:37:58 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 16:38:06 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-# define WARNA "minishell: warning: here-document at line"
-# define WARNB "delimited by end-of-file (wanted `"
+#define WARNA "minishell: warning: here-document at line"
+#define WARNB "delimited by end-of-file (wanted `"
 
 static int	g_heredoc;
 
@@ -27,9 +27,9 @@ void	report_sig_number(int signum)
 
 char	*generate_random_name(void)
 {
-	char    		*bytes;
-	int     		fd;
-	int     		i;
+	char	*bytes;
+	int		fd;
+	int		i;
 
 	bytes = ft_strdup("/tmp/.00000000000000000000", SOUJAOUR);
 	fd = open("/dev/random", O_RDONLY);
@@ -53,9 +53,9 @@ char	*generate_random_name(void)
 	return (bytes);
 }
 
-void    prompt_here_doc(const char *limiter, int fd, int num)
+void	prompt_here_doc(const char *limiter, int fd, int num)
 {
-	char    *line;
+	char	*line;
 	char	*save;
 
 	line = NULL;
