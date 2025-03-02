@@ -6,38 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 16:46:55 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 09:01:35 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
-
-void	handle_interrupt(void)
-{
-	write(1, "\n", 1);
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	handler(int signum, siginfo_t *info, void *ptr)
-{
-	(void)info;
-	(void)ptr;
-	if (signum == SIGINT)
-		handle_interrupt();
-}
-
-void	setup_signals(void)
-{
-	struct sigaction	signals;
-
-	sigfillset(&signals.sa_mask);
-	signals.sa_flags = SA_SIGINFO | SA_RESTART;
-	signals.sa_sigaction = handler;
-	sigaction(SIGINT, &signals, NULL);
-	signal(SIGQUIT, SIG_IGN);
-}
 
 int	loop_minishell(t_shell *mini, struct termios *tp_out, struct termios *tp_in)
 {
