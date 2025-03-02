@@ -18,6 +18,12 @@
 		"features.h": "c",
 		"termios.h": "c",
 		"history.h": "c",
-		"fcntl.h": "c"
+		"fcntl.h": "c",
+		"array": "c",
+		"memory": "c",
+		"ranges": "c",
+		"functional": "c",
+		"tuple": "c",
+		"utility": "c"
 	}
 }
