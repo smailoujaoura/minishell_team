@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 08:46:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 10:07:38 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,9 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 	wait(NULL);
 }
 
-void	run_sub(t_ast *tree, t_shell *mini)
+int run_sub(t_ast *tree, t_shell *mini, t_chain *files)
 {
 	pid_t	pid;
-	t_chain	*ptr;
 
 	expand_redirs(tree->data->adj_f, mini);
 	pid = fork();
@@ -82,21 +81,22 @@ void	run_sub(t_ast *tree, t_shell *mini)
 		if (open_and_assign(tree->data->adj_f))
 			exit(1);
 		executor(tree->left, mini);
-		wait(NULL);
-		exit(0);
+		exit(mini->last_exit);
 	}
 	else if (pid == -1)
 		panic_exit("Forking subshell", 45);
-	ptr = tree->data->adj_f;
-	while (ptr)
+	while (files)
 	{
-		if (ptr->ambiguous)
-		break ;
-		if (ptr->type == HEREDOC)
-		close(ptr->fd);
-		ptr = ptr->next;
+		if (files->ambiguous)
+			break ;
+		if (files->type == HEREDOC)
+			close(files->fd);
+		files = files->next;
 	}
-	wait(NULL);
+	waitpid(pid, &mini->last_exit, WUNTRACED);
+	if (WIFEXITED(mini->last_exit))
+        return WEXITSTATUS(mini->last_exit);
+	return (1);
 }
 
 void	executor(t_ast *tree, t_shell *mini)
@@ -104,28 +104,20 @@ void	executor(t_ast *tree, t_shell *mini)
 	if (tree == NULL)
 		return ;
 	else if (tree->type == CMD)
-	{
 		run_cmd(tree, mini);
-	}
 	else if (tree->type == PIPE)
-	{
 		run_pipe(tree, mini);
-	}
 	else if (tree->type == SUB)
-	{
-		run_sub(tree, mini);
-	}
+		mini->last_exit = run_sub(tree, mini, tree->data->adj_f);
 	else if (tree->type == OR)
 	{
 		executor(tree->left, mini);
-		printf("OR:[%d]\n", mini->last_exit);
 		if (mini->last_exit != 0)
 			executor(tree->right, mini);
 	}
 	else if (tree->type == AND)
 	{
 		executor(tree->left, mini);
-		printf("AND:[%d]\n", mini->last_exit);
 		if (mini->last_exit == 0)
 			executor(tree->right, mini);
 	}

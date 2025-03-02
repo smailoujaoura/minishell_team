@@ -6,6 +6,7 @@ SRCS =	main.c \
 		./utils/garbage_collector.c \
 		./utils/bkol_garb_coll.c \
 		./utils/libft/allocator.c \
+		./utils/signals.c \
 		./parser/lexing/lexer.c \
 		./parser/lexing/lexer_utils1.c \
 		./parser/parsing/parser_utils_1.c \

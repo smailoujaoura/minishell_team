@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 17:55:37 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 09:08:54 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,6 @@ typedef struct s_shell
 {
 	t_env	*env;
 	int		last_exit;
-	bool	should_execute;
 }	t_shell;
 
 // General
@@ -286,10 +285,15 @@ void	construct_flags(char *str, char flag, char **flags);
 void	expand_wildcard(t_list **list, char *pattern, char *is_wild);
 char	*get_value_wrapper(char *var, t_env *env);
 
+// Signals
+void	setup_signals(void);
+void	setup_child_signals(void);
+
 // Executor
 int		open_and_assign(t_chain *redirs);
 void	executor(t_ast *tree, t_shell *mini);
 void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
+int		assign_fds_builtins(t_ast *tree, char *cmd, int action);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 char	*construct_cmd_path(char **argv, t_env *envp);
 char	**generate_env_tab(t_env *envp);

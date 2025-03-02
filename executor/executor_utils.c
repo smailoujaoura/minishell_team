@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 09:00:50 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 09:53:16 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,46 +17,6 @@ char	*find_path(char **argv, t_env *env)
 	if (ft_strchr(argv[0], '/'))
 		return (argv[0]);
 	return (construct_cmd_path(argv, env));
-}
-
-void	open_redir(t_chain *redir)
-{
-	if (redir->ambiguous)
-		return ;
-	if (redir->type == REDIR_IN)
-		redir->fd = open(redir->file, O_RDONLY);
-	if (redir->type == REDIR_OUT)
-		redir->fd = open(redir->file, O_WRONLY | O_CREAT, 0644);
-	if (redir->type == REDIR_APPEND)
-		redir->fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (redir->fd == -1)
-	{
-		dup2(STDERR_FILENO, STDOUT_FILENO);
-		printf("minishell: %s: %s\n", redir->file, strerror(errno));
-	}
-}
-
-int	open_and_assign(t_chain *redirs)
-{
-	while (redirs)
-	{
-		open_redir(redirs);
-		if (redirs->ambiguous || redirs->fd == -1)
-		{
-			return (1);
-		}
-		if (redirs->type == HEREDOC || redirs->type == REDIR_IN)
-		{
-			dup2(redirs->fd, STDIN_FILENO);
-		}
-		if (redirs->type == REDIR_APPEND || redirs->type == REDIR_OUT)
-		{
-			dup2(redirs->fd, STDOUT_FILENO);
-		}
-		close(redirs->fd);
-		redirs = redirs->next;
-	}
-	return (0);
 }
 
 char	*get_string(int which)
@@ -71,7 +31,7 @@ char	*get_string(int which)
 		return ("minishell: ");
 	}
 	if (ft_strnstr(error, "Bad", SIZE_MAX))
-		return ("Command not found");
+		return ("command not found");
 	return (error);
 }
 

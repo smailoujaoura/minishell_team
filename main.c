@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 09:01:35 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 09:09:21 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,12 @@ int	main(int argc, char *argv[], char *envp[])
 	if (!isatty(STDIN_FILENO))
 		return (1);
 	setup_signals();
-	data.env = handle_env(envp);
 	if (isatty(STDOUT_FILENO) && tcgetattr(STDOUT_FILENO, &tp_out) < 0)
 		return (1);
 	if (tcgetattr(STDIN_FILENO, &tp_in) < 0)
 		return (1);
+	data.env = handle_env(envp);
+	data.last_exit = 0;
 	loop_minishell(&data, &tp_out, &tp_in);
 	(void)argv;
 	(void)argc;
