@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 22:13:54 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/02 22:24:43 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ char **make_env(char **envp)
 	env[0] = ft_strjoin("PWD=", getcwd(NULL, 0), BKOLANI);
 	env[1] = ft_strjoin("PATH=", getenv("PATH"), BKOLANI);
 	env[2] = ft_strjoin("OLDPWD=", getcwd(NULL, 0), BKOLANI);
-	printf("khjgkjhg %s\n", getenv("PATH"));
 	env[3] = NULL;
 	return (env);
 }
@@ -70,6 +69,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (1);
 	setup_signals(-1);
 	envp = make_env(envp);
+	data.env = handle_env(envp);
 	data.last_exit = 0;
 	minishell(&data, &tp_out, &tp_in, 0);
 	(void)argv;

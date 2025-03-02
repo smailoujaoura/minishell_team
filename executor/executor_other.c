@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 22:16:11 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/02 22:25:22 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,6 @@ char	**generate_env_tab(t_env *envp)
 	char	**env;
 	t_env	*tmp;
 
-	i = -1;
-	while (envp)
-	{
-		printf("%s\n", envp->full);
-		envp = envp->next;
-	}
 	i = 0;
 	tmp = envp;
 	while (tmp)
