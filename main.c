@@ -6,28 +6,26 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 11:18:41 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 11:24:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-int	loop_minishell(t_shell *mini, struct termios *tp_out, struct termios *tp_in)
+void loop_minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
 {
 	t_chain			*list;
 	t_ast			*root;
 	char			*line;
-	int				lines_num;
 
-	lines_num = 0;
 	list = NULL;
 	while (1337)
 	{
-		lines_num++;
+		n++;
 		line = readline("Minishell: ");
 		if (line == NULL)
 			break ;
-		root = parse_line(line, &list, &lines_num);
+		root = parse_line(line, &list, &n);
 		store_line(NULL, -1);
 		setup_signals(2);
 		executor(root, mini);
@@ -35,12 +33,11 @@ int	loop_minishell(t_shell *mini, struct termios *tp_out, struct termios *tp_in)
 		free(line);
 		list = NULL;
 		ft_malloc(0, DEALLOCATE);
-		if (tcsetattr(STDOUT_FILENO, TCSANOW, tp_out) < 0
-			|| tcsetattr(STDIN_FILENO, TCSANOW, tp_in) < 0)
-			return (1);
+		if (tcsetattr(STDOUT_FILENO, TCSANOW, o) < 0
+			|| tcsetattr(STDIN_FILENO, TCSANOW, i) < 0)
+			return ;
 	}
 	ft_malloc_bkol(0, DEALLOCATE);
-	return (0);
 }
 
 // if (!data.env) 
@@ -61,7 +58,7 @@ int	main(int argc, char *argv[], char *envp[])
 		return (1);
 	data.env = handle_env(envp);
 	data.last_exit = 0;
-	loop_minishell(&data, &tp_out, &tp_in);
+	loop_minishell(&data, &tp_out, &tp_in, 0);
 	(void)argv;
 	(void)argc;
 	return (0);

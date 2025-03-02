@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 20:35:44 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/02 11:42:22 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+# define WARNA "minishell: warning: here-document at line"
+# define WARNB "delimited by end-of-file (wanted `"
 
 char	*generate_random_name(void)
 {
@@ -51,8 +54,7 @@ void    prompt_here_doc(const char *limiter, int fd, int num)
 		line = readline("> ");
 		if (!line)
 		{
-			printf("minishell: warning: here-document at line %d \
-				delimited by end-of-file (wanted `%s')\n", num, limiter);
+			printf("%s %d %s%s')\n", WARNA, num, WARNB, limiter);
 			break ;
 		}
 		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
