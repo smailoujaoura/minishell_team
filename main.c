@@ -6,13 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 15:27:25 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 16:53:25 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-void loop_minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
+void	minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
 {
 	t_chain			*list;
 	t_ast			*root;
@@ -40,9 +40,6 @@ void loop_minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
 	ft_malloc_bkol(0, DEALLOCATE);
 }
 
-// if (!data.env) 
-// should setup some envs even if the program strted with env -i gnore
-// return (1);
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_shell			data;
@@ -58,7 +55,7 @@ int	main(int argc, char *argv[], char *envp[])
 	setup_signals(-1);
 	data.env = handle_env(envp);
 	data.last_exit = 0;
-	loop_minishell(&data, &tp_out, &tp_in, 0);
+	minishell(&data, &tp_out, &tp_in, 0);
 	(void)argv;
 	(void)argc;
 	return (0);
