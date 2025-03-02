@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:06 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:20:27 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:46:32 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// checks if a two chars: current and one next to it may represent variable
 int	is_var(char current, char next, char *set)
 {
 	if (current == '$')
@@ -26,6 +27,7 @@ int	is_var(char current, char next, char *set)
 	return (0);
 }
 
+// get variable value
 char	*get_value_wrapper(char *var, t_env *env)
 {
 	t_env	*node;
@@ -37,6 +39,7 @@ char	*get_value_wrapper(char *var, t_env *env)
 		return (node->value);
 }
 
+// Get variable value or special variable value
 char	*get_value(char *str, int *i, t_shell *mini)
 {
 	char	*key;

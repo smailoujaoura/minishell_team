@@ -6,12 +6,14 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:00:58 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:24:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// copies part of a string that is not part of a variable and joins it
+// to the other parts that might have been expanded
 char	*expand_str(char *str, int i, char **flags, t_shell *mini)
 {
 	char	*new;
@@ -39,6 +41,7 @@ char	*expand_str(char *str, int i, char **flags, t_shell *mini)
 	return (new);
 }
 
+// expands a command or its arguments if they contain $ or *
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini)
 {
 	char	*temp;
@@ -62,6 +65,7 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini)
 	return (ultimate_split(actual, flags, SPLIT, NULL));
 }
 
+// expand a filename if it has $ or *
 char	**expand_files(t_chain *node, t_shell *mini)
 {
 	char	*actual;
@@ -76,6 +80,8 @@ char	**expand_files(t_chain *node, t_shell *mini)
 	return (ultimate_split(actual, flags, SPLIT, NULL));
 }
 
+// this function will expand redirs's variables $ and wildcards *
+// it also expands the heredoc's contents
 void	expand_redirs(t_chain *ptr, t_shell *mini)
 {
 	char	*new_name;

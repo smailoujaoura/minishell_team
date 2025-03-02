@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_heredoc.c                                   :+:      :+:    :+:   */
+/*   expanding_heredoc.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:56:07 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 15:57:06 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:26:38 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// open 
 int	open_files(char *new, int *expand_fd)
 {
 	int	expand_read_fd;
@@ -26,6 +27,7 @@ int	open_files(char *new, int *expand_fd)
 	return (expand_read_fd);
 }
 
+// checks if current string is variable
 int	check_var_existence(char current, char next)
 {
 	if (current == '$')
@@ -38,6 +40,7 @@ int	check_var_existence(char current, char next)
 	return (0);
 }
 
+// find a variable key(key=value)
 char	*get_var_key(char *key, int *i)
 {
 	int	start;
@@ -50,6 +53,7 @@ char	*get_var_key(char *key, int *i)
 	return (ft_substr(&key[start], 0, (*i) - start, SOUJAOUR));
 }
 
+// copies parts of lines and joins them with others expanded or literals 
 char	*just_copy_until(char *line, t_shell *mini, int i, int start)
 {
 	char	*key;
@@ -79,6 +83,7 @@ char	*just_copy_until(char *line, t_shell *mini, int i, int start)
 	return (new_line);
 }
 
+// expands heredoc contents 
 void	expand_heredoc(t_chain *ptr, t_shell *mini, char *new, int source_fd)
 {
 	char	*line;

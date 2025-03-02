@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:25:13 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:15:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:39:10 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// change togglers for single quotes and double quotes
 void	singles_doubles(int *singles, int *doubles, char c)
 {
 	if (c == '\'' && !*singles && !*doubles)
@@ -32,6 +33,10 @@ void	singles_doubles(int *singles, int *doubles, char c)
 	}
 }
 
+// the flags are just a way of marking what each part of string means:
+// variable expansion or just copied (literl) or there is a delimiter
+// the delimiter for splitting and also later on this flag will have wildcards
+// these flags help in rmeoving quotes and expanding wildcards 
 void	construct_flags(char *str, char flag, char **flags)
 {
 	char	*new_flag;
@@ -53,6 +58,7 @@ void	construct_flags(char *str, char flag, char **flags)
 		*flags = ft_strjoin(*flags, new_flag, SOUJAOUR);
 }
 
+// splits a variable contents based on spaces and joins but with flags
 char	*handle_var_values(char *value, char *new, char **flags, int two)
 {
 	char	**var_values;
@@ -80,6 +86,7 @@ char	*handle_var_values(char *value, char *new, char **flags, int two)
 	return (new);
 }
 
+// copies a literal until finding another variable or end of string
 char	*just_copy(char *str, int *i, int *singles, int *doubles)
 {
 	char	*new;
