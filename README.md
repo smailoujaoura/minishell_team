@@ -8,3 +8,5 @@ Almost the first thought-of path for solution will not be the best one, breaking
 	- might require changing the approach of handling signals in readline in here-document by a process like
 
 - handle env -i ./minishell
+
+- Makefile relink and tests etc... 
