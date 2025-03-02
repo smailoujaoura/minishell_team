@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 16:53:25 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 21:45:22 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,26 @@ int	main(int argc, char *argv[], char *envp[])
 	t_shell			data;
 	struct termios	tp_out;
 	struct termios	tp_in;
+	char	*cwd;
+	char	*pwd;
+	char	*env[2];
 
 	if (!isatty(STDIN_FILENO))
-		return (1);
+	return (1);
 	if (isatty(STDOUT_FILENO) && tcgetattr(STDOUT_FILENO, &tp_out) < 0)
-		return (1);
+	return (1);
 	if (tcgetattr(STDIN_FILENO, &tp_in) < 0)
-		return (1);
+	return (1);
+	cwd = getcwd(NULL, 0);
+	if (envp == NULL)
+	{
+		pwd = ft_strjoin("PWD=", cwd, BKOLANI);
+		env[0] = pwd;
+		env[1] = NULL;
+		printf("TEST: %s\n", env[0]);
+		free(cwd);
+		envp = env;
+	}
 	setup_signals(-1);
 	data.env = handle_env(envp);
 	data.last_exit = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 16:39:11 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 21:48:04 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@ char	**generate_env_tab(t_env *envp)
 	char	**env;
 	t_env	*tmp;
 
+	i = -1;
+	while (envp)
+	{
+		printf("%s\n", envp->full);
+		envp = envp->next;
+	}
 	i = 0;
 	tmp = envp;
 	while (tmp)
@@ -26,11 +32,12 @@ char	**generate_env_tab(t_env *envp)
 		tmp = tmp->next;
 	}
 	env = ft_malloc_bkol((sizeof(char *) * (i + 1)), ALLOCATE);
-	i = -1;
+	i = 0;
 	while (envp)
 	{
-		env[++i] = ft_strdup(envp->full, BKOLANI);
+		env[i] = ft_strdup(envp->full, BKOLANI);
 		envp = envp->next;
+		i++;
 	}
 	env[i] = NULL;
 	return (env);
@@ -52,6 +59,8 @@ char	*construct_cmd_path(char **argv, t_env *envp)
 			break ;
 		envp = envp->next;
 	}
+	if (!envp)
+		return (NULL);
 	path = ft_strdup(envp->full + 5, BKOLANI);
 	spl_path = ft_split(path, ':', BKOLANI);
 	while (spl_path[++i])
