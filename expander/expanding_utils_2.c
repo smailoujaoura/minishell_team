@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:51:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:22:44 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:42:43 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// count len of new str execluding removable characters marked by flags
 int	count_len(char *str)
 {
 	int	i;
@@ -28,6 +29,7 @@ int	count_len(char *str)
 	return (len);
 }
 
+// copy excluding removables like quotes
 void	copy_helper(char *str, char *flags, char *new_str, char *new_flg)
 {
 	int	i;
@@ -47,7 +49,7 @@ void	copy_helper(char *str, char *flags, char *new_str, char *new_flg)
 	}
 }
 
-// possible mistake here
+// mark what needs to be removed in flag and str
 char	*remove_flags(char *flags, char **actual, char *str)
 {
 	char	*new_flg;
@@ -73,6 +75,7 @@ char	*remove_flags(char *flags, char **actual, char *str)
 	return (new_flg);
 }
 
+// assign quotes positions into flags
 void	assign_flag(char *edit, char which, int one, int two)
 {
 	if (which == '"' && one == 0)
@@ -83,6 +86,8 @@ void	assign_flag(char *edit, char which, int one, int two)
 		*edit = NOT_QUOTE;
 }
 
+// manipulates the flag and str(command, file, arg, wildcard, ...)
+// building building the full flags
 char	*ultimate(char *str, char *flags, int one, int two)
 {
 	char	*quotes_flag;

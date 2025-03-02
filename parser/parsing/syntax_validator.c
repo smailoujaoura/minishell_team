@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 22:57:00 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 19:58:41 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// calls the function to do the syntax checking based on token's type
 int	multiple_tokens(t_chain *prev, t_chain *token, t_chain *next)
 {
 	if (token->type == PIPE)
@@ -25,6 +26,7 @@ int	multiple_tokens(t_chain *prev, t_chain *token, t_chain *next)
 	return (0);
 }
 
+// checks the single token is of type Word
 int	one_token(t_chain *list)
 {
 	if (!(list->type == WORD))
@@ -32,14 +34,10 @@ int	one_token(t_chain *list)
 		printf("%s `%s'\n", SYNTAXERR, list->content);
 		return (1);
 	}
-	if (is_redir(list, IN + OR + OUT))
-	{
-		printf("%s '%s'\n", SYNTAXERR, "newline");
-		return (1);
-	}
 	return (0);
 }
 
+// checks if all quotes have their match
 int	check_quotes(char *line)
 {
 	int	i;
@@ -66,6 +64,8 @@ int	check_quotes(char *line)
 	return (0);
 }
 
+// checks syntax based on multiple conditions one token or two
+// also checks for unquoted strings and unclosed parenthesis
 int	check_syntax(t_chain *list, char *line, int l_paren, int r_paren)
 {
 	if (list && !list->next && one_token(list))

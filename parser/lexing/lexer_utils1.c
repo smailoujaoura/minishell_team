@@ -6,30 +6,33 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:38 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:39:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 19:51:49 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	handle_quotes(char **start, char target, char opposite)
+// skips and increment all the string inside quotes
+// stoping at the character after the closing quote
+void	handle_quotes(char **start, char target)
 {
-	int	i;
+	int	quotes_flag;
 
-	i = 0;
+	quotes_flag = 0;
 	while (**start)
 	{
-		if (i && **start == target)
-			i = 0;
-		else if (!i && **start == target)
-			i = 1;
-		else if (!i && (ft_strchr(WHITESPACE, **start)
-				|| ft_strchr(SYMBOLS, **start) || **start == opposite))
+		if (quotes_flag && **start == target)
+			quotes_flag = 0;
+		else if (!quotes_flag && **start == target)
+			quotes_flag = 1;
+		else if (!quotes_flag)
 			break ;
 		(*start)++;
 	}
 }
 
+// will skip ONCE or TWICE depending on whether >> or >
+// skips also twice for <<, and once for <
 void	handle_redirs(char **start)
 {
 	if (**start == '<')

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 13:08:43 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 19:52:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ void	garbage_collector(t_list *allocs, void *one, void *two);
 // Lexing
 void	convert_str(char *str, t_chain **list);
 void	tokenize_list(t_chain *list);
-void	handle_quotes(char **start, char target, char opposite);
+void	handle_quotes(char **start, char target);
 void	handle_redirs(char **start);
 
 // Parser

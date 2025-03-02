@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 21:41:13 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/02 21:57:50 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int	run_sub(t_ast *tree, t_shell *mini, t_chain *files)
 	return (1);
 }
 
+// walk the tree recursively and execute each node as needed
 void	executor(t_ast *tree, t_shell *mini)
 {
 	if (tree == NULL)

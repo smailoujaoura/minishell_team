@@ -6,12 +6,14 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:40 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 18:02:02 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:48:50 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// function to check if str matches pattern 
+// pattern string contains wildcards which are only valid if is_wild confirms
 int	match_wildcard(char *str, char *pattern, char *is_wild)
 {
 	while (*pattern)
@@ -39,6 +41,7 @@ int	match_wildcard(char *str, char *pattern, char *is_wild)
 	return (*str == '\0');
 }
 
+// bubble sort a linked list by ascii 
 void	bubble_ascii_sort(t_list *list)
 {
 	char	*tmp;
@@ -65,6 +68,7 @@ void	bubble_ascii_sort(t_list *list)
 	}
 }
 
+// sort the added entries in a linked list of expansions and literals
 void	sort_newly_added(int action, t_list *list)
 {
 	static int	starting_point;
@@ -91,6 +95,7 @@ void	sort_newly_added(int action, t_list *list)
 	}
 }
 
+// check all entries of a current direction if they match the pattern for
 void	check_entries(t_list **list, char *pattern, char *is_wild, int *found)
 {
 	DIR				*dir;
@@ -116,6 +121,7 @@ void	check_entries(t_list **list, char *pattern, char *is_wild, int *found)
 	closedir(dir);
 }
 
+// expands willcard and sorts the elements found in that expansion
 void	expand_wildcard(t_list **list, char *pattern, char *is_wild)
 {
 	int				found;

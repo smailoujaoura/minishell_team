@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:22:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:45:12 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// create the string containing markings of wildcards positions
 char	*create_wilds(char *wilds)
 {
 	int		j;
@@ -39,6 +40,7 @@ char	*create_wilds(char *wilds)
 	return (wilds);
 }
 
+// levels are no longer needed because all wildcards are expanded
 int	inside_level_two(char *str, char *sources, int i)
 {
 	if (str[i] == '"' || str[i] == '\'')
@@ -53,6 +55,7 @@ int	inside_level_two(char *str, char *sources, int i)
 	return (0);
 }
 
+// mark if the char at position x is a wildcard
 void	wild_shell_copy_helper(char *quotes, char *str, char *sources, int i)
 {
 	int	inside_lvl_one;
@@ -80,6 +83,7 @@ void	wild_shell_copy_helper(char *quotes, char *str, char *sources, int i)
 	}
 }
 
+// build the flags for wildcards
 char	*wild_shell(char *sources, char *quotes, char *str)
 {
 	int		i;
