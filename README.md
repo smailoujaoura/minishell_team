@@ -4,3 +4,7 @@ Good research should lead to an immaculate all-encapsulating code, making the pr
 
 Almost the first thought-of path for solution will not be the best one, breaking all the rules above.
 
+- fix file descriptor leaks when doing << 1 << 2 << 3 ||| 
+	- might require changing the approach of handling signals in readline in here-document by a process like
+
+- 
