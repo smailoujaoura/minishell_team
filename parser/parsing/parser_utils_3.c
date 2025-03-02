@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils_3.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 18:19:03 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/02 20:07:14 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// handles the redirs that come before the command node
 void	assign_adjecent_redirs_helper(t_chain *list, t_chain *ptr)
 {
 	if (list->type == WORD && is_redir(list->back, IN + OR + OUT))
@@ -24,6 +25,7 @@ void	assign_adjecent_redirs_helper(t_chain *list, t_chain *ptr)
 	}
 }
 
+// assign redirs for their adjacent nodes: whether they come before or after
 void	assign_adjacent_redirs(t_chain *list, t_chain *ptr)
 {
 	t_chain	*last;
@@ -50,6 +52,7 @@ void	assign_adjacent_redirs(t_chain *list, t_chain *ptr)
 	}
 }
 
+// create empty CMD that will take the redirs that have no commands
 t_chain	*create_empty_cmd(t_chain *list, t_chain *redirs)
 {
 	t_chain	*new;
@@ -75,6 +78,7 @@ t_chain	*create_empty_cmd(t_chain *list, t_chain *redirs)
 	return (new);
 }
 
+// assign inputs that have no commands
 t_chain	*assign_inputs_edges(t_chain *list)
 {
 	t_chain	*redirs;
@@ -97,6 +101,8 @@ t_chain	*assign_inputs_edges(t_chain *list)
 	return (list);
 }
 
+// apply Shunting Yard Algorithm on the tokens: words, operators, parenthesis
+// resulting in and ouput queue(Reverse Polish Notation or postfix)
 t_chain	*convert_infix(t_chain *infix, t_chain *post, t_chain *ops)
 {
 	while (infix)

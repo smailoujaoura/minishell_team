@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 19:05:51 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:00:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
+// remove quotes off delimiter
 void	strip_heredoc(t_chain *node, char *delim)
 {
 	if (ft_strchr(delim, '"') || ft_strchr(delim, '\''))
@@ -19,6 +20,7 @@ void	strip_heredoc(t_chain *node, char *delim)
 	node->delim = remove_occurences(delim, 0, 0, 0);
 }
 
+// remove here-document's delimiter's quotes and open it, store its contents
 int	open_heredocs(t_chain *list, int num)
 {
 	int	here_doc_signaled;
@@ -41,6 +43,7 @@ int	open_heredocs(t_chain *list, int num)
 	return (0);
 }
 
+// adds a line to the history of readline history library as needed
 void	store_line(char *new, int flag)
 {
 	static char	*store;
@@ -58,6 +61,7 @@ void	store_line(char *new, int flag)
 	}
 }
 
+// continues reading if line is incomplete
 int	complete_line(t_chain *last, char *line, int *num, char **rest)
 {
 	char			*temp;
@@ -82,6 +86,7 @@ int	complete_line(t_chain *last, char *line, int *num, char **rest)
 	return (0);
 }
 
+// Using the Shunting Yard Algorithm, converst the line -> tokens list -> AST 
 t_ast	*parse_line(char *line, t_chain **list, int *num)
 {
 	t_chain	*post;

@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 22:14:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:03:52 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// handles redirs left without any commands
 void	pick_left_redirs(t_chain *list)
 {
 	t_chain	*ptr;
@@ -39,6 +40,8 @@ void	pick_left_redirs(t_chain *list)
 	}
 }
 
+// handle a variety of redirs cases: 
+// redirs without commands, redirs for subshells, redirs for commands
 t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
 {
 	list = assign_inputs_edges(list);
@@ -48,6 +51,7 @@ t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
 	return (list);
 }
 
+// join commands with their arguments: ls -la
 void	join_commands(t_chain *list, t_argv *argv, t_argv *new)
 {
 	t_chain	*ptr;
@@ -77,6 +81,7 @@ void	join_commands(t_chain *list, t_argv *argv, t_argv *new)
 	}
 }
 
+// join redirs nodes: (>, <, >>) with their filename's nodes 
 void	join_redirs(t_chain *list)
 {
 	while (list)
@@ -91,6 +96,7 @@ void	join_redirs(t_chain *list)
 	}
 }
 
+// add priority levels for each token type based Shunting Yard Algo
 void	prioritize_list(t_chain *list)
 {
 	while (list)

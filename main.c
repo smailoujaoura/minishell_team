@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 16:53:25 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 19:30:11 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
+// Reads a line and parses and executes and frees the parsing by-products
 void	minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
 {
 	t_chain			*list;

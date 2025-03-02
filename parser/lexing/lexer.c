@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:51 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 17:39:32 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 19:55:18 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// looks into the next character if it is in a set of tokens
 int	peek(char *s, char *tokens)
 {
 	char	*tok;
@@ -28,6 +29,7 @@ int	peek(char *s, char *tokens)
 	return (0);
 }
 
+// tokenize the list depending on the first one/two characters > << ( || ..
 void	tokenize_list(t_chain *list)
 {
 	while (list)
@@ -56,15 +58,16 @@ void	tokenize_list(t_chain *list)
 	}
 }
 
+// keeps incrementing the start until a space or real operator is found
 void	handle_words(char **start)
 {
 	if (**start == '\0' || ft_strchr(WHITESPACE, **start)
 		|| peek(*start, "|<>()") || (**start == '&' && *(*start + 1) == '&'))
 		return ;
 	else if (**start == '"')
-		handle_quotes(start, '"', '\'');
+		handle_quotes(start, '"');
 	else if (**start == '\'')
-		handle_quotes(start, '\'', '"');
+		handle_quotes(start, '\'');
 	else
 		while (!ft_strchr(WHITESPACE, **start) && !ft_strchr(SYMBOLS, **start)
 			&& !(**start == '&' && *(*start + 1) == '&'))
@@ -72,6 +75,7 @@ void	handle_words(char **start)
 	handle_words(start);
 }
 
+// loops through the string searching for complete token and returns it
 int	get_token(char **start, char **tok_start, char **tok_end)
 {
 	while (**start && ft_strchr(WHITESPACE, **start))
@@ -97,6 +101,7 @@ int	get_token(char **start, char **tok_start, char **tok_end)
 	return (1);
 }
 
+// keeps adding tokens into the list of tokens t_chain
 void	convert_str(char *str, t_chain **list)
 {
 	char	*tok_start;

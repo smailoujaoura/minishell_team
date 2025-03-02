@@ -6,13 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/01 17:47:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 20:10:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// no longer dupicating the new node of t_chain
+// allocate for tree node and assign data to it
 t_ast	*make_tree_node(t_chain **node, int type)
 {
 	t_ast	*tree;
@@ -24,6 +24,7 @@ t_ast	*make_tree_node(t_chain **node, int type)
 	return (tree);
 }
 
+// check the type of token and create tree node based on it
 t_ast	*construct_tree(t_chain **node)
 {
 	if (!node || !*node)
@@ -45,6 +46,10 @@ t_ast	*construct_tree(t_chain **node)
 	}
 }
 
+// checks the type of the token in list and creates nodes if necessary:
+// subshells have only the left child, right set to NULL
+// operators have both the left and right children
+// commands have no left or right child, they are set to NULL
 void	fill_tree_recursively(t_ast	*parent, t_chain **node)
 {
 	if (node == NULL || *node == NULL || parent->type == CMD)
@@ -63,6 +68,7 @@ void	fill_tree_recursively(t_ast	*parent, t_chain **node)
 	}
 }
 
+// reverses list for easy manipulation and understanding
 t_chain	*reverse_list(t_chain *list)
 {
 	t_chain	*head;
@@ -80,7 +86,7 @@ t_chain	*reverse_list(t_chain *list)
 	}
 	return (head);
 }
-
+// create root node of the tree and then call function to create rest of tree
 t_ast	*build_tree(t_chain *post)
 {
 	t_ast	*root;
