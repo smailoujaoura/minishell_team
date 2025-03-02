@@ -36,9 +36,7 @@ int	open_heredocs(t_chain *list, int num)
 			delete_any(list->next, 0);
 			here_doc_signaled = here_doc(list, num);
 			if (here_doc_signaled == -1)
-			{
 				return (1);
-			}
 		}
 		list = list->next;
 	}
@@ -90,14 +88,15 @@ t_ast	*parse_line(char *line, t_chain **list, int *num)
 {
 	t_chain	*post;
 	char	*rest;
+	int		error;
 
 	rest = NULL;
 	convert_str(line, list);
 	if (*list == NULL)
 		return (NULL);
 	tokenize_list(*list);
-	check_syntax(*list, line, 0, 0);
-	if (open_heredocs(*list, *num))
+	error = check_syntax(*list, line, 0, 0);
+	if (open_heredocs(*list, *num) || error == -1)
 	{
 		add_history(line);
 		return (NULL);

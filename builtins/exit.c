@@ -19,8 +19,9 @@ void    check_exit_status(char *str, int *status)
     i = -1;
     while (str[++i])
     {
-        if (str[i] < '0' && str[i] > 9)
+        if (str[i] < '0' || str[i] > 9)
         {
+            printf("exit\n");
             printf("exit: %s: numeric argument required\n", str);
             *status = 2;
             exit(2);
