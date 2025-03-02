@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 15:32:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 19:08:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	setup_signals(int action)
 	}
 	else if (action == 5)
 	{
-		dup(saved_fd);
+		dup2(saved_fd, STDIN_FILENO);
 		close(saved_fd);
 	}
 }
