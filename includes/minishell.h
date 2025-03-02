@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 09:08:54 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 11:15:23 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -286,7 +286,7 @@ void	expand_wildcard(t_list **list, char *pattern, char *is_wild);
 char	*get_value_wrapper(char *var, t_env *env);
 
 // Signals
-void	setup_signals(void);
+void	setup_signals(int action);
 void	setup_child_signals(void);
 
 // Executor

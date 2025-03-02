@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 09:09:21 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 11:18:41 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@ int	loop_minishell(t_shell *mini, struct termios *tp_out, struct termios *tp_in)
 			break ;
 		root = parse_line(line, &list, &lines_num);
 		store_line(NULL, -1);
+		setup_signals(2);
 		executor(root, mini);
+		setup_signals(3);
 		free(line);
 		list = NULL;
 		ft_malloc(0, DEALLOCATE);
@@ -52,7 +54,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	if (!isatty(STDIN_FILENO))
 		return (1);
-	setup_signals();
+	setup_signals(-1);
 	if (isatty(STDOUT_FILENO) && tcgetattr(STDOUT_FILENO, &tp_out) < 0)
 		return (1);
 	if (tcgetattr(STDIN_FILENO, &tp_in) < 0)

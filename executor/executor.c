@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 10:07:38 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 10:54:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 		external_cmd(tree, argv, envp, mini);
 	if (mini->last_exit == 131)
 		printf("Quit (core dumped)\n");
+	if (mini->last_exit == 130)
+		write(1, "\n", 1);
 	ptr = tree->data->adj_f;
 	while (ptr)
 	{
