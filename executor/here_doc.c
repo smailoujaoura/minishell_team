@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 11:42:22 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 15:37:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 
 # define WARNA "minishell: warning: here-document at line"
 # define WARNB "delimited by end-of-file (wanted `"
+
+static int	g_heredoc;
+
+void	report_sig_number(int signum)
+{
+	(void)signum;
+	write(1, "\n", 1);
+	g_heredoc = -33;
+	close(STDIN_FILENO);
+}
 
 char	*generate_random_name(void)
 {
@@ -49,31 +59,34 @@ void    prompt_here_doc(const char *limiter, int fd, int num)
 	char	*save;
 
 	line = NULL;
-	while (1337)
+	while (g_heredoc != -33)
 	{
 		line = readline("> ");
-		if (!line)
+		if (!line && g_heredoc != -33)
 		{
 			printf("%s %d %s%s')\n", WARNA, num, WARNB, limiter);
 			break ;
 		}
-		if (ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
+		if (!line)
+			break ;
+		if (ft_strncmp(line, limiter, SIZE_MAX) == 0)
 		{
+			free(line);
 			break ;
 		}
 		save = ft_strjoin(line, ft_strdup("\n", SOUJAOUR), SOUJAOUR);
 		write(fd, save, ft_strlen(save));
 		free(line);
 	}
-	free(line);
 }
 
-void    here_doc(t_chain *data, int num)
+int	here_doc(t_chain *data, int num)
 {
 	char	*filename;
 	int		fd1;
 	int		fd2;
 
+	g_heredoc = 0;
 	filename = generate_random_name();
 	fd1 = open(filename, O_WRONLY | O_CREAT, 0600);
 	if (fd1 == -1)
@@ -82,11 +95,16 @@ void    here_doc(t_chain *data, int num)
 	if (fd2 == -1)
 		panic_exit("Open failed\n", 7232);
 	unlink(filename);
+	setup_signals(4);
 	prompt_here_doc(data->delim, fd1, num);
+	setup_signals(3);
+	setup_signals(5);
 	close(fd1);
 	data->fd = fd2;
-	// printf("Heredoc temp file created: [%s]\n", filename);
+	if (g_heredoc == -33)
+	{
+		close(data->fd);
+		return (-1);
+	}
+	return (0);
 }
-
-
-// handling ^ + C in delimiter ??? !

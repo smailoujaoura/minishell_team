@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 11:18:49 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 15:32:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	handler(int signum, siginfo_t *info, void *ptr)
 void	setup_signals(int action)
 {
 	static struct sigaction	interactive;
+	static int				saved_fd;
 
 	if (action == -1)
 	{
@@ -47,11 +48,17 @@ void	setup_signals(int action)
 		signal(SIGQUIT, SIG_IGN);
 	}
 	else if (action == 2)
-	{
 		signal(SIGINT, SIG_IGN);
-	}
 	else if (action == 3)
-	{
 		sigaction(SIGINT, &interactive, NULL);
+	else if (action == 4)
+	{
+		signal(SIGINT, report_sig_number);
+		saved_fd = dup(STDIN_FILENO);
+	}
+	else if (action == 5)
+	{
+		dup(saved_fd);
+		close(saved_fd);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 11:15:23 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 13:08:43 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,7 +242,7 @@ t_ast	*free_list(t_chain *list);
 
 // Heredoc
 char	*generate_random_name(void);
-void	here_doc(t_chain *data, int num);
+int		here_doc(t_chain *data, int num);
 
 // Env functions and their utils
 t_env	*handle_env(char **envp);
@@ -288,6 +288,9 @@ char	*get_value_wrapper(char *var, t_env *env);
 // Signals
 void	setup_signals(int action);
 void	setup_child_signals(void);
+void	report_sig_number(int signum);
+void	handle_interrupt(void);
+void	handler(int signum, siginfo_t *info, void *ptr);
 
 // Executor
 int		open_and_assign(t_chain *redirs);

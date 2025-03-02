@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 22:10:27 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 15:34:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,20 +22,23 @@ void	strip_heredoc(t_chain *node, char *delim)
 int	open_heredocs(t_chain *list, int num)
 {
 	int	execute_or_not;
+	int	here_doc_signaled;
 
 	execute_or_not = 0;
+	here_doc_signaled = 0;
 	while (list)
 	{
 		if (list->error == 1)
-		{
-			execute_or_not = 1;
-			break ;
-		}
+			return (1);
 		if (list->type == HEREDOC)
 		{
 			strip_heredoc(list, list->next->content);
 			delete_any(list->next, 0);
-			here_doc(list, num);
+			here_doc_signaled = here_doc(list, num);
+			if (here_doc_signaled == -1)
+			{
+				return (1);
+			}
 		}
 		list = list->next;
 	}

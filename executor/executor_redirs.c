@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 09:04:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/02 15:24:32 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,11 @@ int	assign_fds_builtins(t_ast *tree, char *cmd, int action)
 	else
 	{
 		dup2(original_in, STDIN_FILENO);
-		close(original_in);
+		if (!isatty(original_in))
+			close(original_in);
 		dup2(original_out, STDOUT_FILENO);
-		close(original_out);
+		if (!isatty(original_out))
+			close(original_out);
 	}
 	return (0);
 }
