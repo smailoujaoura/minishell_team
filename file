@@ -1,0 +1,15 @@
+archivez.zip
+builtins
+executor
+expander
+file
+includes
+main.c
+main.o
+Makefile
+minishell
+minishell.c
+minishell.o
+parser
+README.md
+utils
