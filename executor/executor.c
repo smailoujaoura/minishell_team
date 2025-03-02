@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 20:56:10 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/02 08:46:05 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 	argv = expand_cmd(tree->data, tree->data->argv, mini);
 	expand_redirs(tree->data->adj_f, mini);
 	if (check_buildin(argv[0]))
-	buildin_excutor(tree, argv, mini);
+		buildin_excutor(tree, argv, mini);
 	else
-	external_cmd(tree, argv, envp, mini);
+		external_cmd(tree, argv, envp, mini);
 	if (mini->last_exit == 131)
-	printf("Quit (core dumped)\n");
+		printf("Quit (core dumped)\n");
 	ptr = tree->data->adj_f;
 	while (ptr)
 	{

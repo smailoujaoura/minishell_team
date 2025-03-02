@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 20:51:03 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/02 08:58:39 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,22 @@ void	setup_child_signals(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
+char	*get_string(int which)
+{
+	char	*error;
+
+	error = strerror(errno);
+	if (which == 1)
+	{
+		if (ft_strnstr(error, "Bad", SIZE_MAX))
+			return ("");
+		return ("minishell: ");
+	}
+	if (ft_strnstr(error, "Bad", SIZE_MAX))
+		return ("Command not found");
+	return (error);
+}
+
 void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 {
 	if (open_and_assign(tree->data->adj_f))
@@ -78,7 +94,7 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	setup_child_signals();
 	execve(find_path(argv, mini->env), argv, envp);
 	dup2(STDERR_FILENO, STDOUT_FILENO);
-	printf("minishell: %s: command not found\n", argv[0]);
+	printf("%s%s: %s\n", get_string(1), argv[0], get_string(2));
 	close(STDOUT_FILENO);
 	close(STDIN_FILENO);
 	exit(EXIT_FAILURE);
