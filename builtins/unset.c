@@ -3,22 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:58:05 by bkolani           #+#    #+#             */
-/*   Updated: 2025/02/27 07:58:09 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 09:44:27 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-static void	free_env(t_env *env_to_unset)
-{
-	free(env_to_unset->key);
-	free(env_to_unset->value);
-	free(env_to_unset->full);
-	free(env_to_unset);
-}
 
 static void	remove_and_rebuilt(t_env *env, char *arg)
 {
@@ -30,7 +22,6 @@ static void	remove_and_rebuilt(t_env *env, char *arg)
 		temp = env->next;
 		if (ft_strncmp(env->key, arg, ft_strlen(arg)) == 0)
 		{
-			free_env(env);
 			env = temp;
 			break ;
 		}
@@ -40,7 +31,6 @@ static void	remove_and_rebuilt(t_env *env, char *arg)
 				env->next = temp->next;
 			else
 				env->next = NULL;
-			free_env(temp);
 			break ;
 		}
 		env = env->next;
