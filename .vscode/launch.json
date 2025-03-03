@@ -5,10 +5,14 @@
             "name": "Debug minishell",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/minishell",
-            "args": [],
-            "stopAtEntry": false,
+            "program": "/usr/bin/env",
+            "args": [
+                "-i",
+                "${workspaceFolder}/minishell"
+            ],
             "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            // "cwd": "${workspaceFolder}",
             "envFile": "${workspaceFolder}/.env",
             "environment": [],
             "externalConsole": false,

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 19:52:28 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 08:48:16 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,8 +158,8 @@ typedef struct s_chain
 typedef struct s_ast
 {
 	int				type;
+	int				f;
 	struct s_chain	*data;
-	char			**argv;
 	struct s_ast	*left;
 	struct s_ast	*right;
 }	t_ast;
@@ -298,7 +298,7 @@ void	executor(t_ast *tree, t_shell *mini);
 void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
 int		assign_fds_builtins(t_ast *tree, char *cmd, int action);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
-char	*construct_cmd_path(char **argv, t_env *envp);
+char	*construct_cmd_path(char **argv, t_env *envp, int i);
 char	**generate_env_tab(t_env *envp);
 int		check_buildin(const char *cmd);
 bool	create_adj_files(t_chain *adj);
