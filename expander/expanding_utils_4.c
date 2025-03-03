@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:06 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:46:32 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 09:19:22 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	is_var(char current, char next, char *set)
 				return (2);
 			return (1);
 		}
+		else
+			return (3);
 	}
 	return (0);
 }
@@ -57,8 +59,8 @@ char	*get_value(char *str, int *i, t_shell *mini)
 		return (value);
 	}
 	j = *i + 1;
-	(*i) += 2;
-	while (str[*i] && is_var('$', str[*i], MID))
+	(*i) += 1;
+	while (str[*i] && ft_strchr(MID, str[*i]))
 	{
 		(*i)++;
 	}
