@@ -1,4 +1,5 @@
 NAME = minishell
+LIBFT := $(wildcard ./utils/libft/*.c)
 SRCS =	main.c \
 		minishell.c \
 		./utils/list_utils.c \
@@ -49,17 +50,17 @@ LIBS = ./utils/libft/libft.a
 
 all: $(NAME)
 
-%.o: %.c ./includes/minishell.h ./utils/libft/libft.h
+%.o: %.c ./includes/minishell.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(LIBS) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) -lreadline -lncurses -o $(NAME)
 
-$(LIBS):
+$(LIBS): ./utils/libft/libft.h $(LIBFT)
 	make -C utils/libft
 	make -C utils/libft bonus
 
-clean: 
+clean:
 	rm -rf $(OBJS)
 	rm -rf $(DEPENS)
 	make -C utils/libft clean
@@ -74,3 +75,5 @@ run:
 rer: re run
 
 re: fclean all
+
+.PHONY: clean

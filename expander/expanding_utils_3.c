@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:45:12 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 12:11:33 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,42 +40,19 @@ char	*create_wilds(char *wilds)
 	return (wilds);
 }
 
-// levels are no longer needed because all wildcards are expanded
-int	inside_level_two(char *str, char *sources, int i)
-{
-	if (str[i] == '"' || str[i] == '\'')
-	{
-		while (sources[i] == FROM_VAR)
-		{
-			i++;
-			if ((str[i] == '"' || str[i] == '\'') && sources[i] == FROM_VAR)
-				return (1);
-		}
-	}
-	return (0);
-}
-
-// mark if the char at position x is a wildcard
+// mark if the char at position x is a wild if it come outside quotes
 void	wild_shell_copy_helper(char *quotes, char *str, char *sources, int i)
 {
-	int	inside_lvl_one;
-	int	inside_lvl_two;
+	int	flags;
 
-	inside_lvl_one = 0;
-	inside_lvl_two = 0;
+	flags = 0;
 	while (quotes[i])
 	{
-		if (!inside_lvl_one && quotes[i] == QUOTE)
-			inside_lvl_one++;
-		else if (inside_lvl_one && quotes[i] == QUOTE)
-			inside_lvl_one--;
-		if (!inside_lvl_two && inside_level_two(str, sources, i))
-			inside_lvl_two++;
-		else if (inside_lvl_two && (str[i] == '"' || str[i] == '\''))
-			inside_lvl_two--;
-		if (str[i] == '*' && !inside_lvl_one && sources[i] == LITERAL)
-			quotes[i] = IS_WILD;
-		else if (str[i] == '*' && !inside_lvl_two && !inside_lvl_one)
+		if (!flags && quotes[i] == QUOTE)
+			flags++;
+		else if (flags && quotes[i] == QUOTE)
+			flags--;
+		if (str[i] == '*' && !flags && sources[i] == LITERAL)
 			quotes[i] = IS_WILD;
 		else if (quotes[i] != SPLIT && quotes[i] != QUOTE)
 			quotes[i] = NOT_WILD;

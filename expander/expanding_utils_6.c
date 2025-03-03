@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:27:06 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:50:25 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 11:22:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ char	**convert_list_str(t_list *list)
 }
 
 // handle the special case where "$non" should be kept as part of the argv arr 
-void	handle_special_case(t_list **list, char *str, char *flags)
+void	handle_special_case(t_list **list, char *str, char **flags)
 {
 	expand_wildcard(list, ft_strdup("", SOUJAOUR), "");
-	flags++;
+	(*flags)++;
 	str++;
 }
 
@@ -55,7 +55,7 @@ char	**ultimate_split(char *str, char *flags, char sep, t_list *list)
 			str++;
 		}
 		if (*flags == HANDLE)
-			handle_special_case(&list, str, flags);
+			handle_special_case(&list, str, &flags);
 		else if (*flags)
 		{
 			trail = flags;
