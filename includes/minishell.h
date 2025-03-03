@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 08:48:16 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 12:37:13 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@
 # include <stddef.h>
 # include <dirent.h>
 # include <sys/wait.h>
-# include <dirent.h>
 # include <sys/types.h>
 # include <stdbool.h>
 # include <termios.h>
@@ -202,14 +201,11 @@ void	join_commands(t_chain *list, t_argv *argv, t_argv *new);
 t_chain	*assign_inputs(t_chain *list, t_chain *ptr);
 void	pick_left_redirs(t_chain *list);
 t_chain	*convert_infix(t_chain *infix, t_chain *post, t_chain *ops);
-void	assign_block_redirs(t_chain *list);
 void	assign_adjacent_redirs(t_chain *list, t_chain *ptr);
 t_chain	*assign_inputs_edges(t_chain *list);
 void	remove_if(t_chain *list);
 void	delete_any(t_chain *ptr, int i);
 char	*remove_occurences(char *str, int i, int singles, int doubles);
-void	create_all_redirs(t_chain *list, t_chain *ptr, int f);
-void	add_files(t_chain *list, t_chain *new);
 void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f);
 t_ast	*build_tree(t_chain *post);
 void	store_line(char *new, int flag);
@@ -238,7 +234,6 @@ t_argv	*lstnew_arg(t_chain *cmd);
 // Redirections
 t_chain	*assign_inputs_edges(t_chain *list);
 t_chain	*create_redirs_chain(t_chain *list);
-t_ast	*free_list(t_chain *list);
 
 // Heredoc
 char	*generate_random_name(void);
@@ -301,9 +296,7 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 char	*construct_cmd_path(char **argv, t_env *envp, int i);
 char	**generate_env_tab(t_env *envp);
 int		check_buildin(const char *cmd);
-bool	create_adj_files(t_chain *adj);
 void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
-void	fds_dup(t_ast *tree);
 void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 
