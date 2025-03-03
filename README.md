@@ -9,6 +9,11 @@ Almost the first thought-of path for solution will not be the best one, breaking
 
 - handle env -i ./minishell
 
-- Makefile relink and tests etc... 
 
 - fix issues mkdir -p 1/2/3/4   bash shows errors only 3, we show that 4 times 
+
+
+- Makefile relink and tests etc...
+
+- 100 advanced tests for parsing 
+- 100 advanced tests for expanding

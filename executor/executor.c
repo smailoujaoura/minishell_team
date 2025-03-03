@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 21:57:50 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/03 08:23:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,16 +72,15 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 	wait(NULL);
 }
 
-int	run_sub(t_ast *tree, t_shell *mini, t_chain *files)
+int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 {
-	pid_t	pid;
-
 	expand_redirs(tree->data->adj_f, mini);
 	pid = fork();
 	if (pid == 0)
 	{
 		if (open_and_assign(tree->data->adj_f))
 			exit(1);
+		tree->left->f = 1;
 		executor(tree->left, mini);
 		exit(mini->last_exit);
 	}
@@ -111,15 +110,17 @@ void	executor(t_ast *tree, t_shell *mini)
 	else if (tree->type == PIPE)
 		run_pipe(tree, mini);
 	else if (tree->type == SUB)
-		mini->last_exit = run_sub(tree, mini, tree->data->adj_f);
+		mini->last_exit = run_sub(tree, mini, tree->data->adj_f, -2);
 	else if (tree->type == OR)
 	{
+		((tree->f == 1) && (tree->left->f = 1) && (tree->right->f = 1));
 		executor(tree->left, mini);
 		if (mini->last_exit != 0)
 			executor(tree->right, mini);
 	}
 	else if (tree->type == AND)
 	{
+		((tree->f == 1) && (tree->left->f = 1) && (tree->right->f = 1));
 		executor(tree->left, mini);
 		if (mini->last_exit == 0)
 			executor(tree->right, mini);

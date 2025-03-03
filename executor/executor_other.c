@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 22:25:22 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/03 08:47:49 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,13 @@ char	**generate_env_tab(t_env *envp)
 	return (env);
 }
 
-char	*construct_cmd_path(char **argv, t_env *envp)
+char	*construct_cmd_path(char **argv, t_env *envp, int i)
 {
 	char	*path;
-	int		i;
 	char	**spl_path;
 	char	*tmp_cmd;
 	char	*new_cmd;
 
-	i = -1;
 	tmp_cmd = NULL;
 	while (envp)
 	{
@@ -98,8 +96,8 @@ void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 		builtin_env(mini->env, argv);
 	if (ft_strncmp("exit", argv[0], SIZE_MAX) == 0)
 	{
-		if (!isatty(STDOUT_FILENO) || !isatty(STDIN_FILENO))
-			close(STDOUT_FILENO);
+		if (isatty(STDOUT_FILENO) && isatty(STDIN_FILENO) && tree->f == 0)
+			printf("exit\n");
 		builtin_exit(argv, &mini->last_exit);
 	}
 	assign_fds_builtins(tree, argv[0], 0);

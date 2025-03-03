@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:10:28 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 08:23:36 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_ast	*make_tree_node(t_chain **node, int type)
 	tree = ft_calloc(1, sizeof(t_ast), SOUJAOUR);
 	tree->type = type;
 	tree->data = *node;
+	tree->f = 0;
 	*node = (*node)->next;
 	return (tree);
 }
@@ -86,6 +87,7 @@ t_chain	*reverse_list(t_chain *list)
 	}
 	return (head);
 }
+
 // create root node of the tree and then call function to create rest of tree
 t_ast	*build_tree(t_chain *post)
 {

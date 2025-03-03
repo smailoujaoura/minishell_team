@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:50:59 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/01 20:23:01 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/03 08:15:20 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	check_exit_status(char *str, int *status)
 	{
 		if (str[i] < '0' || str[i] > 9)
 		{
-			printf("exit\n");
 			printf("exit: %s: numeric argument required\n", str);
 			*status = 2;
 			exit(2);
@@ -36,7 +35,6 @@ void	builtin_exit(char **argv, int *status)
 	if (!argv[1])
 	{
 		*status = 0;
-		write(STDOUT_FILENO, "exit\n", 5);
 		exit(EXIT_SUCCESS);
 	}
 	if (argv[2])
