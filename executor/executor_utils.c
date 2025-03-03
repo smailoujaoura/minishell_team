@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 08:48:11 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 16:02:52 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*find_path(char **argv, t_env *env)
 {
-	if (ft_strchr(argv[0], '/'))
+	if (ft_strchr(argv[0], '/') || !get_value_wrapper(argv[0], env)[0])
 		return (argv[0]);
 	return (construct_cmd_path(argv, env, -1));
 }
@@ -38,7 +38,7 @@ char	*get_string(int which)
 void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 {
 	if (open_and_assign(tree->data->adj_f))
-		exit(1);
+		exit(EXIT_FAILURE);
 	if (tree->data->empty)
 	{
 		close(STDOUT_FILENO);
@@ -47,11 +47,17 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	}
 	setup_child_signals();
 	execve(find_path(argv, mini->env), argv, envp);
-	dup2(STDERR_FILENO, STDOUT_FILENO);
+	if (ft_strnstr(strerror(errno), "Exec format", SIZE_MAX))
+		exit(0);
+	if (dup2(STDERR_FILENO, STDOUT_FILENO) < 0)
+	{
+		perror("minishell");
+		return ;
+	}
 	printf("%s%s: %s\n", get_string(1), argv[0], get_string(2));
 	close(STDOUT_FILENO);
 	close(STDIN_FILENO);
-	exit(EXIT_FAILURE);
+	exit(map_errno_to_exit_status());
 }
 
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
@@ -75,19 +81,21 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 	if (flag)
 	{
 		close(pipe_fd[0]);
-		dup2(pipe_fd[1], STDOUT_FILENO);
+		if (ft_dup2(pipe_fd[1], STDOUT_FILENO))
+			return ;
 		close(pipe_fd[1]);
 		executor(tree->left, mini);
 		wait(NULL);
-		exit(0);
+		exit(mini->last_exit);
 	}
 	else
 	{
 		close(pipe_fd[1]);
-		dup2(pipe_fd[0], STDIN_FILENO);
+		if (ft_dup2(pipe_fd[0], STDIN_FILENO))
+			return ;
 		close(pipe_fd[0]);
 		executor(tree->right, mini);
 		wait(NULL);
-		exit(0);
+		exit(mini->last_exit);
 	}
 }

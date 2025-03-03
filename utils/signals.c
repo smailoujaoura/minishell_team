@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:20:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 12:59:36 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,34 @@ will setup signals based on a few circumstances:
 	action == 4: handle heredoc signals before opening heredoc
 	action == 5: restore signals after heredoc
 */
+void	handle_here_doc_signal(int action)
+{
+	static int	saved_fd;
+
+	if (action == 4)
+	{
+		signal(SIGINT, report_sig_number);
+		saved_fd = dup(STDIN_FILENO);
+		if (saved_fd < 0)
+		{
+			perror("minishell");
+			return ;
+		}
+	}
+	else if (action == 5)
+	{
+		if (dup2(saved_fd, STDIN_FILENO) < 0)
+		{
+			perror("minishell");
+			return ;
+		}
+		close(saved_fd);
+	}
+}
+
 void	setup_signals(int action)
 {
 	static struct sigaction	interactive;
-	static int				saved_fd;
 
 	if (action == -1)
 	{
@@ -67,14 +91,6 @@ void	setup_signals(int action)
 		signal(SIGINT, SIG_IGN);
 	else if (action == 3)
 		sigaction(SIGINT, &interactive, NULL);
-	else if (action == 4)
-	{
-		signal(SIGINT, report_sig_number);
-		saved_fd = dup(STDIN_FILENO);
-	}
-	else if (action == 5)
-	{
-		dup2(saved_fd, STDIN_FILENO);
-		close(saved_fd);
-	}
+	else
+		handle_here_doc_signal(action);
 }

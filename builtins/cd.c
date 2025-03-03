@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 09:58:31 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/03 13:50:42 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void	builtin_cd(t_env *env, char **argv, int *status)
 	{
 		if (argv[2])
 		{
-			write(2, "cd: too many arguments\n", 23);
+			write(2, "minishell: cd: too many arguments\n", 35);
 			*status = 1;
 			return ;
 		}

@@ -3,14 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 08:47:49 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 16:03:22 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	map_errno_to_exit_status(void)
+{
+	if (errno == ENOENT)
+		return (127);
+	if (errno == ENOEXEC || errno == EACCES || errno == EISDIR)
+		return (126);
+	return (1);
+}
 
 char	**generate_env_tab(t_env *envp)
 {

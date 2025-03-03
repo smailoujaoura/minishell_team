@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:50:59 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 08:15:20 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 16:03:58 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,38 +15,46 @@
 void	check_exit_status(char *str, int *status)
 {
 	int	i;
+	int	n;
+	int	error;
 
 	i = -1;
-	while (str[++i])
+	error = 0;
+	n = ft_atoi(str, &error);
+	if (error)
 	{
-		if (str[i] < '0' || str[i] > 9)
-		{
-			printf("exit: %s: numeric argument required\n", str);
-			*status = 2;
-			exit(2);
-		}
+		printf("minishell: exit: %s: numeric argument required\n", str);
+		*status = 2;
+		exit(2);
 	}
+	*status = n % 256;
+	exit(n % 256);
 }
 
 void	builtin_exit(char **argv, int *status)
 {
-	int	exit_status;
+	int	i;
 
 	if (!argv[1])
 	{
 		*status = 0;
 		exit(EXIT_SUCCESS);
 	}
+	i = -1;
+	while (argv[1][++i])
+	{
+		if (argv[1][i] < 0 || argv[1][i] > 9)
+		{
+			printf("minishell: exit: %s: numeric argument required\n", argv[1]);
+			*status = 2;
+			exit(2);
+		}
+	}
 	if (argv[2])
 	{
-		write(2, "exit: too many arguments\n", 25);
+		write(2, "minishell: exit: too many arguments\n", 36);
 		*status = 1;
 		return ;
 	}
 	check_exit_status(argv[1], status);
-	write(STDOUT_FILENO, "exit\n", 5);
-	exit_status = ft_atoi(argv[1]);
-	exit_status = exit_status % 256;
-	*status = exit_status;
-	exit(exit_status);
 }

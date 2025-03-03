@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 12:37:13 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/03 16:03:40 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,5 +299,7 @@ int		check_buildin(const char *cmd);
 void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
 void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
+int		ft_dup2(int old, int new);
+int		map_errno_to_exit_status(void);
 
 #endif

@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redirs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 15:24:32 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:26:16 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	ft_dup2(int old, int new)
+{
+	if (dup2(old, new) < 0)
+	{
+		perror("minishell");
+		return (1);
+	}
+	return (0);
+}
 
 void	open_redir(t_chain *redir)
 {
@@ -24,7 +34,11 @@ void	open_redir(t_chain *redir)
 		redir->fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (redir->fd == -1)
 	{
-		dup2(STDERR_FILENO, STDOUT_FILENO);
+		if (dup2(STDERR_FILENO, STDOUT_FILENO) < 0)
+		{
+			perror("minishell");
+			return ;
+		}
 		printf("minishell: %s: %s\n", redir->file, strerror(errno));
 	}
 }
@@ -35,20 +49,45 @@ int	open_and_assign(t_chain *redirs)
 	{
 		open_redir(redirs);
 		if (redirs->ambiguous || redirs->fd == -1)
-		{
 			return (1);
-		}
 		if (redirs->type == HEREDOC || redirs->type == REDIR_IN)
 		{
-			dup2(redirs->fd, STDIN_FILENO);
+			if (dup2(redirs->fd, STDIN_FILENO) < 0)
+			{
+				perror("minishell");
+				return (1);
+			}
 		}
 		if (redirs->type == REDIR_APPEND || redirs->type == REDIR_OUT)
 		{
-			dup2(redirs->fd, STDOUT_FILENO);
+			if (dup2(redirs->fd, STDOUT_FILENO) < 0)
+			{
+				perror("minishell");
+				return (1);
+			}
 		}
 		close(redirs->fd);
 		redirs = redirs->next;
 	}
+	return (0);
+}
+
+int	reset_orig_fds(int orig_in, int orig_out)
+{
+	if (dup2(orig_in, STDIN_FILENO) < 0)
+	{
+		perror("minishell");
+		return (1);
+	}
+	if (!isatty(orig_in))
+		close(orig_in);
+	if (dup2(orig_out, STDOUT_FILENO) < 0)
+	{
+		perror("minishell");
+		return (1);
+	}
+	if (!isatty(orig_out))
+		close(orig_out);
 	return (0);
 }
 
@@ -67,13 +106,6 @@ int	assign_fds_builtins(t_ast *tree, char *cmd, int action)
 			return (1);
 	}
 	else
-	{
-		dup2(original_in, STDIN_FILENO);
-		if (!isatty(original_in))
-			close(original_in);
-		dup2(original_out, STDOUT_FILENO);
-		if (!isatty(original_out))
-			close(original_out);
-	}
+		return (reset_orig_fds(original_in, original_out));
 	return (0);
 }

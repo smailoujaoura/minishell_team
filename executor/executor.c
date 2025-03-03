@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 08:23:42 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:17:41 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,12 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		panic_exit("Forking left", 44);
 	close(pipe_pair[1]);
 	close(pipe_pair[0]);
-	wait(NULL);
-	wait(NULL);
+	waitpid(pid_left, NULL, WUNTRACED);
+	waitpid(pid_right, &mini->last_exit, WUNTRACED);
+	if (WIFEXITED(mini->last_exit))
+		mini->last_exit = WEXITSTATUS(mini->last_exit);
+	else if (WIFSIGNALED(mini->last_exit))
+		mini->last_exit = WTERMSIG(mini->last_exit) + 128;
 }
 
 int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
