@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:35:53 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 13:26:40 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 13:52:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int ft_dup(int old)
 		close(old);
 		panic_exit("dup failed", 0);
 	}
-	// close(old);
 	return (new);
 }
 

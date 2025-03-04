@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 13:11:56 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:07:50 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,9 @@ int	open_and_assign(t_chain *redirs)
 int	reset_orig_fds(int orig_in, int orig_out)
 {
 	ft_dup2(orig_in, STDIN_FILENO);
-	if (!isatty(orig_in))
-		close(orig_in);
+	close(orig_in);
 	ft_dup2(orig_out, STDOUT_FILENO);
-	if (!isatty(orig_out))
-		close(orig_out);
+	close(orig_out);
 	return (0);
 }
 
@@ -73,9 +71,13 @@ int	assign_fds_builtins(t_ast *tree, char *cmd, int action)
 		original_in = ft_dup(STDIN_FILENO);
 		original_out = ft_dup(STDOUT_FILENO);
 		if (open_and_assign(tree->data->adj_f))
+		{
+			close(original_in);
+			close(original_out);
 			return (1);
+		}
 	}
 	else
-		return (reset_orig_fds(original_in, original_out));
+		reset_orig_fds(original_in, original_out);
 	return (0);
 }
