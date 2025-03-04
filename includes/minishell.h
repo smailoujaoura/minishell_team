@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 16:03:40 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/04 12:20:03 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,5 +301,8 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 int		ft_dup2(int old, int new);
 int		map_errno_to_exit_status(void);
+int 	ft_fork(void);
+int 	ft_dup(int old);
+int 	ft_dup2(int old, int new);
 
 #endif

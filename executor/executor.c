@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 13:17:41 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/04 12:19:02 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 
 	envp = generate_env_tab(mini->env);
 	argv = expand_cmd(tree->data, tree->data->argv, mini);
+	if (!argv)
+		return ;
 	expand_redirs(tree->data->adj_f, mini);
 	if (check_buildin(argv[0]))
 		buildin_excutor(tree, argv, mini);
@@ -79,7 +81,7 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 {
 	expand_redirs(tree->data->adj_f, mini);
-	pid = fork();
+	pid = ();
 	if (pid == 0)
 	{
 		if (open_and_assign(tree->data->adj_f))
@@ -104,7 +106,6 @@ int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 	return (1);
 }
 
-// walk the tree recursively and execute each node as needed
 void	executor(t_ast *tree, t_shell *mini)
 {
 	if (tree == NULL)
