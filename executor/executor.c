@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 12:19:02 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 12:30:16 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,14 @@ void	panic_exit(char *ptr, int place)
 	exit(EXIT_FAILURE);
 }
 
-void	run_cmd(t_ast *tree, t_shell *mini)
+void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 {
-	char	**argv;
 	char	**envp;
 	t_chain	*ptr;
 
-	envp = generate_env_tab(mini->env);
-	argv = expand_cmd(tree->data, tree->data->argv, mini);
 	if (!argv)
 		return ;
+	envp = generate_env_tab(mini->env);
 	expand_redirs(tree->data->adj_f, mini);
 	if (check_buildin(argv[0]))
 		buildin_excutor(tree, argv, mini);
@@ -81,7 +79,7 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 {
 	expand_redirs(tree->data->adj_f, mini);
-	pid = ();
+	pid = ft_fork();
 	if (pid == 0)
 	{
 		if (open_and_assign(tree->data->adj_f))
@@ -90,8 +88,6 @@ int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 		executor(tree->left, mini);
 		exit(mini->last_exit);
 	}
-	else if (pid == -1)
-		panic_exit("Forking subshell", 45);
 	while (files)
 	{
 		if (files->ambiguous)
@@ -111,7 +107,7 @@ void	executor(t_ast *tree, t_shell *mini)
 	if (tree == NULL)
 		return ;
 	else if (tree->type == CMD)
-		run_cmd(tree, mini);
+		run_cmd(tree, mini, expand_cmd(tree->data, tree->data->argv, mini));
 	else if (tree->type == PIPE)
 		run_pipe(tree, mini);
 	else if (tree->type == SUB)
