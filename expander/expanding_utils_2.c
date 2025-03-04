@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:51:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:42:43 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:49:57 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ char	*remove_flags(char *flags, char **actual, char *str)
 		if (flags[i] != QUOTE)
 			flags[i] = flags[i];
 		else if (flags[i] == QUOTE && flags[i + 1] == QUOTE
-			&& (flags[i + 2] == SPLIT || !flags[i + 2]))
+			&& (flags[i + 2] == SPLIT || !flags[i + 2])
+			&& (i == 0 || flags[i - 1] == SPLIT))
 			flags[i] = HANDLE;
 		else
 			flags[i] = REMOV;
@@ -112,6 +113,7 @@ char	*ultimate(char *str, char *flags, int one, int two)
 			quotes_flag[i] = NOT_QUOTE;
 		i++;
 	}
+
 	ultimate = wild_shell(flags, quotes_flag, str);
 	return (ultimate);
 }
