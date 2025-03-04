@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 12:59:36 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/04 13:13:14 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,21 +57,11 @@ void	handle_here_doc_signal(int action)
 	if (action == 4)
 	{
 		signal(SIGINT, report_sig_number);
-		saved_fd = dup(STDIN_FILENO);
-		if (saved_fd < 0)
-		{
-			perror("minishell");
-			return ;
-		}
+		saved_fd = ft_dup(STDIN_FILENO);
 	}
 	else if (action == 5)
 	{
-		if (dup2(saved_fd, STDIN_FILENO) < 0)
-		{
-			perror("minishell");
-			return ;
-		}
-		close(saved_fd);
+		ft_dup2(saved_fd, STDIN_FILENO);
 	}
 }
 

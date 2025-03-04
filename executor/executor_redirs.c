@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 12:36:36 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 13:11:56 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,7 @@ void	open_redir(t_chain *redir)
 		redir->fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (redir->fd == -1)
 	{
-		if (dup2(STDERR_FILENO, STDOUT_FILENO) < 0)
-		{
-			perror("minishell");
-			return ;
-		}
+		ft_dup2(STDERR_FILENO, STDOUT_FILENO);
 		printf("minishell: %s: %s\n", redir->file, strerror(errno));
 	}
 }
@@ -42,19 +38,11 @@ int	open_and_assign(t_chain *redirs)
 			return (1);
 		if (redirs->type == HEREDOC || redirs->type == REDIR_IN)
 		{
-			if (dup2(redirs->fd, STDIN_FILENO) < 0)
-			{
-				perror("minishell");
-				return (1);
-			}
+			ft_dup2(redirs->fd, STDIN_FILENO);
 		}
 		if (redirs->type == REDIR_APPEND || redirs->type == REDIR_OUT)
 		{
-			if (dup2(redirs->fd, STDOUT_FILENO) < 0)
-			{
-				perror("minishell");
-				return (1);
-			}
+			ft_dup2(redirs->fd, STDOUT_FILENO);
 		}
 		close(redirs->fd);
 		redirs = redirs->next;
@@ -64,18 +52,10 @@ int	open_and_assign(t_chain *redirs)
 
 int	reset_orig_fds(int orig_in, int orig_out)
 {
-	if (dup2(orig_in, STDIN_FILENO) < 0)
-	{
-		perror("minishell");
-		return (1);
-	}
+	ft_dup2(orig_in, STDIN_FILENO);
 	if (!isatty(orig_in))
 		close(orig_in);
-	if (dup2(orig_out, STDOUT_FILENO) < 0)
-	{
-		perror("minishell");
-		return (1);
-	}
+	ft_dup2(orig_out, STDOUT_FILENO);
 	if (!isatty(orig_out))
 		close(orig_out);
 	return (0);
@@ -90,8 +70,8 @@ int	assign_fds_builtins(t_ast *tree, char *cmd, int action)
 		return (0);
 	if (action)
 	{
-		original_in = dup(STDIN_FILENO);
-		original_out = dup(STDOUT_FILENO);
+		original_in = ft_dup(STDIN_FILENO);
+		original_out = ft_dup(STDOUT_FILENO);
 		if (open_and_assign(tree->data->adj_f))
 			return (1);
 	}

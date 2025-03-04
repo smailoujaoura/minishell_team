@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 16:45:20 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 13:12:14 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,7 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	execve(find_path(argv, mini->env), argv, envp);
 	if (ft_strnstr(strerror(errno), "Exec format", SIZE_MAX))
 		exit(0);
-	if (dup2(STDERR_FILENO, STDOUT_FILENO) < 0)
-	{
-		perror("minishell");
-		return ;
-	}
+	ft_dup2(STDERR_FILENO, STDOUT_FILENO);
 	printf("%s%s: %s\n", get_string(1), argv[0], get_string(2));
 	close(STDOUT_FILENO);
 	close(STDIN_FILENO);
