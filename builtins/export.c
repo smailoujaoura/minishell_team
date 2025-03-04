@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 16:26:51 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:18:27 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,15 @@ static void	check_export_env(t_env *env, char *line)
 {
 	char	**splited_line;
 	t_env	*new_env;
+	int		i;
 
-	if (!ft_strchr(line, '=') && line[ft_strlen(line) -1] == '+')
-	{
-		printf("minishell: export: `%s': not a valid identifier\n", line);
-		return ;
-	}
-	else if (!ft_strchr(line, '='))
+	i = -1;
+	if (!ft_strchr(line, '=') && check_env_str(line))
 		return ;
 	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
-	splited_line = ft_split(line, '=', BKOLANI);
-	if (check_env_str(line, splited_line))
-	{
-		ft_malloc_bkol(0, DEALLOCATE);
+	splited_line = ft_split(line, '=', SOUJAOUR);
+	if (check_env_str(splited_line[0]))
 		return ;
-	}
 	process_env_var(env, new_env, splited_line, line);
 }
 

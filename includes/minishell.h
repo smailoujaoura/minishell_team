@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 13:34:36 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:14:50 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,9 @@
 # define RECORD 9327
 # define SORT 1232
 
-# define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-# define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?"
+# define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_" // BKOL
+# define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?" // SOUj
+# define VAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_" // BKOL
 
 # define REMOV 'r'
 # define HANDLE 'h'
@@ -251,7 +252,7 @@ void	update_env_trunc(t_env *env, t_env *new_env,
 void	update_env_concat(t_env *env, t_env *new_env, const char *str);
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
-int		check_env_str(const char *line, char **str_tab);
+int		check_env_str(const char *line);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 int		check_env(t_env *env, char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
