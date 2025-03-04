@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 13:28:41 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:30:33 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,15 @@ void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 	}
 }
 
+void	update_exit_status(t_shell *mini);
+
 void	executor(t_ast *tree, t_shell *mini)
 {
 	if (tree == NULL)
 		return ;
 	else if (tree->type == CMD)
 	{
+		update_exit_status(mini);
 		expand_redirs(tree->data->adj_f, mini);
 		run_cmd(tree, mini, expand_cmd(tree->data, tree->data->argv, mini));
 	}

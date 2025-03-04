@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 13:13:14 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:31:38 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,35 @@ void	handle_interrupt(void)
 	rl_redisplay();
 }
 
+void	update_exit_status(t_shell *mini)
+{
+	static int	flag;
+
+	if (flag)
+	{
+		if (mini)
+			mini->last_exit = 130;
+		flag = 0;
+	}
+	else
+	{
+		flag = 1;
+	}
+}
+
 // handler 
 void	handler(int signum, siginfo_t *info, void *ptr)
 {
+	static int	k;
 	(void)info;
 	(void)ptr;
 	if (signum == SIGINT)
+	{
+		k = 130;
 		handle_interrupt();
+		if (k == 130)
+			update_exit_status(NULL);
+	}
 }
 
 /*
@@ -78,7 +100,7 @@ void	setup_signals(int action)
 		signal(SIGQUIT, SIG_IGN);
 	}
 	else if (action == 2)
-		signal(SIGINT, SIG_IGN);
+		sigaction(SIGINT, &interactive, NULL);
 	else if (action == 3)
 		sigaction(SIGINT, &interactive, NULL);
 	else

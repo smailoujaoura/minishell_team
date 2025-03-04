@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 12:58:56 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:15:37 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	open_heredocs(t_chain *list, int num)
 	count_heredocs(list);
 	while (list)
 	{
-		if (list->error == 1)
+		if (list->error == -1)
 			return (1);
 		if (list->type == HEREDOC)
 		{
