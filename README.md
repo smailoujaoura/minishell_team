@@ -19,3 +19,176 @@ Almost the first thought-of path for solution will not be the best one, breaking
 - 100 advanced tests for expanding
 
 - echo "$$"
+
+
+________________________________________________________TO-DOs_________________________________
+Minishell: $l $P $f $h
+[1]    1898990 segmentation fault (core dumped)  ./minishell
+--------------------------------------------------------------
+Minishell: export x=" "
+Minishell: $x
+[1]    1900092 segmentation fault (core dumped)  ./minishell
+--------------------------------------------------------------
+Minishell: export x="   "
+Minishell: $x
+        : command not found
+--------------------------------------------------------------
+file leak : Minishell: echo ""
+
+Minishell: echo ""
+
+Minishell: echo ""
+
+Minishell: echo ""
+
+Minishell: echo ""
+
+Minishell: echo ""
+
+Minishell: echo ""
+
+Minishell: 
+--------------------------------------------------------------
+Minishell: ls | exit 100
+minishell: exit: too many arguments
+--------------------------------------------------------------
+Minishell: cat >> << ls
+Minishell: syntax error near unexpected token `<<'
+> ss
+> s
+> s
+> s
+> s
+> ls
+Minishell: echo $?
+0
+--------------------------------------------------------------
+Minishell: ls >>
+Minishell: syntax error near unexpected token `newline'
+Minishell: echo $?
+0
+--------------------------------------------------------------
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: ^C
+Minishell: echo $?
+0
+--------------------------------------------------------------
+Minishell: ls''''
+ls': command not found
+Minishell: ls""
+ls": command not found-----------------------------------------------------------
+Minishell: echo $?
+0
+--------------------------------------------------------------
+Minishell: export x="ls -l^C
+Minishell: echo $x
+ls -la
+Minishell: export y=$x
+Minishell: echo $y
+ls
+--------------------------------------------------------------
+inishell: export $x="yassine"^C
+Minishell: echo $x
+a b
+Minishell: export $x="yassine"
+Minishell: 
+--------------------------------------------------------------
+Minishell: echo $EMPTY="yassine"
+=yassine
+Minishell: export ="ss"
+Minishell: 
+--------------------------------------------------------------
+Minishell: $l | kgdkj
+kgdkj: command not found
+Minishell: echo $?
+1
+--------------------------------------------------------------
+Minishell: export x="+=+=+=+="
+Minishell: echo $x
++
+--------------------------------------------------------------
+Minishell: export $X=$U yassine=ddd
+[1]    1938868 segmentation fault (core dumped)  ./minishell
+-----------------------------------------------------------
+Minishell: syntax error near unexpected token `>>'
+> dd
+> d
+> d
+> d
+> l
+> <<
+> l
+> l
+> ^C
+-----------------------------------------------------------
+Minishell: mkdir -p 1/2/3/4/5/6/7
+Minishell: ls
+"'"   1        builtins   expander   folder     main.c     minishell     parser   TODO
+'*'   1.tldr   executor   file       includes   Makefile   minishell.c   t.c      utils
+Minishell: cd 1/2/3/4/5/6/7
+Minishell: ls
+Minishell: pwd
+/home/soujaour/Desktop/youbrhic/1/2/3/4/5/6/7
+Minishell: pwd
+/home/soujaour/Desktop/youbrhic/1/2/3/4/5/6/7
+Minishell: unset PATH PWD OLDPWD HOME
+Minishell: cd ll
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+Minishell: cd ..
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+Minishell: cd
+[1]    1945364 segmentation fault (core dumped)  ./minishell
+-------------------------------------------------------------
+Minishell: echo $x
+*
+Minishell: cat $x
+*
+1.tldr
+builtins
+executor
+expander
+folder
+includes
+main.c
+Makefile
+minishell
+minishell.c
+parser
+t.c
+TODO
+utils
+-------------------------------------------------------------
+Minishell: unset HOME
+Minishell: cd
+[1]    1964739 segmentation fault (core dumped)  ./minishell
+-------------------------------------------------------------
+Minishell: export cmd1="ls -la" cmd2="cat -e" cmd3="1"
+Minishell: export a="c" b="a" c="t"
+[1]    1964823 segmentation fault (core dumped)  ./minishell
+-------------------------------------------------------------
+Minishell: < TODO  cat
+[1]    1967587 segmentation fault (core dumped)  ./minishell
+-------------------------------------------------------------
+Minishell: syntax error near unexpected token `<<'
+> file
+> a
+> b
+> c
+> <<
+> >>
+> 
+minishell: warning: here-document at line 20 delimited by end-of-file (wanted `|')
+Minishell: echo $?
+0

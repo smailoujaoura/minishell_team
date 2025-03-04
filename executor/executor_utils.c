@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 16:02:52 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/03 16:45:20 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 char	*find_path(char **argv, t_env *env)
 {
-	if (ft_strchr(argv[0], '/') || !get_value_wrapper(argv[0], env)[0])
+	if (ft_strchr(argv[0], '/') || !get_value_wrapper("PATH", env)[0])
+	{
 		return (argv[0]);
+	}
 	return (construct_cmd_path(argv, env, -1));
 }
 
