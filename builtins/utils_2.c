@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 09:26:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 18:18:43 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,21 @@ t_env	*get_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
-int	check_env_str(const char *line, char **str_tab)
+int	check_env_str(const char *line)
 {
 	int	i;
 
 	i = -1;
-	while (str_tab[0][++i])
+	if (!ft_strchr(VAR, line[++i]))
 	{
-		if (((str_tab[0][0] >= '0' && str_tab[0][0] <= '9')
-			&& str_tab[0][ft_strlen(str_tab[0]) - 1])
-			|| (!(str_tab[0][i] >= 'a' && str_tab[0][i] <= 'z')
-			&& !(str_tab[0][i] >= 'A' && str_tab[0][i] <= 'Z')
-			&& !(str_tab[0][i] >= '0' && str_tab[0][i] <= '9')
-			&& str_tab[0][i] != '_' && !str_tab[1]))
+		printf("Minishell: export: `%s': not a valid identifier\n", line);
+		return (1);
+	}
+	while (line[++i])
+	{
+		if (!ft_strchr(MID, line[i]))
 		{
-			printf("Minishell: export: `%s': not a valid identifier\n", line);
+			printf("minishell: export: `%s': not a valid identifier\n", line);
 			return (1);
 		}
 	}
