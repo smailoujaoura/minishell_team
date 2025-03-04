@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 19:19:27 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 19:25:54 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,7 @@ static void	check_export_env(t_env *env, char *line)
 		return ;
 	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
 	splited_line = ft_split(line, '=', BKOLANI);
-	if (check_env_str(line, splited_line))
-	{
-		ft_malloc_bkol(0, DEALLOCATE);
+	if (check_env_str(splited_line[0]))
 		return ;
 	process_env_var(env, new_env, splited_line, line);
 }
