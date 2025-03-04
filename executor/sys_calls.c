@@ -6,11 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:35:53 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 12:27:35 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 12:36:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "includes/minishell.h"
+#include "../includes/minishell.h"
 
 int ft_dup2(int old, int new)
 {

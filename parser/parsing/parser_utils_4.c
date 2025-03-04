@@ -6,11 +6,30 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 22:15:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 12:59:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	count_heredocs(t_chain *list)
+{
+	int num_of_heredocs;
+
+	num_of_heredocs = 0;
+	while (list)
+	{
+		if (list->type == HEREDOC)
+		{
+			num_of_heredocs++;
+		}
+		list = list->next;
+	}
+	if (num_of_heredocs > 16)
+	{
+		panic_exit("bash: maximum here-document count exceeded\n", 2);
+	}
+}
 
 int	is_redir(t_chain *ptr, int f)
 {

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 12:12:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 12:33:40 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
 		line = readline("Minishell: ");
 		if (line == NULL)
 			break ;
-		root = parse_line(line, &list, &n);
+		root = parse_line(line, &list, &n, mini);
 		store_line(NULL, -1);
 		setup_signals(2);
 		executor(root, mini);

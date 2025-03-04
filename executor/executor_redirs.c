@@ -3,24 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redirs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 13:26:16 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/04 12:36:36 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-int	ft_dup2(int old, int new)
-{
-	if (dup2(old, new) < 0)
-	{
-		perror("minishell");
-		return (1);
-	}
-	return (0);
-}
 
 void	open_redir(t_chain *redir)
 {

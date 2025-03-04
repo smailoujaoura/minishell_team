@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:00:58 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 12:58:56 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	open_heredocs(t_chain *list, int num)
 	int	here_doc_signaled;
 
 	here_doc_signaled = 0;
+	count_heredocs(list);
 	while (list)
 	{
 		if (list->error == 1)
@@ -87,13 +88,13 @@ int	complete_line(t_chain *last, char *line, int *num, char **rest)
 }
 
 // Using the Shunting Yard Algorithm, converst the line -> tokens list -> AST 
-t_ast	*parse_line(char *line, t_chain **list, int *num)
+t_ast	*parse_line(char *line, t_chain **list, int *num, t_shell *mini)
 {
 	t_chain	*post;
 	char	*rest;
 	int		error;
 
-	rest = NULL;
+	rest = NULL; 
 	convert_str(line, list);
 	if (*list == NULL)
 		return (NULL);
@@ -101,6 +102,8 @@ t_ast	*parse_line(char *line, t_chain **list, int *num)
 	error = check_syntax(*list, line, 0, 0);
 	if (open_heredocs(*list, *num) || error == -1)
 	{
+		if (error == -1)
+			mini->last_exit = 2;
 		add_history(line);
 		return (NULL);
 	}
@@ -109,7 +112,7 @@ t_ast	*parse_line(char *line, t_chain **list, int *num)
 	join_commands(*list, NULL, NULL);
 	*list = assign_inputs(*list, NULL);
 	if (complete_line(lstlast(*list), line, num, &rest))
-		return (parse_line(rest, list, num));
+		return (parse_line(rest, list, num, mini));
 	post = convert_infix(*list, NULL, NULL);
 	return (build_tree(post));
 }

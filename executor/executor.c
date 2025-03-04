@@ -6,18 +6,21 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 12:30:16 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 12:54:34 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	panic_exit(char *ptr, int place)
+void	panic_exit(char *ptr, int custom)
 {
-	(void)ptr;
-	(void)place;
-	perror("Minishell exit");
-	exit(EXIT_FAILURE);
+	if (custom)
+	{
+		printf("%s", ptr);
+	}
+	else
+		perror("Minishell exit");
+	exit(custom);
 }
 
 void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
@@ -68,7 +71,6 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		panic_exit("Forking left", 44);
 	close(pipe_pair[1]);
 	close(pipe_pair[0]);
-	waitpid(pid_left, NULL, WUNTRACED);
 	waitpid(pid_right, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
 		mini->last_exit = WEXITSTATUS(mini->last_exit);

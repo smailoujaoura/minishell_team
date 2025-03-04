@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 12:20:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 13:00:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,7 @@ void	handle_quotes(char **start, char target);
 void	handle_redirs(char **start);
 
 // Parser
-t_ast	*parse_line(char *line, t_chain **list, int *num);
+t_ast	*parse_line(char *line, t_chain **list, int *num, t_shell *mini);
 void	prioritize_list(t_chain *list);
 void	join_redirs(t_chain *list);
 void	join_commands(t_chain *list, t_argv *argv, t_argv *new);
@@ -238,6 +238,7 @@ t_chain	*create_redirs_chain(t_chain *list);
 // Heredoc
 char	*generate_random_name(void);
 int		here_doc(t_chain *data, int num);
+void	count_heredocs(t_chain *list);
 
 // Env functions and their utils
 t_env	*handle_env(char **envp);
