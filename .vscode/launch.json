@@ -5,11 +5,8 @@
             "name": "Debug minishell",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/usr/bin/env",
-            "args": [
-                "-i",
-                "${workspaceFolder}/minishell"
-            ],
+            "program": "${workspaceFolder}/minishell",
+            "args": [],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
             // "cwd": "${workspaceFolder}",
@@ -43,6 +40,11 @@
     ]
 }
 
+
+// "args": [
+//     "-i",
+//     "${workspaceFolder}/minishell"
+// ],
 
 // {"DOTENV_CONFIG_PATH": "${workspaceFolder}/.env"},
                 // {"__DOTENV_LOAD": "true"}
