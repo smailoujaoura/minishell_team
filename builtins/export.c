@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 16:26:51 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:10:22 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	check_export_env(t_env *env, char *line)
 	splited_line = ft_split(line, '=', BKOLANI);
 	if (check_env_str(line, splited_line))
 	{
-		ft_malloc_bkol(0, DEALLOCATE);
+		ft_malloc_bkol(0, DEALLOCATE); // is it necesary to free in here ? 
 		return ;
 	}
 	process_env_var(env, new_env, splited_line, line);

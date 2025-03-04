@@ -192,3 +192,7 @@ Minishell: syntax error near unexpected token `<<'
 minishell: warning: here-document at line 20 delimited by end-of-file (wanted `|')
 Minishell: echo $?
 0
+
+
+--------------------
+fix export function 
