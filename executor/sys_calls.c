@@ -6,20 +6,29 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:35:53 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 12:36:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 13:26:40 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+int	ft_pipe(int *pair)
+{
+	if (pipe(pair) == -1)
+	{
+		panic_exit("pipe failed\n", 0);
+	}
+	return (0);
+}
+
 int ft_dup2(int old, int new)
 {
 	if (dup2(old, new) == -1)
 	{
-		close(old);
-		panic_exit("dup2 failed", 1);
+		// close(old);
+		panic_exit("dup2 failed", 0);
 	}
-	close(old);
+	// close(old);
 	return (new);
 }
 
@@ -31,9 +40,9 @@ int ft_dup(int old)
 	if (new == -1)
 	{
 		close(old);
-		panic_exit("dup failed", 2);
+		panic_exit("dup failed", 0);
 	}
-	close(old);
+	// close(old);
 	return (new);
 }
 
@@ -45,7 +54,7 @@ int ft_fork(void)
 	if (pid == -1)
 	{
 		kill(0, SIGTERM); // might need to use sigkill afterwards if they don't die may sleep 1 and then sigkill
-		panic_exit("fork failed", 3);
+		panic_exit("fork failed", 0);
 		return (-1);
 	}
 	return (pid);

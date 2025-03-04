@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 13:12:14 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 13:33:05 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 		exit(EXIT_FAILURE);
 	if (tree->data->empty)
 	{
-		close(STDOUT_FILENO);
-		close(STDIN_FILENO);
 		exit(0);
 	}
 	setup_child_signals();
@@ -62,9 +60,7 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 {
 	pid_t	pid;
 
-	pid = fork();
-	if (pid == -1)
-		panic_exit("Forking a cmd for execve", 46);
+	pid = ft_fork();;
 	if (pid == 0)
 		ext_proc(tree, argv, envp, mini);
 	waitpid(pid, &mini->last_exit, WUNTRACED);
@@ -79,8 +75,7 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 	if (flag)
 	{
 		close(pipe_fd[0]);
-		if (ft_dup2(pipe_fd[1], STDOUT_FILENO))
-			return ;
+		ft_dup2(pipe_fd[1], STDOUT_FILENO);
 		close(pipe_fd[1]);
 		executor(tree->left, mini);
 		wait(NULL);
@@ -89,8 +84,7 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 	else
 	{
 		close(pipe_fd[1]);
-		if (ft_dup2(pipe_fd[0], STDIN_FILENO))
-			return ;
+		ft_dup2(pipe_fd[0], STDIN_FILENO);
 		close(pipe_fd[0]);
 		executor(tree->right, mini);
 		wait(NULL);

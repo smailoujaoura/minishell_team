@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 13:00:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 13:34:36 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,5 +305,6 @@ int		map_errno_to_exit_status(void);
 int 	ft_fork(void);
 int 	ft_dup(int old);
 int 	ft_dup2(int old, int new);
+int		ft_pipe(int *pair);
 
 #endif
