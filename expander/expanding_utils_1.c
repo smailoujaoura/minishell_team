@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:25:13 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 16:09:54 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:35:36 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*handle_var_values(char *value, char *new, char **flags, int two)
 	int		i;
 
 	i = 0;
-	if (two || var_to_var(new))
+	if (two || (new && var_to_var(new)))
 	{
 		new = ft_strjoin(new, value, SOUJAOUR);
 		construct_flags(value, FROM_VAR, flags);
