@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 16:03:22 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/04 21:32:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	**generate_env_tab(t_env *envp)
 	i = 0;
 	while (envp)
 	{
-		env[i] = ft_strdup(envp->full, BKOLANI);
+		env[i] = ft_strdup(envp->full, SOUJAOUR);
 		envp = envp->next;
 		i++;
 	}

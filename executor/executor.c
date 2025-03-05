@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 14:30:33 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/04 21:27:34 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	panic_exit(char *ptr, int custom)
 	}
 	else
 		perror("Minishell exit");
+	ft_malloc(0, DEALLOCATE);
+	ft_malloc_bkol(0, DEALLOCATE);
 	exit(custom);
 }
 
