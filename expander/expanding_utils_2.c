@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:51:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 15:49:57 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/05 16:22:39 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ char	*ultimate(char *str, char *flags, int one, int two)
 			quotes_flag[i] = NOT_QUOTE;
 		i++;
 	}
-
 	ultimate = wild_shell(flags, quotes_flag, str);
 	return (ultimate);
 }

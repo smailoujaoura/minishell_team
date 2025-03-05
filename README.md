@@ -196,3 +196,4 @@ Minishell: echo $?
 
 --------------------
 fix export function 
+- fix everything 

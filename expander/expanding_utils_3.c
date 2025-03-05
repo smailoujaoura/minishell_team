@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 12:11:33 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/05 16:24:03 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ char	*create_wilds(char *wilds)
 }
 
 // mark if the char at position x is a wild if it come outside quotes
-void	wild_shell_copy_helper(char *quotes, char *str, char *sources, int i)
+void	wild_shell_copy_helper(char *quotes, char *str, int i)
 {
 	int	flags;
 
@@ -52,7 +52,7 @@ void	wild_shell_copy_helper(char *quotes, char *str, char *sources, int i)
 			flags++;
 		else if (flags && quotes[i] == QUOTE)
 			flags--;
-		if (str[i] == '*' && !flags && sources[i] == LITERAL)
+		if (str[i] == '*' && !flags)
 			quotes[i] = IS_WILD;
 		else if (quotes[i] != SPLIT && quotes[i] != QUOTE)
 			quotes[i] = NOT_WILD;
@@ -72,6 +72,6 @@ char	*wild_shell(char *sources, char *quotes, char *str)
 			quotes[i] = SPLIT;
 		i++;
 	}
-	wild_shell_copy_helper(quotes, str, sources, 0);
+	wild_shell_copy_helper(quotes, str, 0);
 	return (create_wilds(quotes));
 }
