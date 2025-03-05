@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 14:15:37 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/05 18:08:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	strip_heredoc(t_chain *node, char *delim)
 // remove here-document's delimiter's quotes and open it, store its contents
 int	open_heredocs(t_chain *list, int num)
 {
-	int	here_doc_signaled;
+	int	status;
 
-	here_doc_signaled = 0;
+	status = 0;
 	count_heredocs(list);
 	while (list)
 	{
@@ -35,8 +35,8 @@ int	open_heredocs(t_chain *list, int num)
 		{
 			strip_heredoc(list, list->next->content);
 			delete_any(list->next, 0);
-			here_doc_signaled = here_doc(list, num);
-			if (here_doc_signaled == -1)
+			status = here_doc(list, num);
+			if (status == EXIT_FAILURE)
 				return (1);
 		}
 		list = list->next;

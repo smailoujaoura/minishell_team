@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 19:21:10 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:53:39 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,6 +256,7 @@ int		check_env_str(const char *line);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 int		check_env(t_env *env, char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
+char	**make_env(char **envp);
 
 // Builtins
 void	builtin_pwd(t_shell *mini);
@@ -284,10 +285,9 @@ char	*get_value_wrapper(char *var, t_env *env);
 
 // Signals
 void	setup_signals(int action);
-void	setup_child_signals(void);
-void	report_sig_number(int signum);
 void	handle_interrupt(void);
 void	handler(int signum, siginfo_t *info, void *ptr);
+void	second_handler(int signum, siginfo_t *info, void *ptr);
 
 // Executor
 int		open_and_assign(t_chain *redirs);

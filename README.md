@@ -197,3 +197,9 @@ Minishell: echo $?
 --------------------
 fix export function 
 - fix everything 
+
+Minishell: export cmd1="ls -la" cmd2="cat -e" cmd3="1"
+Minishell: export a="c" b="a" c="t"
+
+unset HOME or anything else 
+cd 

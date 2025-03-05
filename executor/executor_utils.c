@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 13:33:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/05 16:54:41 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,7 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	if (open_and_assign(tree->data->adj_f))
 		exit(EXIT_FAILURE);
 	if (tree->data->empty)
-	{
 		exit(0);
-	}
-	setup_child_signals();
 	execve(find_path(argv, mini->env), argv, envp);
 	if (ft_strnstr(strerror(errno), "Exec format", SIZE_MAX))
 		exit(0);

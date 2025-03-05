@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/02 16:38:06 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/05 18:16:17 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,6 @@
 
 #define WARNA "minishell: warning: here-document at line"
 #define WARNB "delimited by end-of-file (wanted `"
-
-static int	g_heredoc;
-
-void	report_sig_number(int signum)
-{
-	(void)signum;
-	write(1, "\n", 1);
-	g_heredoc = -33;
-	close(STDIN_FILENO);
-}
 
 char	*generate_random_name(void)
 {
@@ -53,22 +43,26 @@ char	*generate_random_name(void)
 	return (bytes);
 }
 
+void	return_status(int signum)
+{
+	(void)signum;
+	exit(EXIT_FAILURE);
+}
+
 void	prompt_here_doc(const char *limiter, int fd, int num)
 {
 	char	*line;
 	char	*save;
 
 	line = NULL;
-	while (g_heredoc != -33)
+	while (1)
 	{
 		line = readline("> ");
-		if (!line && g_heredoc != -33)
+		if (!line)
 		{
 			printf("%s %d %s%s')\n", WARNA, num, WARNB, limiter);
 			break ;
 		}
-		if (!line)
-			break ;
 		if (ft_strncmp(line, limiter, SIZE_MAX) == 0)
 		{
 			free(line);
@@ -78,33 +72,44 @@ void	prompt_here_doc(const char *limiter, int fd, int num)
 		write(fd, save, ft_strlen(save));
 		free(line);
 	}
+	exit(EXIT_SUCCESS);
 }
 
 int	here_doc(t_chain *data, int num)
 {
+	pid_t	heredoc_proc;
 	char	*filename;
+	int		status;
 	int		fd1;
 	int		fd2;
 
-	g_heredoc = 0;
 	filename = generate_random_name();
 	fd1 = open(filename, O_WRONLY | O_CREAT, 0600);
 	if (fd1 == -1)
 		panic_exit("Open failed\n", 1338);
 	fd2 = open(filename, O_RDONLY);
 	if (fd2 == -1)
+	{
+		close(fd1);
 		panic_exit("Open failed\n", 7232);
+	}
 	unlink(filename);
-	setup_signals(4);
-	prompt_here_doc(data->delim, fd1, num);
-	setup_signals(3);
-	setup_signals(5);
+	heredoc_proc = ft_fork();
+	if (heredoc_proc == 0)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, return_status);
+		close(fd2);
+		prompt_here_doc(data->delim, fd1, num);
+	}
+	else
+		setup_signals(2);
 	close(fd1);
 	data->fd = fd2;
-	if (g_heredoc == -33)
-	{
-		close(data->fd);
-		return (-1);
-	}
-	return (0);
+	wait(&status);
+	if (WIFEXITED(status))
+		status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		status = WTERMSIG(status);
+	return (status);
 }
