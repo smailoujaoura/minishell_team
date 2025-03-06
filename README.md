@@ -250,7 +250,39 @@ export =
 <a cat <b <c 
 parsing problem SEGV 
 ------------------------------------------------------------------------------------------------------------------------
+Minishell: ls | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc 
+      1       3      24
+Minishell: ls | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc  | wc 
+      1       3      24
+Minishell: ls | wc
 
+=================================================================
+==1232472==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 32 byte(s) in 1 object(s) allocated from:
+    #0 0x49a29d in malloc (/home/soujaour/Documents/shell/minishell+0x49a29d)
+    #1 0x7f6537137bac in xmalloc (/lib/x86_64-linux-gnu/libreadline.so.8+0x39bac)
+
+Indirect leak of 204 byte(s) in 12 object(s) allocated from:
+    #0 0x49a29d in malloc (/home/soujaour/Documents/shell/minishell+0x49a29d)
+    #1 0x7f6537137bac in xmalloc (/lib/x86_64-linux-gnu/libreadline.so.8+0x39bac)
+
+SUMMARY: AddressSanitizer: 236 byte(s) leaked in 13 allocation(s).
+     14      14     134
+
+=================================================================
+==1232473==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 32 byte(s) in 1 object(s) allocated from:
+    #0 0x49a29d in malloc (/home/soujaour/Documents/shell/minishell+0x49a29d)
+    #1 0x7f6537137bac in xmalloc (/lib/x86_64-linux-gnu/libreadline.so.8+0x39bac)
+
+Indirect leak of 204 byte(s) in 12 object(s) allocated from:
+    #0 0x49a29d in malloc (/home/soujaour/Documents/shell/minishell+0x49a29d)
+    #1 0x7f6537137bac in xmalloc (/lib/x86_64-linux-gnu/libreadline.so.8+0x39bac)
+
+SUMMARY: AddressSanitizer: 236 byte(s) leaked in 13 allocation(s).
+Minishell:
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
