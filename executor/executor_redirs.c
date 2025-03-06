@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 16:15:52 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 16:32:55 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ int	is_a_dir(const char *cmd, t_shell *mini)
 	{
 		printf("minishell: .: filename argument required\n"
 			".: usage: . filename [arguments]\n");
+		mini->last_exit = 2;
 		return (1);
 	}
 	if (((ft_strncmp(cmd, ".", 1) == 0 && ft_strchr(cmd, '/'))
