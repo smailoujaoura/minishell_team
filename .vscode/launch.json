@@ -8,6 +8,7 @@
             "program": "${workspaceFolder}/minishell",
             "args": [],
             "cwd": "${workspaceFolder}",
+            "maxStringLength": 50,
             "stopAtEntry": false,
             // "cwd": "${workspaceFolder}",
             "envFile": "${workspaceFolder}/.env",
