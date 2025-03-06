@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 17:59:29 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 20:17:40 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@
 # define SORT 1232
 
 # define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-# define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?" // SOUj
-# define VAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_" // BKOL
+# define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?"
+# define VAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
 
 # define REMOV 'r'
 # define HANDLE 'h'
@@ -285,6 +285,8 @@ char	*just_copy(char *str, int *i, int *singles, int *doubles);
 void	construct_flags(char *str, char flag, char **flags);
 void	expand_wildcard(t_list **list, char *pattern, char *is_wild);
 char	*get_value_wrapper(char *var, t_env *env);
+int		find_split(char *flags, int i);
+char	**ft_split_custom(char const *s, char *set, int f);
 
 // Signals
 void	setup_signals(int action);

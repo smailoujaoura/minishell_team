@@ -81,6 +81,7 @@ SRCS =	main.c \
 		./expander/expanding_utils_4.c \
 		./expander/expanding_utils_5.c \
 		./expander/expanding_utils_6.c \
+		./expander/split.c \
 		./executor/here_doc.c \
 		./executor/executor.c \
 		./executor/executor_other.c \
