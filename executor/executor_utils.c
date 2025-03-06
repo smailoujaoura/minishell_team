@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 18:14:37 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 19:26:33 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 char	*find_path(char **argv, t_env *env)
 {
-	int	status;
+	int		status;
+	char	*path;
 
 	status = is_a_dir(argv[0]);
 	if (status != 0)
@@ -23,7 +24,14 @@ char	*find_path(char **argv, t_env *env)
 	{
 		return (argv[0]);
 	}
-	return (construct_cmd_path(argv, env, -1));
+	path = construct_cmd_path(argv, env, -1);
+	if (path == NULL)
+	{
+		ft_dup2(STDERR_FILENO, STDOUT_FILENO);
+		printf("%s: command not found\n", argv[0]);
+		exit(127);
+	}
+	return (path);
 }
 
 char	*get_string(int which)
@@ -53,14 +61,11 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 		exit(EXIT_FAILURE);
 	if (tree->data->empty)
 		exit(0);
-	execve(path, argv, envp);
-	if (ft_strnstr(strerror(errno), "Exec format", SIZE_MAX))
-		exit(0);
-	// ft_dup2(STDERR_FILENO, STDOUT_FILENO);
-	// printf("%s%s: %s\n", get_string(1), argv[0], get_string(2));
-	// close(STDOUT_FILENO);
-	// close(STDIN_FILENO);
-	// exit(map_errno_to_exit_status());
+	if (execve(path, argv, envp) == -1)
+	{
+		perror("minishell");
+		exit(EXIT_FAILURE);
+	}
 }
 
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
