@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 14:46:07 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 14:55:46 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 16:27:47 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	is_empty_cmd(const char *cmd, t_shell *mini)
 			"apt install nmh           # version 1.7.1-11\n"
 			"apt install termtris      # version 1.3-1ubuntu1\n"
 			"Ask your administrator to install one of them.\n");
-		mini->last_exit = 127;
+		mini->last_exit = 2;
 		return (1);
 	}
 	return (0);
