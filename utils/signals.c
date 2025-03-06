@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 17:38:41 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 17:40:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ void	handle_interrupt(void)
 	rl_on_new_line();
 	rl_redisplay();
 }
-
-
 
 void	setup_signals(int action)
 {
@@ -43,5 +41,9 @@ void	setup_signals(int action)
 		interactive.sa_sigaction = second_handler;
 		sigaction(SIGINT, &interactive, NULL);
 	}
-	
+	else if (action == 3)
+	{
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
+	}
 }
