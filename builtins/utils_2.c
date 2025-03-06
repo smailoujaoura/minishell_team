@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 18:18:43 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/05 21:16:35 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ t_env	*get_env_var(t_env *env, const char *key)
 int	check_env_str(const char *line)
 {
 	int	i;
+	char **splited_str;
 
 	i = -1;
 	if (!ft_strchr(VAR, line[++i]))
@@ -64,9 +65,10 @@ int	check_env_str(const char *line)
 		printf("Minishell: export: `%s': not a valid identifier\n", line);
 		return (1);
 	}
-	while (line[++i])
+	splited_str = ft_split(line, '=', BKOLANI);
+	while (splited_str[0][++i])
 	{
-		if (!ft_strchr(MID, line[i]))
+		if (!ft_strchr(MID, splited_str[0][i]))
 		{
 			printf("minishell: export: `%s': not a valid identifier\n", line);
 			return (1);

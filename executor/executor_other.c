@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 21:32:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/05 21:05:28 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	*construct_cmd_path(char **argv, t_env *envp, int i)
 	tmp_cmd = NULL;
 	while (envp)
 	{
-		if (ft_strncmp(envp->full, "PATH=", 5) == 0)
+		if (ft_strncmp(envp->full, "PATH=", SIZE_MAX) == 0)
 			break ;
 		envp = envp->next;
 	}

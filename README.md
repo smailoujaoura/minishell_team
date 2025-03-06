@@ -203,3 +203,22 @@ Minishell: export a="c" b="a" c="t"
 
 unset HOME or anything else 
 cd 
+
+export var"'"=hsjsj
+bash: export: `var'=hsjsj': not a valid identifier
+---------------------
+bash: ./parser/: Is a directory
+./parser
+minishell: ./parser: Permission denied
+------------------
+bash: echo      \n hola
+n hola
+echo      \n hola
+n hola
+------------------
+Minishell: echo "         " | cat -e
+cat: command not found
+bkolani@e1r2p6:~/Desktop/push_6$ echo "         " | cat -
+e
+         $
+---------------

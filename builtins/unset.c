@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:58:05 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 09:44:27 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/05 21:05:05 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ static void	remove_and_rebuilt(t_env *env, char *arg)
 	while (env)
 	{
 		temp = env->next;
-		if (ft_strncmp(env->key, arg, ft_strlen(arg)) == 0)
+		if (ft_strncmp(env->key, arg, SIZE_MAX) == 0)
 		{
 			env = temp;
 			break ;
 		}
-		else if (ft_strncmp(temp->key, arg, ft_strlen(arg)) == 0)
+		else if (ft_strncmp(temp->key, arg, SIZE_MAX) == 0)
 		{
 			if (temp->next)
 				env->next = temp->next;

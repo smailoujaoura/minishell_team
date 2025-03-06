@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:05:20 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 16:28:21 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/05 21:05:18 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	check_env(t_env *env, char *key)
 		return (0);
 	while (env)
 	{
-		if (ft_strncmp(env->key, key, ft_strlen(key)) == 0)
+		if (ft_strncmp(env->key, key, SIZE_MAX) == 0)
 			return (1);
 		env = env->next;
 	}
@@ -51,7 +51,7 @@ char	*expand_env_var(t_env *env, char *exp_env)
 {
 	while (env)
 	{
-		if (ft_strncmp(env->key, exp_env, ft_strlen(exp_env)) == 0)
+		if (ft_strncmp(env->key, exp_env, SIZE_MAX) == 0)
 			return (env->value);
 		env = env->next;
 	}
