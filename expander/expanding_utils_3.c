@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/05 16:24:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:03:23 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,15 @@ char	*wild_shell(char *sources, char *quotes, char *str)
 	}
 	wild_shell_copy_helper(quotes, str, 0);
 	return (create_wilds(quotes));
+}
+
+int	find_split(char *flags, int i)
+{
+	while (i > 0 && flags[i] == REMOV)
+	{
+		i--;
+	}
+	if (flags[i] == SPLIT)
+		return (1);
+	return (0);
 }

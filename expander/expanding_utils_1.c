@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:25:13 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 16:35:36 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:17:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ char	*handle_var_values(char *value, char *new, char **flags, int two)
 		construct_flags(value, FROM_VAR, flags);
 		return (new);
 	}
-	var_values = ft_split(value, ' ', SOUJAOUR);
+	var_values = ft_split_custom(value, WHITESPACE, SOUJAOUR);
 	while (var_values[i])
 	{
 		new = ft_strjoin(new, var_values[i], SOUJAOUR);
