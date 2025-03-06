@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 14:52:20 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 17:37:31 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 		buildin_excutor(tree, argv, mini);
 	else
 		external_cmd(tree, argv, envp, mini);
+	printf("%d\n", mini->last_exit);
 	if (mini->last_exit == 131)
 		printf("Quit (core dumped)\n");
 	if (mini->last_exit == 130)

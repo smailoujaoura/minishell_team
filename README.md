@@ -307,36 +307,7 @@ export var="ls       -la"
 
 ------------------------------------------------------------------------------------------------------------------------
 -------------
-bash: echo $
-output: $
-Minishell: echo $
-output:
 ---------------
-Minishell: echo $?$
-0
-bash: echo $?$
-0$
----------------
-bash: echo $:$= | cat -e
-$:$=$
-Minishell: echo $:$= | cat -e
-:=$
---------------
-bash: echo " $ " | cat -e
- $ $
-Minishell: echo " $ " | cat -e
-  $
--------------
-bash: echo $9HOME
-output: HOME
-Minishell: echo $9HOME
-output:
--------------
-bash: .$
-.$: command not found
-minishell: .: filename argument required
-.: usage: . filename [arguments]
-------------------
 bash: $?$?
 127127: command not found
 Minishell: $?$?
