@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:51:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/05 16:22:39 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:33:43 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*remove_flags(char *flags, char **actual, char *str)
 			flags[i] = flags[i];
 		else if (flags[i] == QUOTE && flags[i + 1] == QUOTE
 			&& (flags[i + 2] == SPLIT || !flags[i + 2])
-			&& (i == 0 || flags[i - 1] == SPLIT))
+			&& (i == 0 || flags[i - 1] == SPLIT || flags[i - 1] == REMOV))
 			flags[i] = HANDLE;
 		else
 			flags[i] = REMOV;

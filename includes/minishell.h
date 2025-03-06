@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/03/06 15:34:53 by bkolani          ###   ########.fr       */
+=======
+/*   Updated: 2025/03/06 16:14:24 by soujaour         ###   ########.fr       */
+>>>>>>> f517e86c31ad5697bde7e332bafc26ad4b3600d1
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +183,8 @@ typedef struct s_shell
 {
 	t_env	*env;
 	int		last_exit;
+	int		doubles;
+	int		singles;
 }	t_shell;
 
 // General
@@ -277,7 +283,7 @@ void	expand_heredoc(t_chain *ptr, t_shell *mini, char *new, int source_fd);
 char	**ultimate_split(char *str, char *flags, char sep, t_list *list);
 char	*wild_shell(char *sources, char *quotes, char *str);
 int		is_var(char current, char next, char *set);
-char	*get_value(char *str, int *i, t_shell *mini);
+char	*get_value(char *str, int *i, t_shell *mini, int type);
 char	*handle_var_values(char *value, char *new, char **flags, int two);
 char	*just_copy(char *str, int *i, int *singles, int *doubles);
 void	construct_flags(char *str, char flag, char **flags);
