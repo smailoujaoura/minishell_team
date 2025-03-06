@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/05 17:59:38 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:38:41 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,5 @@ void	setup_signals(int action)
 		interactive.sa_sigaction = second_handler;
 		sigaction(SIGINT, &interactive, NULL);
 	}
-	// else if (action == 3)
-	// {
-	// 	sigfillset(&interactive.sa_mask);
-	// 	interactive.sa_flags = SA_SIGINFO | SA_RESTART;
-	// 	interactive.sa_sigaction = here_doc_signals;
-	// 	sigaction(SIGINT, &interactive, NULL);
-	// }
+	
 }
