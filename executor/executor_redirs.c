@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redirs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 14:07:50 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 13:21:15 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,5 +79,26 @@ int	assign_fds_builtins(t_ast *tree, char *cmd, int action)
 	}
 	else
 		reset_orig_fds(original_in, original_out);
+	return (0);
+}
+
+int	is_a_dir(const char *cmd, t_shell *mini)
+{
+	struct stat	file_info;
+
+	if ((ft_strncmp(cmd, ".", 1) == 0 || ft_strncmp(cmd, "/", 1) == 0)
+			&& stat(cmd, &file_info) == -1)
+	{
+		perror("minishell");
+		mini->last_exit = 1;
+		return (1);
+	}
+	else if ((ft_strncmp(cmd, ".", 1) == 0 || ft_strncmp(cmd, "/", 1) == 0)
+			&& stat(cmd, &file_info) == 0)
+	{
+		printf("minishell: %s: Is a directory\n", cmd);
+		mini->last_exit = 126;
+		return (1);
+	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 11:22:27 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 12:57:02 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <stdbool.h>
 # include <termios.h>
 # include <signal.h>
+# include <sys/stat.h>
 
 // General Macros
 # define MEMORY_ERROR "Memory Error!"
@@ -307,5 +308,6 @@ int 	ft_fork(void);
 int 	ft_dup(int old);
 int 	ft_dup2(int old, int new);
 int		ft_pipe(int *pair);
+int		is_a_dir(const char *cmd, t_shell *mini);
 
 #endif

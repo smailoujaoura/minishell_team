@@ -215,12 +215,8 @@ bash: echo      \n hola
 n hola
 echo      \n hola
 n hola
-------------------
-Minishell: echo "         " | cat -e
-cat: command not found
-bkolani@e1r2p6:~/Desktop/push_6$ echo "         " | cat -
-e
-         $
+-----------------
+
 ---------------
 ------------------------------------------------------------------------------------------------------------------------
 Minishell: echo "" "" "" "" $HOME
