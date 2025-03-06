@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 20:20:35 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 20:33:17 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	cd_executor(const char *cd_arg, char *path, int *status)
 	if (chdir(cd_arg) == -1)
 	{
 		free(path);
-		perror("cd");
+		printf("minishell: cd: %s: %s\n", cd_arg, strerror(errno));
 		*status = 1;
 		return (1);
 	}
