@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 18:28:03 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 19:50:18 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		pipe_child(tree, mini, pipe_pair, 0);
 	close(pipe_pair[1]);
 	close(pipe_pair[0]);
+	waitpid(pid_left, NULL, WUNTRACED);
 	waitpid(pid_right, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
 		mini->last_exit = WEXITSTATUS(mini->last_exit);

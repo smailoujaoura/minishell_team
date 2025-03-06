@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 15:35:29 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 19:54:06 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,5 @@ int	main(int argc, char *argv[], char *envp[])
 	minishell(&data, &tp_out, &tp_in, 1);
 	(void)argv;
 	(void)argc;
-	return (0);
+	return (data.last_exit);
 }
