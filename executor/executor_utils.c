@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 20:31:13 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 21:25:11 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,26 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 {
 	char	*path;
 
+	if (open_and_assign(tree->data->adj_f))
+		exit(EXIT_FAILURE);
+	if (tree->data->empty)
+		exit(EXIT_SUCCESS);
 	path = find_path(argv, mini->env);
 	if (path == NULL)
 		exit(127);
-	if (open_and_assign(tree->data->adj_f))
-		exit(EXIT_FAILURE);
 	if (tree->data->empty)
 		exit(0);
 	if (execve(path, argv, envp) == -1)
 	{
-		perror("minishell");
-		exit(EXIT_FAILURE);
+		if (access(path, X_OK) == 0)
+		{
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			perror("minishell");
+			exit(EXIT_FAILURE);
+		}
 	}
 }
 
