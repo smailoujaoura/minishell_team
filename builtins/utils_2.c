@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 15:35:05 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 17:25:34 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ t_env	*get_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
-static int	check_env_id(const char *line)
+int	check_env_str(const char *line)
 {
 	int	i;
 
@@ -67,34 +67,6 @@ static int	check_env_id(const char *line)
 			return (1);
 		}
 		i++;
-	}
-	return (0);
-}
-
-int	check_env_str(const char *line)
-{
-	int	i;
-	char **splited_str;
-
-	i = 1;
-	if (ft_strchr(line, '='))
-	{
-		splited_str = ft_split(line, '=', BKOLANI);
-		if (ft_strchr(VAR, splited_str[0][0]))
-		{
-			if (check_env_id(line))
-				return (1);
-		}
-	}
-	else if (ft_strchr(VAR, line[0]))
-	{
-		if (check_env_id(line))
-			return (1);
-	}
-	else
-	{
-		printf("minishell: export: `%s': not a valid identifier\n", line);
-		return (1);
 	}
 	return (0);
 }

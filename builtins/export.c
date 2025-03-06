@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/05 21:14:09 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 17:23:55 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,16 @@ static void	check_export_env(t_env *env, char *line)
 	char	**splited_line;
 	t_env	*new_env;
 
+	if (!*line || !ft_strchr(VAR, line[0]))
+	{
+		printf("minishell: export: `%s': not a valid identifier\n", line);
+		return ;
+	}
 	if (!ft_strchr(line, '=') && check_env_str(line))
 		return ;
 	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
 	splited_line = ft_split(line, '=', BKOLANI);
-	if (check_env_str(line))
+	if (check_env_str(splited_line[0]))
 		return ;
 	process_env_var(env, new_env, splited_line, line);
 }
