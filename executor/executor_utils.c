@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 17:11:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:14:37 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 char	*find_path(char **argv, t_env *env)
 {
+	int	status;
+
+	status = is_a_dir(argv[0]);
+	if (status != 0)
+		exit(status);
 	if (ft_strchr(argv[0], '/') || !get_value_wrapper("PATH", env)[0])
 	{
 		return (argv[0]);
@@ -51,11 +56,11 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	execve(path, argv, envp);
 	if (ft_strnstr(strerror(errno), "Exec format", SIZE_MAX))
 		exit(0);
-	ft_dup2(STDERR_FILENO, STDOUT_FILENO);
-	printf("%s%s: %s\n", get_string(1), argv[0], get_string(2));
-	close(STDOUT_FILENO);
-	close(STDIN_FILENO);
-	exit(map_errno_to_exit_status());
+	// ft_dup2(STDERR_FILENO, STDOUT_FILENO);
+	// printf("%s%s: %s\n", get_string(1), argv[0], get_string(2));
+	// close(STDOUT_FILENO);
+	// close(STDIN_FILENO);
+	// exit(map_errno_to_exit_status());
 }
 
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)

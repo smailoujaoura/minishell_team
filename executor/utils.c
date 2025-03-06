@@ -5,25 +5,47 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/06 14:46:07 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 16:33:10 by bkolani          ###   ########.fr       */
+/*   Created: 2025/03/06 18:43:18 by bkolani           #+#    #+#             */
+/*   Updated: 2025/03/06 18:45:08 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	is_empty_cmd(const char *cmd, t_shell *mini)
+int	check_dir_or_file(const char *cmd)
 {
-	if (ft_strncmp(cmd, "", SIZE_MAX) == 0)
+	struct stat	file_info;
+
+	if (stat(cmd, &file_info) < 0)
 	{
-		printf("Command '' not found,  but can be installed with:\n"
-			"apt install mailutils-mh  # version 1:3.14-1, or\n"
-			"apt install mmh           # version 0.4-4\n"
-			"apt install nmh           # version 1.7.1-11\n"
-			"apt install termtris      # version 1.3-1ubuntu1\n"
-			"Ask your administrator to install one of them.\n");
-		mini->last_exit = 127;
-		return (1);
+		dup2(STDERR_FILENO, STDOUT_FILENO);
+		printf("minishell %s: %s\n", cmd, strerror(errno));
+		return (127);
 	}
+	if (S_ISDIR(file_info.st_mode))
+	{
+		dup2(STDERR_FILENO, STDOUT_FILENO);
+		printf("minishell: %s: Is a directory\n", cmd);
+	}
+	else
+	{
+		if (access(cmd, X_OK) == -1)
+			printf("minishell %s: %s\n", cmd, strerror(errno));
+	}
+	return (126);
+}
+
+int	is_a_dir(const char *cmd)
+{
+	if (ft_strlen(cmd) == 1 && ft_strncmp(cmd, ".", 1) == 0)
+	{
+		dup2(STDERR_FILENO, STDOUT_FILENO);
+		printf("minishell: .: filename argument required\n"
+			".: usage: . filename [arguments]\n");
+		return (2);
+	}
+	if (((ft_strncmp(cmd, ".", 1) == 0 && ft_strchr(cmd, '/'))
+		|| ft_strchr(cmd, '/')))
+		return (check_dir_or_file(cmd));
 	return (0);
 }

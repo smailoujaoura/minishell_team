@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 16:58:57 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 17:59:29 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,7 +310,6 @@ int 	ft_fork(void);
 int 	ft_dup(int old);
 int 	ft_dup2(int old, int new);
 int		ft_pipe(int *pair);
-int		is_a_dir(const char *cmd, t_shell *mini);
-int		is_empty_cmd(const char *cmd, t_shell *mini);
+int		is_a_dir(const char *cmd);
 
 #endif

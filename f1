@@ -1,0 +1,14 @@
+builtins
+executor
+expander
+f1
+includes
+main.c
+Makefile
+minishell
+minishell.c
+old_minishell.zip
+parser
+README.md
+utils
+minishell: /tmp: Is a directory

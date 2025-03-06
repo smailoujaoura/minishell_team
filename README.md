@@ -317,8 +317,3 @@ Minishell: ?$HOME
 minishell: No such file or directory
 bash:  ?$HOME
 bash: ?/home/bkolani: No such file or directory
-----------
-bash: sleep 3 | sleep 3 | sleep 3
-^\Quit (core dumped)
-Minishell: sleep 3 | sleep 3 | sleep 3
-^\Minishell: 

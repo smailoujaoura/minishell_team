@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 16:32:55 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 18:43:40 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,35 +79,5 @@ int	assign_fds_builtins(t_ast *tree, char *cmd, int action)
 	}
 	else
 		reset_orig_fds(original_in, original_out);
-	return (0);
-}
-
-int	is_a_dir(const char *cmd, t_shell *mini)
-{
-	struct stat	file_info;
-
-	if (ft_strlen(cmd) == 1 && ft_strncmp(cmd, ".", 1) == 0)
-	{
-		printf("minishell: .: filename argument required\n"
-			".: usage: . filename [arguments]\n");
-		mini->last_exit = 2;
-		return (1);
-	}
-	if (((ft_strncmp(cmd, ".", 1) == 0 && ft_strchr(cmd, '/'))
-		|| ft_strchr(cmd, '/')))
-	{
-		if (stat(cmd, &file_info) < 0)
-		{
-			perror("minishell");
-			mini->last_exit = 127;
-			return (1);
-		}
-		if (S_ISDIR(file_info.st_mode))
-		{
-			printf("minishell: %s: Is a directory\n", cmd);
-			mini->last_exit = 126;
-			return (1);
-		}
-	}
 	return (0);
 }
