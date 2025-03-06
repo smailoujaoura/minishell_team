@@ -6,14 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:03:52 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 12:04:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// handles redirs left without any commands
-void	pick_left_redirs(t_chain *list)
+void	lefts_picker(t_chain *list)
 {
 	t_chain	*ptr;
 	t_chain	*new;
@@ -21,7 +20,7 @@ void	pick_left_redirs(t_chain *list)
 	while (list)
 	{
 		ptr = list;
-		while (ptr && (is_redir(ptr, IN + OR + OUT)))
+		while (ptr && is_redir(ptr, IN + OR + OUT))
 			ptr = ptr->next;
 		if (ptr != list)
 		{
@@ -40,15 +39,109 @@ void	pick_left_redirs(t_chain *list)
 	}
 }
 
-// handle a variety of redirs cases: 
-// redirs without commands, redirs for subshells, redirs for commands
-t_chain	*assign_inputs(t_chain *list, t_chain *ptr)
+void	post_picker(t_chain *list)
 {
-	list = assign_inputs_edges(list);
-	assign_adjacent_redirs(list, ptr);
-	remove_if(list);
-	pick_left_redirs(list);
-	return (list);
+	t_chain	*start;
+	t_chain	*end;
+	t_chain	*last_redir;
+
+	if (!list->next || !is_redir(list->next, IN + OR + OUT))
+		return ;
+	start = list->next;
+	end = list->next;
+	while (end->next && is_redir(end->next, IN + OR + OUT))
+	{
+		end = end->next;
+	}
+	list->next = end->next;
+	end->next = NULL;
+	start->back = NULL;
+	if (list->adj_f)
+	{
+		last_redir = lstlast(list->adj_f);
+		last_redir->next = start;
+		start->back = last_redir;
+	}
+	else
+		list->adj_f = start;
+}
+
+void	pre_picker(t_chain *list)
+{
+	t_chain	*start;
+	t_chain	*end;
+
+	if (!list->back || !is_redir(list->back, IN + OR + OUT))
+		return ;
+	start = list->back;
+	end = list->back;
+	while (list->back && is_redir(list->back, IN + OR + OUT))
+	{
+		list = list->back;
+	}
+	start->back = NULL;
+	end->next = NULL;
+	list->adj_f = start;
+}
+
+t_chain	*special_redir_case(t_chain *list)
+{
+	t_chain	*start;
+	t_chain	*end;
+	t_chain	*new;
+
+	start = list;
+	end = list;
+	while (end && is_redir(end, IN + OR + OUT))
+		end = end->next;
+	if (end == NULL)
+	{
+		new = lstnew(ft_strdup("EMPTY CMD!", SOUJAOUR));
+		new->type = WORD;
+		new->empty = 1;
+		new->adj_f = start;
+		return (new);
+	}
+	else if (end->type != WORD)
+	{
+		new = lstnew(ft_strdup("EMPTY CMD", SOUJAOUR));
+		new->adj_f = start;
+		end->back->next = NULL;
+		end->back = new;
+		new->next = end;
+		return (new);
+	}
+	end->adj_f = start;
+	end->back->next = NULL;
+	end->back = NULL;
+	return (end);
+}
+
+t_chain	*assign_inputs(t_chain *list)
+{
+	t_chain	*saved;
+
+	saved = list;
+	if (list && is_redir(list, IN + OR + OUT))
+	{
+		list = special_redir_case(list);
+		saved = list;
+	}
+	while (list)
+	{
+		if (list->type == WORD)
+		{
+			pre_picker(list);
+			post_picker(list);
+		}
+		else if (list->type == R_PAREN)
+		{
+			post_picker(list);
+		}
+		list = list->next;
+	}
+	lefts_picker(saved);
+	return (saved);
 }
 
 // join commands with their arguments: ls -la

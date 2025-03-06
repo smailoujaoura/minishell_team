@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/05 17:53:39 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 11:22:27 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ t_ast	*parse_line(char *line, t_chain **list, int *num, t_shell *mini);
 void	prioritize_list(t_chain *list);
 void	join_redirs(t_chain *list);
 void	join_commands(t_chain *list, t_argv *argv, t_argv *new);
-t_chain	*assign_inputs(t_chain *list, t_chain *ptr);
+t_chain	*assign_inputs(t_chain *list);
 void	pick_left_redirs(t_chain *list);
 t_chain	*convert_infix(t_chain *infix, t_chain *post, t_chain *ops);
 void	assign_adjacent_redirs(t_chain *list, t_chain *ptr);
