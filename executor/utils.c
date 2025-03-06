@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 18:43:18 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 19:18:55 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 20:35:40 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	is_a_dir(const char *cmd)
 		return (2);
 	}
 	if (((ft_strncmp(cmd, ".", 1) == 0 && ft_strchr(cmd, '/'))
-		|| ft_strchr(cmd, '/')))
+			|| ft_strchr(cmd, '/')))
 		return (check_dir_or_file(cmd));
 	return (0);
 }

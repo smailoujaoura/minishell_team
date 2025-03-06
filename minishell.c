@@ -6,19 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 11:22:07 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:30:59 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
-
-// remove quotes off delimiter
-void	strip_heredoc(t_chain *node, char *delim)
-{
-	if (ft_strchr(delim, '"') || ft_strchr(delim, '\''))
-		node->delim_in_quotes = 1;
-	node->delim = remove_occurences(delim, 0, 0, 0);
-}
 
 void	close_heredocs(t_chain *ptr)
 {
@@ -81,7 +73,6 @@ void	store_line(char *new, int flag)
 int	complete_line(t_chain *last, char *line, int *num, char **rest)
 {
 	char	*temp;
-	(void)line;
 
 	if (last->type == PIPE || last->type == AND || last->type == OR)
 	{
@@ -110,7 +101,7 @@ t_ast	*parse_line(char *line, t_chain **list, int *num, t_shell *mini)
 	char	*rest;
 	int		error;
 
-	rest = NULL; 
+	rest = NULL;
 	convert_str(line, list);
 	if (*list == NULL)
 		return (NULL);

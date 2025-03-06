@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:03:23 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:30:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,4 +85,12 @@ int	find_split(char *flags, int i)
 	if (flags[i] == SPLIT)
 		return (1);
 	return (0);
+}
+
+// remove quotes off delimiter
+void	strip_heredoc(t_chain *node, char *delim)
+{
+	if (ft_strchr(delim, '"') || ft_strchr(delim, '\''))
+		node->delim_in_quotes = 1;
+	node->delim = remove_occurences(delim, 0, 0, 0);
 }

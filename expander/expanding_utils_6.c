@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:27:06 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 13:13:37 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:36:55 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,3 @@ char	**ultimate_split(char *str, char *flags, char sep, t_list *list)
 	}
 	return (convert_list_str(list));
 }
-
-
-// 0x6030000035e0 "echo " " " " /home/soujaour"
-// 0x6030000035b0 "nnnnshshshshsnnnnnnnnnnnnnn"

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:17:40 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:44:59 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,10 @@ int		check_redirs(t_chain *prev, t_chain *next);
 int		check_logicals(t_chain *prev, t_chain *next);
 int		check_pipe(t_chain *prev, t_chain *next);
 int		check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
+t_chain	*special_redir_case(t_chain *list);
+void	pre_picker(t_chain *list);
+void	post_picker(t_chain *list);
+void	lefts_picker(t_chain *list);
 
 # define SYNTAXERR "Minishell: syntax error near unexpected token"
 # define ERR "Minishell: syntax error near unexpected token '%s'\n"
@@ -243,6 +247,7 @@ t_chain	*create_redirs_chain(t_chain *list);
 char	*generate_random_name(void);
 int		here_doc(t_chain *data, int num);
 void	count_heredocs(t_chain *list);
+void	strip_heredoc(t_chain *node, char *delim);
 
 // Env functions and their utils
 t_env	*handle_env(char **envp);
@@ -308,9 +313,9 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 int		ft_dup2(int old, int new);
 int		map_errno_to_exit_status(void);
-int 	ft_fork(void);
-int 	ft_dup(int old);
-int 	ft_dup2(int old, int new);
+int		ft_fork(void);
+int		ft_dup(int old);
+int		ft_dup2(int old, int new);
 int		ft_pipe(int *pair);
 int		is_a_dir(const char *cmd);
 

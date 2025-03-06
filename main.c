@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 19:54:06 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 20:28:54 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
-static int g_sig_number;
+static int	g_sig_number;
 
 void	statically_stored_shell(t_shell *mini, int action)
 {
-	static t_shell *ptr;
+	static t_shell	*ptr;
 
 	if (action == -1)
 		ptr = mini;

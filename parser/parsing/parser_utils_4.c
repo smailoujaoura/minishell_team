@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 12:59:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:43:12 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	count_heredocs(t_chain *list)
 {
-	int num_of_heredocs;
+	int	num_of_heredocs;
 
 	num_of_heredocs = 0;
 	while (list)

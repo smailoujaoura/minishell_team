@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 19:26:33 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 20:31:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 {
 	pid_t	pid;
 
-	pid = ft_fork();;
+	pid = ft_fork();
 	if (pid == 0)
 	{
 		setup_signals(3);

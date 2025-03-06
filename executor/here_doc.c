@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/05 18:16:17 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:46:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,25 +75,11 @@ void	prompt_here_doc(const char *limiter, int fd, int num)
 	exit(EXIT_SUCCESS);
 }
 
-int	here_doc(t_chain *data, int num)
+int	more_logic(int num, t_chain *data, int fd1, int fd2)
 {
-	pid_t	heredoc_proc;
-	char	*filename;
-	int		status;
-	int		fd1;
-	int		fd2;
+	int	status;
+	int	heredoc_proc;
 
-	filename = generate_random_name();
-	fd1 = open(filename, O_WRONLY | O_CREAT, 0600);
-	if (fd1 == -1)
-		panic_exit("Open failed\n", 1338);
-	fd2 = open(filename, O_RDONLY);
-	if (fd2 == -1)
-	{
-		close(fd1);
-		panic_exit("Open failed\n", 7232);
-	}
-	unlink(filename);
 	heredoc_proc = ft_fork();
 	if (heredoc_proc == 0)
 	{
@@ -112,4 +98,24 @@ int	here_doc(t_chain *data, int num)
 	else if (WIFSIGNALED(status))
 		status = WTERMSIG(status);
 	return (status);
+}
+
+int	here_doc(t_chain *data, int num)
+{
+	char	*filename;
+	int		fd1;
+	int		fd2;
+
+	filename = generate_random_name();
+	fd1 = open(filename, O_WRONLY | O_CREAT, 0600);
+	if (fd1 == -1)
+		panic_exit("Open failed\n", 1338);
+	fd2 = open(filename, O_RDONLY);
+	if (fd2 == -1)
+	{
+		close(fd1);
+		panic_exit("Open failed\n", 7232);
+	}
+	unlink(filename);
+	return (more_logic(num, data, fd1, fd2));
 }

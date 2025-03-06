@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:25:13 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:17:28 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:35:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	construct_flags(char *str, char flag, char **flags)
 int	var_to_var(char *key)
 {
 	int	i;
+
 	i = 0;
 	while (key[i])
 	{

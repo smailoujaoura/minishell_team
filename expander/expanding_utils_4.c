@@ -6,13 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:06 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 16:38:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 20:38:43 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-# define SETA " \t\n\v\f\r"
+#define SETA " \t\n\v\f\r"
 
 // checks if a two chars: current and one next to it may represent variable
 int	is_var(char current, char next, char *set)
@@ -59,16 +59,11 @@ char	*get_value(char *str, int *i, t_shell *mini, int type)
 		return (value);
 	}
 	else if (type == 3)
-	{
-		(*i)++;
-		return (ft_strdup("$", SOUJAOUR));
-	}
+		return ((*i)++, ft_strdup("$", SOUJAOUR));
 	j = *i + 1;
 	(*i) += 1;
 	while (str[*i] && ft_strchr(MID, str[*i]))
-	{
 		(*i)++;
-	}
 	key = ft_substr(&str[j], 0, *i - j, SOUJAOUR);
 	key = get_value_wrapper(key, mini->env);
 	if (!key[0] && mini->doubles)
