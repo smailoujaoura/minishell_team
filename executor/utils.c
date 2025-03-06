@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 18:43:18 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 18:45:08 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 19:17:18 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,15 @@ int	check_dir_or_file(const char *cmd)
 	{
 		dup2(STDERR_FILENO, STDOUT_FILENO);
 		printf("minishell: %s: Is a directory\n", cmd);
+		return (126);
 	}
 	else
 	{
 		if (access(cmd, X_OK) == -1)
 			printf("minishell %s: %s\n", cmd, strerror(errno));
+		return (126);
 	}
-	return (126);
+	return (0);
 }
 
 int	is_a_dir(const char *cmd)
