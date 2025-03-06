@@ -6,67 +6,67 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:23 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/28 22:14:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 12:01:10 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	remove_adjacent_redirs_helper(t_chain *non_redir, int f)
-{
-	while (non_redir && is_redir(non_redir, IN + OR + OUT))
-	{
-		if (f)
-			non_redir = non_redir->back;
-		else
-			non_redir = non_redir->next;
-	}
-}
+// void	remove_adjacent_redirs_helper(t_chain *non_redir, int f)
+// {
+// 	while (non_redir && is_redir(non_redir, IN + OR + OUT))
+// 	{
+// 		if (f)
+// 			non_redir = non_redir->back;
+// 		else
+// 			non_redir = non_redir->next;
+// 	}
+// }
 
-void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f)
-{
-	t_chain	*non_redir;
-	t_chain	*tmp;
+// void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f)
+// {
+// 	t_chain	*non_redir;
+// 	t_chain	*tmp;
 
-	non_redir = redirs;
-	remove_adjacent_redirs_helper(redirs, f);
-	if (f)
-	{
-		if (non_redir)
-			non_redir->next = list;
-		list->back = non_redir;
-	}
-	else
-	{
-		list->next = non_redir;
-		if (non_redir)
-			non_redir->back = list;
-	}
-	while (is_redir(redirs, IN + OR + OUT))
-	{
-		tmp = redirs->next;
-		redirs = tmp;
-	}
-}
+// 	non_redir = redirs;
+// 	remove_adjacent_redirs_helper(redirs, f);
+// 	if (f)
+// 	{
+// 		if (non_redir)
+// 			non_redir->next = list;
+// 		list->back = non_redir;
+// 	}
+// 	else
+// 	{
+// 		list->next = non_redir;
+// 		if (non_redir)
+// 			non_redir->back = list;
+// 	}
+// 	while (is_redir(redirs, IN + OR + OUT))
+// 	{
+// 		tmp = redirs->next;
+// 		redirs = tmp;
+// 	}
+// }
 
-t_chain	*create_redirs_chain(t_chain *list)
-{
-	t_chain	*redirs;
-	t_chain	*new;
+// t_chain	*create_redirs_chain(t_chain *list)
+// {
+// 	t_chain	*redirs;
+// 	t_chain	*new;
 
-	redirs = NULL;
-	while (list && is_redir(list, IN + OR + OUT))
-	{
-		list->removable = REMOVE;
-		new = ft_calloc(1, sizeof(t_chain), SOUJAOUR);
-		ft_memcpy(new, list, sizeof(t_chain));
-		new->next = NULL;
-		new->back = NULL;
-		lstadd_back(&redirs, new);
-		list = list->next;
-	}
-	return (redirs);
-}
+// 	redirs = NULL;
+// 	while (list && is_redir(list, IN + OR + OUT))
+// 	{
+// 		list->removable = REMOVE;
+// 		new = ft_calloc(1, sizeof(t_chain), SOUJAOUR);
+// 		ft_memcpy(new, list, sizeof(t_chain));
+// 		new->next = NULL;
+// 		new->back = NULL;
+// 		lstadd_back(&redirs, new);
+// 		list = list->next;
+// 	}
+// 	return (redirs);
+// }
 
 char	*copy_if(char *new, char *str, char *flag)
 {

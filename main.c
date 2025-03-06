@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/05 17:52:56 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 09:40:01 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
 		if (tcsetattr(STDIN_FILENO, TCSANOW, i) < 0)
 			return ;
 		n++;
+		ft_malloc(0, DEALLOCATE);
 	}
 	ft_malloc_bkol(0, DEALLOCATE);
 }

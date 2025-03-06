@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/05 18:08:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 11:22:07 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,18 @@ void	strip_heredoc(t_chain *node, char *delim)
 	if (ft_strchr(delim, '"') || ft_strchr(delim, '\''))
 		node->delim_in_quotes = 1;
 	node->delim = remove_occurences(delim, 0, 0, 0);
+}
+
+void	close_heredocs(t_chain *ptr)
+{
+	while (ptr)
+	{
+		if (ptr->type == HEREDOC)
+		{
+			close(ptr->fd);
+		}
+		ptr = ptr->back;
+	}
 }
 
 // remove here-document's delimiter's quotes and open it, store its contents
@@ -37,7 +49,10 @@ int	open_heredocs(t_chain *list, int num)
 			delete_any(list->next, 0);
 			status = here_doc(list, num);
 			if (status == EXIT_FAILURE)
+			{
+				close_heredocs(list);
 				return (1);
+			}
 		}
 		list = list->next;
 	}
@@ -65,7 +80,8 @@ void	store_line(char *new, int flag)
 // continues reading if line is incomplete
 int	complete_line(t_chain *last, char *line, int *num, char **rest)
 {
-	char			*temp;
+	char	*temp;
+	(void)line;
 
 	if (last->type == PIPE || last->type == AND || last->type == OR)
 	{
@@ -110,7 +126,7 @@ t_ast	*parse_line(char *line, t_chain **list, int *num, t_shell *mini)
 	prioritize_list(*list);
 	join_redirs(*list);
 	join_commands(*list, NULL, NULL);
-	*list = assign_inputs(*list, NULL);
+	*list = assign_inputs(*list);
 	if (complete_line(lstlast(*list), line, num, &rest))
 		return (parse_line(rest, list, num, mini));
 	post = convert_infix(*list, NULL, NULL);
