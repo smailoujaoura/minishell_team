@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 13:35:47 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 15:35:05 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,28 +54,47 @@ t_env	*get_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
+static int	check_env_id(const char *line)
+{
+	int	i;
+
+	i = 1;
+	while (line[i])
+	{
+		if (!ft_strchr(MID, line[i]))
+		{
+			printf("minishell: export: `%s': not a valid identifier\n", line);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 int	check_env_str(const char *line)
 {
 	int	i;
 	char **splited_str;
 
-	i = -1;
-	while (VAR[++i])
+	i = 1;
+	if (ft_strchr(line, '='))
 	{
-		if (!ft_strchr(line, VAR[i]))
+		splited_str = ft_split(line, '=', BKOLANI);
+		if (ft_strchr(VAR, splited_str[0][0]))
 		{
-			printf("Minishell: export: `%s': not a valid identifier\n", line);
-			return (1);
+			if (check_env_id(line))
+				return (1);
 		}
 	}
-	splited_str = ft_split(line, '=', BKOLANI);
-	while (splited_str[0][++i])
+	else if (ft_strchr(VAR, line[0]))
 	{
-		if (!ft_strchr(MID, splited_str[0][i]))
-		{
-			printf("minishell: export: `%s': not a valid identifier\n", line);
+		if (check_env_id(line))
 			return (1);
-		}
+	}
+	else
+	{
+		printf("minishell: export: `%s': not a valid identifier\n", line);
+		return (1);
 	}
 	return (0);
 }

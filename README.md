@@ -306,3 +306,48 @@ export var="ls       -la"
 ------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------------------------------------------------
+-------------
+bash: echo $
+output: $
+Minishell: echo $
+output:
+---------------
+Minishell: echo $?$
+0
+bash: echo $?$
+0$
+---------------
+bash: echo $:$= | cat -e
+$:$=$
+Minishell: echo $:$= | cat -e
+:=$
+--------------
+bash: echo " $ " | cat -e
+ $ $
+Minishell: echo " $ " | cat -e
+  $
+-------------
+bash: echo $9HOME
+output: HOME
+Minishell: echo $9HOME
+output:
+-------------
+bash: .$
+.$: command not found
+minishell: .: filename argument required
+.: usage: . filename [arguments]
+------------------
+bash: $?$?
+127127: command not found
+Minishell: $?$?
+11: command not found
+--------------
+Minishell: ?$HOME
+minishell: No such file or directory
+bash:  ?$HOME
+bash: ?/home/bkolani: No such file or directory
+----------
+bash: sleep 3 | sleep 3 | sleep 3
+^\Quit (core dumped)
+Minishell: sleep 3 | sleep 3 | sleep 3
+^\Minishell: 
