@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/03 13:50:42 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/05 21:07:34 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ static void	cd_with_no_args(t_env *env, int *status)
 	updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
 	updated_pwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
 	home = get_env_var(env, "HOME");
+	if (!home)
+	{
+		write(2, "minishell: cd: HOME not set\n", 29);
+		return ;
+	}
 	path = getcwd(NULL, 0);
 	updated_oldpwd[0] = ft_strjoin("OLDPWD=", path, BKOLANI);
 	updated_oldpwd[1] = NULL;
