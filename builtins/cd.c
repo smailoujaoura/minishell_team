@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/05 21:07:34 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 20:20:35 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static int	cd_executor(const char *cd_arg, char *path, int *status)
 	}
 	free(path);
 	path = NULL;
+	*status = 0;
 	return (0);
 }
 
