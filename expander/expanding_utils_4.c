@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:06 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 16:16:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:38:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ int	is_var(char current, char next, char *set)
 		}
 		else if (ft_strchr(SETA, next) || next == 0)
 			return (3);
-		else
-			return (4);
 	}
 	return (0);
 }
@@ -73,7 +71,7 @@ char	*get_value(char *str, int *i, t_shell *mini, int type)
 	}
 	key = ft_substr(&str[j], 0, *i - j, SOUJAOUR);
 	key = get_value_wrapper(key, mini->env);
-	if (!key[0])
+	if (!key[0] && mini->doubles)
 		return (ft_strdup("$", SOUJAOUR));
 	return (key);
 }
