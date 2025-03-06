@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 09:11:51 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:14:54 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ char	*expand_str(char *str, int i, char **flags, t_shell *mini)
 	{
 		if (!singles && str[i] == '$')
 		{
-			value = get_value(str, &i, mini);
+			mini->doubles = doubles;
+			mini->singles = singles;
+			value = get_value(str, &i, mini, is_var('$', str[i + 1], STRT));
 			new = handle_var_values(value, new, flags, doubles);
 		}
 		else
