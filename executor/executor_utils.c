@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/05 16:54:41 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:11:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,16 @@ char	*get_string(int which)
 
 void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 {
+	char	*path;
+
+	path = find_path(argv, mini->env);
+	if (path == NULL)
+		exit(127);
 	if (open_and_assign(tree->data->adj_f))
 		exit(EXIT_FAILURE);
 	if (tree->data->empty)
 		exit(0);
-	execve(find_path(argv, mini->env), argv, envp);
+	execve(path, argv, envp);
 	if (ft_strnstr(strerror(errno), "Exec format", SIZE_MAX))
 		exit(0);
 	ft_dup2(STDERR_FILENO, STDOUT_FILENO);
@@ -59,7 +64,10 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 
 	pid = ft_fork();;
 	if (pid == 0)
+	{
+		setup_signals(3);
 		ext_proc(tree, argv, envp, mini);
+	}
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
 		mini->last_exit = WEXITSTATUS(mini->last_exit);
