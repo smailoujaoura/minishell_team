@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:27:06 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/04 15:17:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 13:13:37 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ char	**convert_list_str(t_list *list)
 }
 
 // handle the special case where "$non" should be kept as part of the argv arr 
-void	handle_special_case(t_list **list, char *str, char **flags)
+void	handle_special_case(t_list **list, char **str, char **flags)
 {
 	expand_wildcard(list, ft_strdup("", SOUJAOUR), "");
 	(*flags)++;
-	str++;
+	(*str)++;
 }
 
 // ultimately splitting the string that was expanded, joined, expanded, joined
@@ -55,7 +55,7 @@ char	**ultimate_split(char *str, char *flags, char sep, t_list *list)
 			str++;
 		}
 		if (*flags == HANDLE)
-			handle_special_case(&list, str, &flags);
+			handle_special_case(&list, &str, &flags);
 		else if (*flags)
 		{
 			trail = flags;
@@ -69,3 +69,7 @@ char	**ultimate_split(char *str, char *flags, char sep, t_list *list)
 	}
 	return (convert_list_str(list));
 }
+
+
+// 0x6030000035e0 "echo " " " " /home/soujaour"
+// 0x6030000035b0 "nnnnshshshshsnnnnnnnnnnnnnn"
