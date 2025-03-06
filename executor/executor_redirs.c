@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 13:21:15 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 16:15:52 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,19 +86,27 @@ int	is_a_dir(const char *cmd, t_shell *mini)
 {
 	struct stat	file_info;
 
-	if ((ft_strncmp(cmd, ".", 1) == 0 || ft_strncmp(cmd, "/", 1) == 0)
-			&& stat(cmd, &file_info) == -1)
+	if (ft_strlen(cmd) == 1 && ft_strncmp(cmd, ".", 1) == 0)
 	{
-		perror("minishell");
-		mini->last_exit = 1;
+		printf("minishell: .: filename argument required\n"
+			".: usage: . filename [arguments]\n");
 		return (1);
 	}
-	else if ((ft_strncmp(cmd, ".", 1) == 0 || ft_strncmp(cmd, "/", 1) == 0)
-			&& stat(cmd, &file_info) == 0)
+	if (((ft_strncmp(cmd, ".", 1) == 0 && ft_strchr(cmd, '/'))
+		|| ft_strchr(cmd, '/')))
 	{
-		printf("minishell: %s: Is a directory\n", cmd);
-		mini->last_exit = 126;
-		return (1);
+		if (stat(cmd, &file_info) < 0)
+		{
+			perror("minishell");
+			mini->last_exit = 127;
+			return (1);
+		}
+		if (S_ISDIR(file_info.st_mode))
+		{
+			printf("minishell: %s: Is a directory\n", cmd);
+			mini->last_exit = 126;
+			return (1);
+		}
 	}
 	return (0);
 }

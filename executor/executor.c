@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 13:16:09 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 14:52:20 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 
 	if (!argv)
 		return ;
-	if (is_a_dir(argv[0], mini))
+	if (is_a_dir(argv[0], mini) || is_empty_cmd(argv[0], mini))
 		return ;
 	envp = generate_env_tab(mini->env);
 	if (check_buildin(argv[0]))

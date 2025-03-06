@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 12:57:02 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/06 15:34:53 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # define RECORD 9327
 # define SORT 1232
 
-# define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+# define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_="
 # define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?" // SOUj
 # define VAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_" // BKOL
 
@@ -309,5 +309,6 @@ int 	ft_dup(int old);
 int 	ft_dup2(int old, int new);
 int		ft_pipe(int *pair);
 int		is_a_dir(const char *cmd, t_shell *mini);
+int		is_empty_cmd(const char *cmd, t_shell *mini);
 
 #endif
