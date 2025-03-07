@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/07 09:17:53 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/07 11:37:09 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,13 @@ this to apply the Shunting Yard algorithm
 # define NOT_QUOTE '!'
 # define QUOTE 'q'
 
+# define UPDATE 23
+# define CREATE 46
+# define INVALID 92
+
+# define SYNTAXERR "Minishell: syntax error near unexpected token"
+# define ERR "Minishell: syntax error near unexpected token '%s'\n"
+
 // Struct for arguments which is a assigned to a variable in t_chain
 typedef struct s_argv
 {
@@ -202,14 +209,10 @@ void	prioritize_list(t_chain *list);
 void	join_redirs(t_chain *list);
 void	join_commands(t_chain *list, t_argv *argv, t_argv *new);
 t_chain	*assign_inputs(t_chain *list);
-void	pick_left_redirs(t_chain *list);
 t_chain	*convert_infix(t_chain *infix, t_chain *post, t_chain *ops);
-void	assign_adjacent_redirs(t_chain *list, t_chain *ptr);
-t_chain	*assign_inputs_edges(t_chain *list);
 void	remove_if(t_chain *list);
 void	delete_any(t_chain *ptr, int i);
 char	*remove_occurences(char *str, int i, int singles, int doubles);
-void	remove_adjacent_redirs(t_chain *list, t_chain *redirs, int f);
 t_ast	*build_tree(t_chain *post);
 void	store_line(char *new, int flag);
 int		is_redir(t_chain *ptr, int f);
@@ -225,9 +228,6 @@ void	pre_picker(t_chain *list);
 void	post_picker(t_chain *list);
 void	lefts_picker(t_chain *list);
 
-# define SYNTAXERR "Minishell: syntax error near unexpected token"
-# define ERR "Minishell: syntax error near unexpected token '%s'\n"
-
 // List utils for parser
 t_chain	*lstnew(char *content);
 t_chain	*lstlast(t_chain *lst);
@@ -237,10 +237,6 @@ void	delete_one(t_chain **list, int i);
 void	lstadd_back_arg(t_argv **lst, t_argv *new);
 t_argv	*lstlast_arg(t_argv *lst);
 t_argv	*lstnew_arg(t_chain *cmd);
-
-// Redirections
-t_chain	*assign_inputs_edges(t_chain *list);
-t_chain	*create_redirs_chain(t_chain *list);
 
 // Heredoc
 char	*generate_random_name(void);
@@ -259,13 +255,13 @@ void	update_env_trunc(t_env *env, t_env *new_env,
 void	update_env_concat(t_env *env, t_env *new_env, const char *str);
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
-int		check_env_str(const char *line);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 int		check_env(t_env *env, char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
 char	**make_env(char **envp);
 
 // Builtins
+char	**splitter(char *str, int *action);
 void	builtin_pwd(t_shell *mini);
 void	builtin_echo(char **argv, int *status);
 void	builtin_exit(char **argv, int *status);

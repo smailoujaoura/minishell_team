@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 17:25:34 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/07 11:34:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,44 @@ t_env	*get_env_var(t_env *env, const char *key)
 	return (NULL);
 }
 
-int	check_env_str(const char *line)
+char	**splitter_helper(char *str, int i, int *action, char **array)
 {
-	int	i;
-
-	i = 1;
-	while (line[i])
+	if (str[i] == '+' && str[i + 1] == '=')
 	{
-		if (!ft_strchr(MID, line[i]))
+		array[0] = ft_substr(str, 0, i, BKOLANI);
+		array[1] = ft_substr(str, i + 2, ft_strlen(str) - (i + 2), BKOLANI);
+		*action = UPDATE;
+		return (array);
+	}
+	else if (str[i] == '=')
+	{
+		array[0] = ft_substr(str, 0, i, BKOLANI);
+		array[1] = ft_substr(str, i + 1, ft_strlen(str) - (i + 1), BKOLANI);
+		*action = CREATE;
+		return (array);
+	}
+	else
+	{
+		*action = INVALID;
+		return (NULL);
+	}
+}
+
+char	**splitter(char *str, int *action)
+{
+	int		i;
+	char	**array;
+
+	i = 0;
+	array = ft_malloc(sizeof(char *) * 3, SOUJAOUR);
+	array[2] = NULL;
+	while (str[i])
+	{
+		if ((str[i] == '=' || str[i] == '+'))
 		{
-			printf("minishell: export: `%s': not a valid identifier\n", line);
-			return (1);
+			return (splitter_helper(str, i, action, array));
 		}
 		i++;
 	}
-	return (0);
+	return (NULL);
 }

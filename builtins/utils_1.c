@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:09:05 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/05 21:00:45 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/07 11:39:56 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ void	update_env_concat(t_env *env, t_env *new_env, const char *str)
 
 	temp = get_env_var(env, new_env->key);
 	value = ft_strdup(temp->value, BKOLANI);
-	free(temp->value);
-	free(temp->full);
 	temp->full = NULL;
 	temp->value = NULL;
 	if (!str)
