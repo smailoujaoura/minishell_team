@@ -6,21 +6,24 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 18:58:09 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 21:38:17 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/07 09:28:40 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdio.h>
 
-static int	atoi_help(const char *str, int *sign)
+static int	atoi_help(const char *str)
 {
+	int	sign;
+
+	sign = 1;
 	if (*str == '-' || *str == '+')
 	{
-		if (*str++ == '-')
-			*sign *= -1;
+		if (*str == '-')
+			sign *= -1;
 	}
-	return (*sign);
+	return (sign);
 }
 
 long	ft_atoi(const char *str, int *error)
@@ -33,7 +36,7 @@ long	ft_atoi(const char *str, int *error)
 	tmp = 0;
 	while ((*str >= 9 && *str <= 13) || *str == 32)
 		str++;
-	sign = atoi_help(str, &sign);
+	sign = atoi_help(str);
 	if (*str == '+' || *str == '-')
 		str++;
 	while (*str)

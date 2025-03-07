@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 21:25:11 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/06 22:49:29 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
 		}
 		else
 		{
-			perror("minishell");
+			printf("minishell: %s: %s\n", path, strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	}

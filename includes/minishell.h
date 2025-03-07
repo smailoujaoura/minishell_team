@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:44:59 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/07 09:17:53 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,6 @@ void	panic_exit(char *ptr, int place);
 // Garbage Collectors
 void	*ft_malloc(size_t size, int flag);
 void	*ft_malloc_bkol(size_t size, int flag);
-void	garbage_collector(t_list *allocs, void *one, void *two);
 
 // Lexing
 void	convert_str(char *str, t_chain **list);
@@ -312,7 +311,6 @@ void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
 void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 int		ft_dup2(int old, int new);
-int		map_errno_to_exit_status(void);
 int		ft_fork(void);
 int		ft_dup(int old);
 int		ft_dup2(int old, int new);
