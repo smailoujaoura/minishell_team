@@ -54,8 +54,7 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror
-
+CFLAGS = -Wall -Wextra -Werror -g 
 LIB = ar rcs
 
 all : $(NAME)

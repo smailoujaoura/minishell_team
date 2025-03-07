@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 19:50:18 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/07 14:30:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,28 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		mini->last_exit = WTERMSIG(mini->last_exit) + 128;
 }
 
+int	is_empty_command(char **argv, t_shell *mini)
+{
+	if (argv == NULL)
+	{
+		mini->last_exit = 0;
+		return (1);
+	}
+	else if (!argv[0][0]) //  || argv[0][0] == '$'
+	{
+		mini->last_exit = 127;
+		printf("minishell: '': not found\n");
+		return (1);
+	}
+	return (0);
+}
+
 void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 {
 	char		**envp;
 	t_chain		*ptr;
 
-	if (!argv[0])
+	if (is_empty_command(argv, mini))
 		return ;
 	envp = generate_env_tab(mini->env);
 	if (check_buildin(argv[0]))

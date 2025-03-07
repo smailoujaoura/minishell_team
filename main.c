@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/07 13:36:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:56:06 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	minishell(t_shell *mini, struct termios *o, struct termios *i, int n)
 	}
 	ft_malloc_bkol(0, DEALLOCATE);
 }
+
 
 int	main(int argc, char *argv[], char *envp[])
 {

@@ -95,7 +95,7 @@ OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g #
 LIBS = ./utils/libft/libft.a
 
 all: $(NAME)
