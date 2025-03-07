@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 17:23:55 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/07 10:07:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,27 @@ static void	export_with_no_args(t_env *env)
 	}
 }
 
+char	**splitter(char *str)
+{
+	int		i;
+	char	**array;
+
+	i = 0;
+	array = ft_malloc(sizeof(char *) * 3, SOUJAOUR);
+	array[2] = NULL;
+	while (str[i])
+	{
+		if (str[i] == '=')
+		{
+			array[0] = ft_substr(str, 0, i, BKOLANI);
+			array[1] = ft_substr(str, i + 1, ft_strlen(str) - i, BKOLANI);
+			return (array);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
 static void	check_export_env(t_env *env, char *line)
 {
 	char	**splited_line;
@@ -58,6 +79,7 @@ static void	check_export_env(t_env *env, char *line)
 		return ;
 	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
 	splited_line = ft_split(line, '=', BKOLANI);
+	// splited_line = splitter(line);
 	if (check_env_str(splited_line[0]))
 		return ;
 	process_env_var(env, new_env, splited_line, line);
@@ -77,3 +99,10 @@ void	builtin_export(t_env *env, char **argv, int flag)
 	while (argv[++i])
 		check_export_env(env, argv[i]);
 }
+
+
+// export var"=""'='one'+'two"
+// export var='='one'+'two
+
+// export var'='one'+'two
+// export var'='one'+'two
