@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:06 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:38:43 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/09 17:21:52 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ char	*get_value_wrapper(char *var, t_env *env)
 // Get variable value or special variable value
 char	*get_value(char *str, int *i, t_shell *mini, int type)
 {
+	int		j;
 	char	*key;
 	char	*value;
-	int		j;
 
 	if (type == 2)
 	{
@@ -65,8 +65,8 @@ char	*get_value(char *str, int *i, t_shell *mini, int type)
 	while (str[*i] && ft_strchr(MID, str[*i]))
 		(*i)++;
 	key = ft_substr(&str[j], 0, *i - j, SOUJAOUR);
-	key = get_value_wrapper(key, mini->env);
+	value = get_value_wrapper(key, mini->env);
 	if (!key[0] && mini->doubles)
 		return (ft_strdup("$", SOUJAOUR));
-	return (key);
+	return (value);
 }

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 20:46:29 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/09 14:55:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ char	*generate_random_name(void)
 void	return_status(int signum)
 {
 	(void)signum;
+	write(1, "\n", 1);
 	exit(EXIT_FAILURE);
 }
 

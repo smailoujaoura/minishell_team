@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:30:59 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/09 20:26:14 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,12 @@ void	store_line(char *new, int flag)
 {
 	static char	*store;
 
-	if (flag == -1)
-	{
-		store = NULL;
-		return ;
-	}
 	store = ft_strjoin(store, new, SOUJAOUR);
 	if (flag)
 	{
 		if (store[0])
 			add_history(store);
+		store = NULL;
 	}
 }
 

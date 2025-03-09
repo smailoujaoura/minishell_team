@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:42:50 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/09 20:39:49 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,9 @@ void	join_commands(t_chain *list, t_argv *argv, t_argv *new)
 		if (list->type == WORD)
 		{
 			ptr = list->next;
-			while (ptr && (ptr->type == WORD
-					|| ptr->type == WILDCARD || is_redir(ptr, IN + OR + OUT)))
+			while (ptr && (ptr->type == WORD || is_redir(ptr, IN + OR + OUT)))
 			{
-				if (ptr->type == WORD || ptr->type == WILDCARD)
+				if (ptr->type == WORD)
 				{
 					new = lstnew_arg(ptr);
 					new->type = ptr->type;
@@ -63,7 +62,7 @@ void	join_commands(t_chain *list, t_argv *argv, t_argv *new)
 				ptr = ptr->next;
 			}
 			remove_if(list);
-			list->argv = argv;
+			lstadd_back_arg(&list->argv, argv);
 		}
 		list = list->next;
 	}

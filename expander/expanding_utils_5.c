@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:50:40 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 20:48:50 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/09 20:44:56 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,19 @@ int	match_wildcard(char *str, char *pattern, char *is_wild)
 	{
 		if (*pattern == '*' && *is_wild == IS_WILD)
 		{
-			while (*pattern == '*' && *is_wild == IS_WILD)
-			{
-				pattern++;
-				is_wild++;
-			}
+			while (*is_wild == IS_WILD && *pattern == '*')
+				1 && (pattern++, is_wild++);
 			if (!*pattern)
 				return (1);
 			while (*str)
-				if (match_wildcard(pattern, str++, is_wild))
+			{
+				if (match_wildcard(str, pattern, is_wild))
 					return (1);
+				str++;
+			}
 			return (0);
 		}
-		if (*pattern != *str || (*pattern == '*' && *is_wild == NOT_WILD))
+		if (*pattern != *str)
 			return (0);
 		pattern++;
 		str++;

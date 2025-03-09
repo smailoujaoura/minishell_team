@@ -15,10 +15,171 @@ Almost the first thought-of path for solution will not be the best one, breaking
 
 - Makefile relink and tests etc...
 
-- 100 advanced tests for parsing 
-- 100 advanced tests for expanding
 
-- echo "$$"
+
+
+
+=============== DONE
+echo *.* 
+=============== SAME as see below
+ISSUES:
+Minishell: export TEST=1337 && wc << EOF &&
+test
+EOF
+ls
+================ DONE
+"$DOESNOTEXIT"
+=============== NOT REQUIRED; NOT NEEDED
+handle: ls \n
+ps
+and echo "test \n
+one two"
+=============== SAME as see above FIXED
+export always showing when it is combined withheredoc and operator as end toekn && || 
+
+
+
+
+void	*handle_multiple_lines(char *line, t_shell *mini, t_term *in, int *num)
+{
+	t_chain	*list;
+	t_ast	*root;
+	char	**lines;
+
+	if (lines == NULL)
+		return (NULL);
+	free(line);
+	while (*lines)
+	{
+		setup_signals(1);
+		list = NULL;
+		root = parse_line(line, &list, num, mini);
+		store_line(NULL, -1);
+		setup_signals(2);
+		executor(root, mini);
+		if (tcsetattr(STDIN_FILENO, TCSANOW, in) < 0)
+			return (NULL);
+		(*num)++;
+		ft_malloc(0, DEALLOCATE);
+		mini->volatile_exit = 0;
+	}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int	count_input(char *input)
+{
+	int	lines_counter;
+	int	quotes;
+	int	i;
+
+	i = 0;
+	quotes = 0;
+	lines_counter = 0;
+	while (input[i])
+	{
+		if (!quotes && input[i] == '"')
+			quotes = 2;
+		else if (!quotes && input[i] == '\'')
+			quotes = 1;
+		if (quotes == 2 && input[i] == '"')
+			quotes = 0;
+		else if (quotes == 1 && input[i] == '\'')
+			quotes = 0;
+		if (!quotes && input[i] == '\n')
+			lines_counter++;
+		i++;
+	}
+	return (lines_counter);
+}
+
+int	count_characters(char *input)
+{
+	int	lines_counter;
+	int	quotes;
+	int	i;
+
+	i = 0;
+	quotes = 0;
+	lines_counter = 0;
+	while (input[i])
+	{
+		if (!quotes && input[i] == '"')
+			quotes = 2;
+		else if (!quotes && input[i] == '\'')
+			quotes = 1;
+		if (quotes == 2 && input[i] == '"')
+			quotes = 0;
+		else if (quotes == 1 && input[i] == '\'')
+			quotes = 0;
+		if (!quotes && input[i] == '\n')
+			lines_counter++;
+		i++;
+	}
+	return (0);
+}
+
+char	**split_lines(char *input)
+{
+	int		i;
+	char	**array;
+	int		lines_counter;
+
+	lines_counter = count_lines(input) + 1;
+	array = ft_malloc(lines_counter * sizeof(char *), SOUJAOUR);
+	i = 0;
+	while (i < lines_counter)
+	{
+		array[i] = 
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ________________________________________________________TO-DOs_________________________________

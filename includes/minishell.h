@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/07 11:37:09 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/09 20:45:14 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "../utils/libft/libft.h"
-
 # include <fcntl.h>
 # include <unistd.h>
 # include <stdio.h>
@@ -31,9 +30,6 @@
 # include <signal.h>
 # include <sys/stat.h>
 
-// General Macros
-# define MEMORY_ERROR "Memory Error!"
-
 // Related to Expanding
 # define RECORD 9327
 # define SORT 1232
@@ -49,13 +45,6 @@
 # define WHITESPACE "\t\n\v\f\r "
 # define SYMBOLS "<>|()\"'"
 
-# define SINGLES '\''
-# define DOUBLES '"'
-
-// Easy pipes ends remembering
-# define READ_END 0
-# define WRITE_END 1
-
 // Tokenizer types: all except SUB/CMD; AST types: SUB, OR, AND, CMD, PIPE
 # define L_PAREN 1001
 # define R_PAREN 1002
@@ -68,18 +57,17 @@
 # define REDIR_IN 1009
 # define WORD 1010
 # define DOLLAR 1011
-# define WILDCARD 1012
 # define QUOTES 1013
-# define SUB 1016
+
+# define SUB 1026
 # define CMD 1027
-# define WILDCARDS 1020
+# define REMOVE 1015
 
 // Identify redir mode
 # define IN 0
 # define OUT 1
 
 // Assigning this type for some nodes to be removed later on, like redirs...
-# define REMOVE 1015
 
 /*
 Macros for operators and terms priority: 
@@ -97,7 +85,6 @@ this to apply the Shunting Yard algorithm
 // Macros for expanding
 # define FROM_VAR 'v'
 # define LITERAL 'l'
-# define IGNORE 'i'
 # define SPLIT 's'
 
 # define IS_WILD 'w'
@@ -106,8 +93,6 @@ this to apply the Shunting Yard algorithm
 # define REMOVE_QUOTE 'r'
 # define STORE 111
 # define RETRIEVE 222
-
-# define SEPERATORS " \t"
 
 # define NOT_QUOTE '!'
 # define QUOTE 'q'
@@ -119,6 +104,8 @@ this to apply the Shunting Yard algorithm
 # define SYNTAXERR "Minishell: syntax error near unexpected token"
 # define ERR "Minishell: syntax error near unexpected token '%s'\n"
 
+typedef struct termios	t_term;
+
 // Struct for arguments which is a assigned to a variable in t_chain
 typedef struct s_argv
 {
@@ -128,21 +115,7 @@ typedef struct s_argv
 	struct s_argv	*back;
 }	t_argv;
 
-/*
-	Each token takes a node. Then, the list is compacted to only these types:
-	
-	1) first:
-		- Redirections absorb their filesnames/delimiters
-
-	2) second:
-		- Command, this node absorbs nodes of args and redirs adjacent to it
-		- Pipe 
-		- && 
-		- ||
-		- (
-		- )
-		Bad design but works.
-*/
+// Struct of linked list of tokens 
 typedef struct s_chain
 {
 	int				type;
@@ -186,8 +159,9 @@ typedef struct s_shell
 {
 	t_env	*env;
 	int		last_exit;
-	int		doubles;
+	int		volatile_exit;
 	int		singles;
+	int		doubles;
 }	t_shell;
 
 // General
@@ -297,6 +271,9 @@ void	second_handler(int signum, siginfo_t *info, void *ptr);
 // Executor
 int		open_and_assign(t_chain *redirs);
 void	executor(t_ast *tree, t_shell *mini);
+void	run_and(t_ast *tree, t_shell *mini);
+void	run_or(t_ast *tree, t_shell *mini);
+int		is_empty_command(char **argv, t_shell *mini);
 void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
 int		assign_fds_builtins(t_ast *tree, char *cmd, int action);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);

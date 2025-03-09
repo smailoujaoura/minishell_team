@@ -89,13 +89,14 @@ SRCS =	main.c \
 		./executor/executor_redirs.c \
 		./executor/executor_utils.c \
 		./executor/sys_calls.c \
+		./executor/and_or.c \
 		./executor/utils.c
 
 OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g #
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address #-o3
 LIBS = ./utils/libft/libft.a
 
 all: $(NAME)

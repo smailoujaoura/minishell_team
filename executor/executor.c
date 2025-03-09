@@ -6,24 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/07 14:30:13 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/09 20:43:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	panic_exit(char *ptr, int custom)
-{
-	if (custom)
-	{
-		printf("%s", ptr);
-	}
-	else
-		perror("Minishell exit");
-	ft_malloc(0, DEALLOCATE);
-	ft_malloc_bkol(0, DEALLOCATE);
-	exit(custom);
-}
 
 int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 {
@@ -74,22 +61,6 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		mini->last_exit = WTERMSIG(mini->last_exit) + 128;
 }
 
-int	is_empty_command(char **argv, t_shell *mini)
-{
-	if (argv == NULL)
-	{
-		mini->last_exit = 0;
-		return (1);
-	}
-	else if (!argv[0][0]) //  || argv[0][0] == '$'
-	{
-		mini->last_exit = 127;
-		printf("minishell: '': not found\n");
-		return (1);
-	}
-	return (0);
-}
-
 void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 {
 	char		**envp;
@@ -119,29 +90,26 @@ void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 
 void	executor(t_ast *tree, t_shell *mini)
 {
-	if (tree == NULL)
+	if (tree == NULL || mini->volatile_exit == 130)
 		return ;
 	else if (tree->type == CMD)
 	{
 		expand_redirs(tree->data->adj_f, mini);
 		run_cmd(tree, mini, expand_cmd(tree->data, tree->data->argv, mini));
+		mini->volatile_exit = mini->last_exit;
 	}
 	else if (tree->type == PIPE)
+	{
 		run_pipe(tree, mini);
+		mini->volatile_exit = mini->last_exit;
+	}
 	else if (tree->type == SUB)
+	{
 		mini->last_exit = run_sub(tree, mini, tree->data->adj_f, -2);
+		mini->volatile_exit = mini->last_exit;
+	}
 	else if (tree->type == OR)
-	{
-		((tree->f == 1) && (tree->left->f = 1) && (tree->right->f = 1));
-		executor(tree->left, mini);
-		if (mini->last_exit != 0)
-			executor(tree->right, mini);
-	}
+		run_or(tree, mini);
 	else if (tree->type == AND)
-	{
-		((tree->f == 1) && (tree->left->f = 1) && (tree->right->f = 1));
-		executor(tree->left, mini);
-		if (mini->last_exit == 0)
-			executor(tree->right, mini);
-	}
+		run_and(tree, mini);
 }

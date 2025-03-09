@@ -28,6 +28,8 @@
 		"optional": "c",
 		"ostream": "c",
 		"ratio": "c",
-		"system_error": "c"
+		"system_error": "c",
+		"string_view": "c",
+		"initializer_list": "c"
 	}
 }
