@@ -6,22 +6,23 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:30:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/09 20:39:24 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/09 21:06:22 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	run_and(t_ast *tree, t_shell *mini)
+void	run_or(t_ast *tree, t_shell *mini)
 {
 	((tree->f == 1) && (tree->left->f = 1) && (tree->right->f = 1));
+	executor(tree->left, mini);
 	mini->volatile_exit = mini->last_exit;
 	if (mini->last_exit != 0)
 		executor(tree->right, mini);
 	mini->volatile_exit = mini->last_exit;
 }
 
-void	run_or(t_ast *tree, t_shell *mini)
+void	run_and(t_ast *tree, t_shell *mini)
 {
 	((tree->f == 1) && (tree->left->f = 1) && (tree->right->f = 1));
 	executor(tree->left, mini);
