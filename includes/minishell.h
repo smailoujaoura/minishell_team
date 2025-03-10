@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/10 11:47:04 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:41:03 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,6 +221,7 @@ char	**make_env(char **envp);
 
 // Builtins
 char	**splitter(char *str, int *action);
+char	*store_pwd(char *store_it, int flag);
 void	builtin_pwd(t_shell *mini);
 void	builtin_echo(char **argv, int *status);
 void	builtin_exit(char **argv, int *status);

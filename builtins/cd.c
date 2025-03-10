@@ -6,15 +6,17 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/10 12:13:27 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:48:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	handle_err(void)
+static int	handle_err(t_env *env)
 {
 	char	*path;
+	char	**argv;
+	char	*new;
 
 	chdir("..");
 	path = getcwd(NULL, 0);
@@ -23,6 +25,14 @@ static int	handle_err(void)
 		write(2, "cd: error retrieving current directory: "
 			"getcwd: cannot access parent directories: "
 			"No such file or directory\n", 108);
+		argv = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
+		argv[0] = ft_strdup("export", BKOLANI);
+		new = ft_strjoin("PWD=", get_value_wrapper("PWD", env), BKOLANI);
+		new = ft_strjoin(new, "/..", BKOLANI);
+		argv[1] = new;
+		argv[2] = NULL;
+		builtin_export(env, argv, 0);
+		store_pwd(ft_strdup(new, BKOLANI), -1);
 	}
 	free(path);
 	return (1);
@@ -80,7 +90,7 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 	updated_pwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 	path = getcwd(NULL, 0);
-	if (!path && handle_err())
+	if (!path && handle_err(env))
 		return ;
 	updated_oldpwd[0] = ft_strdup("export", BKOLANI);
 	updated_oldpwd[1] = ft_strjoin("OLDPWD=", path, BKOLANI);
@@ -89,7 +99,7 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	if (cd_executor(argv[1], path, status))
 		return ;
 	path = getcwd(NULL, 0);
-	if (!path && handle_err())
+	if (!path && handle_err(env))
 		return ;
 	updated_pwd[0] = ft_strdup("export", BKOLANI);
 	updated_pwd[1] = ft_strjoin("PWD=", path, BKOLANI);

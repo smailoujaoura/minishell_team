@@ -492,3 +492,35 @@ export "'var=value'"
 
 
 
+
+
+=================================================================
+Minishell:$ ls
+Minishell:$ pwd
+/home/soujaour/Desktop/push_minishell/1/2/3/4
+Minishell:$ rm -rf ../../../2
+Minishell:$ unset PWD
+Minishell:$ cd ..
+cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+Minishell:$ ls
+Minishell:$ echo $PWD
+
+Minishell:$ pwd
+AddressSanitizer:DEADLYSIGNAL
+=================================================================
+==51890==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000008 (pc 0x562bea03090a bp 0x7ffcec2c1640 sp 0x7ffcec2c1620 T0)
+==51890==The signal is caused by a READ memory access.
+==51890==Hint: address points to the zero page.
+    #0 0x562bea03090a in builtin_pwd builtins/pwd.c:25
+    #1 0x562bea038ee1 in buildin_excutor executor/executor_other.c:90
+    #2 0x562bea03818b in run_cmd executor/executor.c:73
+    #3 0x562bea038541 in executor executor/executor.c:98
+    #4 0x562bea027a56 in minishell /home/soujaour/Desktop/push_minishell/main.c:66
+    #5 0x562bea027d42 in main /home/soujaour/Desktop/push_minishell/main.c:89
+    #6 0x7fe2be092d8f in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
+    #7 0x7fe2be092e3f in __libc_start_main_impl ../csu/libc-start.c:392
+    #8 0x562bea027724 in _start (/home/soujaour/Desktop/push_minishell/minishell+0x5724)
+
+AddressSanitizer can not provide additional info.
+SUMMARY: AddressSanitizer: SEGV builtins/pwd.c:25 in builtin_pwd
+==51890==ABORTING
