@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 20:33:17 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/10 09:53:20 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,13 @@ static int	cd_executor(const char *cd_arg, char *path, int *status)
 	return (0);
 }
 
-static void	cd_with_no_args(t_env *env, int *status)
+static void	cd_with_no_args(t_env *env, int *status, char **old_pwd, char **pwd)
 {
 	t_env	*home;
 	char	*path;
-	char	**updated_oldpwd;
-	char	**updated_pwd;
 
-	updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
-	updated_pwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
+	old_pwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
+	pwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 	home = get_env_var(env, "HOME");
 	if (!home)
 	{
@@ -59,15 +57,17 @@ static void	cd_with_no_args(t_env *env, int *status)
 		return ;
 	}
 	path = getcwd(NULL, 0);
-	updated_oldpwd[0] = ft_strjoin("OLDPWD=", path, BKOLANI);
-	updated_oldpwd[1] = NULL;
-	builtin_export(env, updated_oldpwd, 0);
+	old_pwd[0] = ft_strdup("export", BKOLANI);
+	old_pwd[1] = ft_strjoin("OLDPWD=", path, BKOLANI);
+	old_pwd[2] = NULL;
+	builtin_export(env, old_pwd, 0);
 	if (cd_executor(home->value, path, status))
 		return ;
 	path = getcwd(NULL, 0);
-	updated_pwd[0] = ft_strjoin("PWD=", path, BKOLANI);
-	updated_pwd[1] = NULL;
-	builtin_export(env, updated_pwd, 0);
+	pwd[0] = ft_strdup("export", BKOLANI);
+	pwd[1] = ft_strjoin("PWD=", path, BKOLANI);
+	pwd[2] = NULL;
+	builtin_export(env, pwd, 0);
 	free(path);
 }
 
@@ -77,21 +77,23 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	char	**updated_oldpwd;
 	char	**updated_pwd;
 
-	updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
-	updated_pwd = ft_malloc_bkol(sizeof(char *) * 2, ALLOCATE);
+	updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
+	updated_pwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 	path = getcwd(NULL, 0);
 	if (!path && handle_err())
 		return ;
-	updated_oldpwd[0] = ft_strjoin("OLDPWD=", path, BKOLANI);
-	updated_oldpwd[1] = NULL;
+	updated_oldpwd[0] = ft_strdup("export", BKOLANI);
+	updated_oldpwd[1] = ft_strjoin("OLDPWD=", path, BKOLANI);
+	updated_oldpwd[2] = NULL;
 	builtin_export(env, updated_oldpwd, 0);
 	if (cd_executor(argv[1], path, status))
 		return ;
 	path = getcwd(NULL, 0);
 	if (!path && handle_err())
 		return ;
-	updated_pwd[0] = ft_strjoin("PWD=", path, BKOLANI);
-	updated_pwd[1] = NULL;
+	updated_pwd[0] = ft_strdup("export", BKOLANI);
+	updated_pwd[1] = ft_strjoin("PWD=", path, BKOLANI);
+	updated_pwd[2] = NULL;
 	builtin_export(env, updated_pwd, 0);
 	free(path);
 	return ;
@@ -100,7 +102,7 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 void	builtin_cd(t_env *env, char **argv, int *status)
 {
 	if (argv[1] == NULL)
-		cd_with_no_args(env, status);
+		cd_with_no_args(env, status, NULL, NULL);
 	else
 	{
 		if (argv[2])
