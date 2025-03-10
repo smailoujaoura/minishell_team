@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/09 20:28:26 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:43:26 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	statically_stored_shell(t_shell *mini, int action)
 	}
 }
 
-// 
 void	second_handler(int signum, siginfo_t *info, void *ptr)
 {
 	g_sig_number = SIGINT;
@@ -36,7 +35,6 @@ void	second_handler(int signum, siginfo_t *info, void *ptr)
 	(void)signum;
 }
 
-// handler 
 void	handler(int signum, siginfo_t *info, void *ptr)
 {
 	g_sig_number = SIGINT;
@@ -59,7 +57,7 @@ void	minishell(t_shell *mini, struct termios *initial)
 	{
 		list = NULL;
 		setup_signals(1);
-		line = readline("Minishell$ ");
+		line = readline("Minishell:$ ");
 		if (line == NULL)
 			break ;
 		root = parse_line(line, &list, &num, mini);

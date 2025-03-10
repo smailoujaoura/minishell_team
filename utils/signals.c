@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 17:40:29 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:42:06 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,14 @@ void	setup_signals(int action)
 	if (action == 1)
 	{
 		sigfillset(&interactive.sa_mask);
-		interactive.sa_flags = SA_SIGINFO | SA_RESTART;
+		interactive.sa_flags =  SA_RESTART;
 		interactive.sa_sigaction = handler;
 		sigaction(SIGINT, &interactive, NULL);
 	}
 	else if (action == 2)
 	{
 		sigfillset(&interactive.sa_mask);
-		interactive.sa_flags = SA_SIGINFO | SA_RESTART;
+		interactive.sa_flags = SA_RESTART;
 		interactive.sa_sigaction = second_handler;
 		sigaction(SIGINT, &interactive, NULL);
 	}

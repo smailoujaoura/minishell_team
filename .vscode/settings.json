@@ -30,6 +30,7 @@
 		"ratio": "c",
 		"system_error": "c",
 		"string_view": "c",
-		"initializer_list": "c"
+		"initializer_list": "c",
+		"*.tcc": "c"
 	}
 }

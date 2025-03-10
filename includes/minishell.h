@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/09 20:45:14 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/10 11:47:04 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,6 @@
 # include <signal.h>
 # include <sys/stat.h>
 
-// Related to Expanding
-# define RECORD 9327
-# define SORT 1232
-
-# define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-# define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?"
-# define VAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-
-# define REMOV 'r'
-# define HANDLE 'h'
-
-// Macros for token recognization
-# define WHITESPACE "\t\n\v\f\r "
-# define SYMBOLS "<>|()\"'"
-
-// Tokenizer types: all except SUB/CMD; AST types: SUB, OR, AND, CMD, PIPE
 # define L_PAREN 1001
 # define R_PAREN 1002
 # define OR 1003
@@ -63,26 +47,27 @@
 # define CMD 1027
 # define REMOVE 1015
 
-// Identify redir mode
+# define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?"
+# define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+# define VAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+
+# define REMOV 'r'
+# define HANDLE 'h'
+
+# define WHITESPACE "\t\n\v\f\r "
+# define SYMBOLS "<>|()\"'"
+
 # define IN 0
 # define OUT 1
 
-// Assigning this type for some nodes to be removed later on, like redirs...
+# define RECORD 9327
+# define SORT 1232
 
-/*
-Macros for operators and terms priority: 
-	VIP for all commands: ls, echo, grep, ./a.out, ... 
-	LVL1 for pipes, 
-	LVL2 for logicals "&&" and "||"
-	NAN for parenthesis, which have no priority
-this to apply the Shunting Yard algorithm
-*/
 # define VIP 9
 # define NAN 0
 # define LVL1 2
 # define LVL2 1
 
-// Macros for expanding
 # define FROM_VAR 'v'
 # define LITERAL 'l'
 # define SPLIT 's'
