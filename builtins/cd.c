@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/10 14:48:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:33:46 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,26 @@ static int	handle_err(t_env *env)
 {
 	char	*path;
 	char	**argv;
-	char	*new;
 
 	chdir("..");
 	path = getcwd(NULL, 0);
 	if (!path)
 	{
+		store_pwd("../", -2);
 		write(2, "cd: error retrieving current directory: "
 			"getcwd: cannot access parent directories: "
 			"No such file or directory\n", 108);
 		argv = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 		argv[0] = ft_strdup("export", BKOLANI);
-		new = ft_strjoin("PWD=", get_value_wrapper("PWD", env), BKOLANI);
-		new = ft_strjoin(new, "/..", BKOLANI);
-		argv[1] = new;
+		argv[1] = ft_strdup(ft_strjoin("PWD=", store_pwd(NULL, 2), BKOLANI), BKOLANI);
 		argv[2] = NULL;
 		builtin_export(env, argv, 0);
-		store_pwd(ft_strdup(new, BKOLANI), -1);
 	}
 	free(path);
 	return (1);
 }
 
-static int	cd_executor(const char *cd_arg, char *path, int *status)
+static int	cd_executor(char *cd_arg, char *path, int *status)
 {
 	if (chdir(cd_arg) == -1)
 	{
@@ -47,6 +44,7 @@ static int	cd_executor(const char *cd_arg, char *path, int *status)
 		*status = 1;
 		return (1);
 	}
+	store_pwd(cd_arg, -3);
 	free(path);
 	path = NULL;
 	*status = 0;
@@ -90,7 +88,7 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 	updated_pwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 	path = getcwd(NULL, 0);
-	if (!path && handle_err(env))
+	if (!path && !ft_strncmp(argv[1], "..", 2) && handle_err(env))
 		return ;
 	updated_oldpwd[0] = ft_strdup("export", BKOLANI);
 	updated_oldpwd[1] = ft_strjoin("OLDPWD=", path, BKOLANI);
@@ -106,13 +104,19 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	updated_pwd[2] = NULL;
 	builtin_export(env, updated_pwd, 0);
 	free(path);
-	return ;
 }
 
 void	builtin_cd(t_env *env, char **argv, int *status)
 {
+	char	*pwd;
+
 	if (argv[1] == NULL)
+	{
 		cd_with_no_args(env, status, NULL, NULL);
+		pwd = getcwd(NULL, 0);
+		store_pwd(pwd, -1);
+		free(pwd);
+	}
 	else
 	{
 		if (argv[2])

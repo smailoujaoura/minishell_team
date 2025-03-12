@@ -6,12 +6,13 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 18:43:18 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 20:35:40 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/11 21:23:07 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+// issues
 int	check_dir_or_file(const char *cmd)
 {
 	struct stat	file_info;
@@ -39,15 +40,20 @@ int	check_dir_or_file(const char *cmd)
 	return (0);
 }
 
+
+// issues
 int	is_a_dir(const char *cmd)
 {
+	printf("here \n");
 	if (ft_strlen(cmd) == 1 && ft_strncmp(cmd, ".", 1) == 0)
 	{
-		dup2(STDERR_FILENO, STDOUT_FILENO);
+		dup2(STDERR_FILENO, STDOUT_FILENO); // ERROR 
 		printf("minishell: .: filename argument required\n"
 			".: usage: . filename [arguments]\n");
 		return (2);
 	}
+	if (cmd[0] == '.' && cmd[1] == '.' && !cmd[2]) // segfault
+		printf("command not found lskdjflkdjflkds sljflkdsjf\n");
 	if (((ft_strncmp(cmd, ".", 1) == 0 && ft_strchr(cmd, '/'))
 			|| ft_strchr(cmd, '/')))
 		return (check_dir_or_file(cmd));

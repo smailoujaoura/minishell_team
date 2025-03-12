@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/10 14:41:03 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:55:43 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,8 @@ typedef struct s_shell
 	int		volatile_exit;
 	int		singles;
 	int		doubles;
+	int		flag;
+	int		num;
 }	t_shell;
 
 // General
@@ -163,7 +165,7 @@ void	handle_quotes(char **start, char target);
 void	handle_redirs(char **start);
 
 // Parser
-t_ast	*parse_line(char *line, t_chain **list, int *num, t_shell *mini);
+t_ast	*parse_line(char *line, t_chain **list, t_shell *mini);
 void	prioritize_list(t_chain *list);
 void	join_redirs(t_chain *list);
 void	join_commands(t_chain *list, t_argv *argv, t_argv *new);
@@ -173,7 +175,7 @@ void	remove_if(t_chain *list);
 void	delete_any(t_chain *ptr, int i);
 char	*remove_occurences(char *str, int i, int singles, int doubles);
 t_ast	*build_tree(t_chain *post);
-void	store_line(char *new, int flag);
+int 	store_line(char *new, int flag);
 int		is_redir(t_chain *ptr, int f);
 void	delete_any(t_chain *ptr, int i);
 void	remove_if(t_chain *list);
@@ -198,8 +200,9 @@ t_argv	*lstlast_arg(t_argv *lst);
 t_argv	*lstnew_arg(t_chain *cmd);
 
 // Heredoc
+int		open_heredocs(t_chain *list, t_shell *mini);
 char	*generate_random_name(void);
-int		here_doc(t_chain *data, int num);
+int		here_doc(t_chain *data, t_shell *mini);
 void	count_heredocs(t_chain *list);
 void	strip_heredoc(t_chain *node, char *delim);
 
@@ -225,9 +228,9 @@ char	*store_pwd(char *store_it, int flag);
 void	builtin_pwd(t_shell *mini);
 void	builtin_echo(char **argv, int *status);
 void	builtin_exit(char **argv, int *status);
-void	builtin_env(t_env *env, char **argv);
+void	builtin_env(t_env *env);
 void	builtin_cd(t_env *env, char **argv, int *status);
-void	builtin_export(t_env *env, char **argv, int flag);
+int		builtin_export(t_env *env, char **argv, int flag);
 void	builtin_unset(t_env *env, char **argv);
 
 // Expanding
@@ -251,8 +254,10 @@ char	**ft_split_custom(char const *s, char *set, int f);
 // Signals
 void	setup_signals(int action);
 void	handle_interrupt(void);
-void	handler(int signum, siginfo_t *info, void *ptr);
-void	second_handler(int signum, siginfo_t *info, void *ptr);
+void	first_handler(int signum);
+void	second_handler(int signum);
+void	third_handler(int signum);
+void	statically_stored_shell(t_shell *mini, int action);
 
 // Executor
 int		open_and_assign(t_chain *redirs);

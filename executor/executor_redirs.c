@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redirs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 18:43:40 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/10 15:41:16 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	open_redir(t_chain *redir)
 {
+	char	*error;
+
 	if (redir->ambiguous)
 		return ;
 	if (redir->type == REDIR_IN)
@@ -24,8 +26,12 @@ void	open_redir(t_chain *redir)
 		redir->fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (redir->fd == -1)
 	{
-		ft_dup2(STDERR_FILENO, STDOUT_FILENO);
-		printf("minishell: %s: %s\n", redir->file, strerror(errno));
+		write(2, "minishell: ", 12);
+		write(2, redir->file, ft_strlen(redir->file));
+		write(2, ": ", 3);
+		error = strerror(errno);
+		write(2, error, ft_strlen(error));
+		write(2, "\n", 2);
 	}
 }
 

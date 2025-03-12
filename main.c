@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/10 14:13:57 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/12 14:44:54 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,29 +20,41 @@ void	statically_stored_shell(t_shell *mini, int action)
 
 	if (action == -1)
 		ptr = mini;
+	else if (action == -2)
+	{
+		ptr->flag = 1;
+	}
 	else
 	{
 		ptr->last_exit = g_sig_number + 128;
+		ptr->flag = 1;
 	}
 }
 
-void	second_handler(int signum, siginfo_t *info, void *ptr)
+void	third_handler(int signum)
 {
+	(void)signum;
+	write(1, "\n", 1);
+	close(STDIN_FILENO);
 	g_sig_number = SIGINT;
 	statically_stored_shell(NULL, SIGINT);
-	(void)info;
-	(void)ptr;
-	(void)signum;
+	statically_stored_shell(NULL, -2);
+	setup_signals(1);
 }
 
-void	handler(int signum, siginfo_t *info, void *ptr)
+void	second_handler(int signum)
 {
-	g_sig_number = SIGINT;
-	handle_interrupt();
-	statically_stored_shell(NULL, SIGINT);
-	(void)info;
-	(void)ptr;
 	(void)signum;
+	g_sig_number = SIGINT;
+	statically_stored_shell(NULL, SIGINT);
+}
+
+void	first_handler(int signum)
+{
+	(void)signum;
+	g_sig_number = SIGINT;
+	statically_stored_shell(NULL, SIGINT);
+	handle_interrupt();
 }
 
 void	minishell(t_shell *mini, struct termios *initial)
@@ -50,9 +62,7 @@ void	minishell(t_shell *mini, struct termios *initial)
 	t_chain			*list;
 	t_ast			*root;
 	char			*line;
-	int				num;
 
-	num = 1;
 	while (1337)
 	{
 		list = NULL;
@@ -60,12 +70,13 @@ void	minishell(t_shell *mini, struct termios *initial)
 		line = readline("Minishell:$ ");
 		if (line == NULL)
 			break ;
-		root = parse_line(line, &list, &num, mini);
+		root = parse_line(line, &list, mini);
 		free(line);
+		line = NULL;
 		setup_signals(2);
 		executor(root, mini);
 		ft_malloc(0, DEALLOCATE);
-		num++;
+		mini->num++;
 		mini->volatile_exit = 0;
 		if (tcsetattr(STDIN_FILENO, TCSANOW, initial) < 0)
 			return ;
@@ -77,16 +88,26 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	t_shell			data;
 	struct termios	initial;
+	char			*pwd;
 
 	if (!isatty(STDIN_FILENO))
-		return (1);
+		exit(1);
+	if (!isatty(STDOUT_FILENO))
+		rl_outstream = stderr;
 	if (tcgetattr(STDIN_FILENO, &initial) < 0)
 		return (1);
 	envp = make_env(envp);
 	data.env = handle_env(envp);
 	data.last_exit = 0;
+	data.volatile_exit = 0;
+	data.flag = 0;
+	data.num = 1;
+	pwd = getcwd(NULL, 0);
+	store_pwd(ft_strdup(pwd, BKOLANI), -1);
+	free(pwd);
 	statically_stored_shell(&data, -1);
 	minishell(&data, &initial);
+	write(2, "exit here\n", 11);
 	return (data.last_exit);
 	(void)argv;
 	(void)argc;

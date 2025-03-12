@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/09 14:55:13 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/12 12:05:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	return_status(int signum)
 	exit(EXIT_FAILURE);
 }
 
-void	prompt_here_doc(const char *limiter, int fd, int num)
+void	prompt_here_doc(const char *limiter, int fd, t_shell *mini)
 {
 	char	*line;
 	char	*save;
@@ -61,7 +61,7 @@ void	prompt_here_doc(const char *limiter, int fd, int num)
 		line = readline("> ");
 		if (!line)
 		{
-			printf("%s %d %s%s')\n", WARNA, num, WARNB, limiter);
+			printf("%s %d %s%s')\n", WARNA, mini->num, WARNB, limiter);
 			break ;
 		}
 		if (ft_strncmp(line, limiter, SIZE_MAX) == 0)
@@ -76,7 +76,7 @@ void	prompt_here_doc(const char *limiter, int fd, int num)
 	exit(EXIT_SUCCESS);
 }
 
-int	more_logic(int num, t_chain *data, int fd1, int fd2)
+int	more_logic(t_shell *mini, t_chain *data, int fd1, int fd2)
 {
 	int	status;
 	int	heredoc_proc;
@@ -87,7 +87,7 @@ int	more_logic(int num, t_chain *data, int fd1, int fd2)
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, return_status);
 		close(fd2);
-		prompt_here_doc(data->delim, fd1, num);
+		prompt_here_doc(data->delim, fd1, mini);
 	}
 	else
 		setup_signals(2);
@@ -101,7 +101,7 @@ int	more_logic(int num, t_chain *data, int fd1, int fd2)
 	return (status);
 }
 
-int	here_doc(t_chain *data, int num)
+int	here_doc(t_chain *data, t_shell *mini)
 {
 	char	*filename;
 	int		fd1;
@@ -118,5 +118,5 @@ int	here_doc(t_chain *data, int num)
 		panic_exit("Open failed\n", 7232);
 	}
 	unlink(filename);
-	return (more_logic(num, data, fd1, fd2));
+	return (more_logic(mini, data, fd1, fd2));
 }

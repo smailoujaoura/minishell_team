@@ -6,42 +6,12 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/07 11:34:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:15:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static t_env	*create_new_env(const char *line)
-{
-	char	**splited_line;
-	t_env	*new_env;
-
-	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
-	splited_line = ft_split(line, '=', BKOLANI);
-	new_env->key = ft_strdup(splited_line[0], BKOLANI);
-	if (splited_line[1])
-		new_env->value = ft_strdup(splited_line[1], BKOLANI);
-	new_env->full = ft_strdup(line, BKOLANI);
-	new_env->next = NULL;
-	return (new_env);
-}
-
-t_env	*handle_env(char **envp)
-{
-	int		i;
-	t_env	*head;
-	t_env	*new;
-
-	i = -1;
-	head = NULL;
-	while (envp[++i])
-	{
-		new = create_new_env(envp[i]);
-		ft_lstadd_back_env(&head, new);
-	}
-	return (head);
-}
 
 t_env	*get_env_var(t_env *env, const char *key)
 {
@@ -94,4 +64,35 @@ char	**splitter(char *str, int *action)
 		i++;
 	}
 	return (NULL);
+}
+
+static t_env	*create_new_env(char *line)
+{
+	char	**splited_line;
+	t_env	*new_env;
+	int		action;
+
+	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
+	splited_line = splitter(line, &action);
+	new_env->key = ft_strdup(splited_line[0], BKOLANI);
+	new_env->value = ft_strdup(splited_line[1], BKOLANI);
+	new_env->full = ft_strdup(line, BKOLANI);
+	new_env->next = NULL;
+	return (new_env);
+}
+
+t_env	*handle_env(char **envp)
+{
+	int		i;
+	t_env	*head;
+	t_env	*new;
+
+	i = -1;
+	head = NULL;
+	while (envp[++i])
+	{
+		new = create_new_env(envp[i]);
+		ft_lstadd_back_env(&head, new);
+	}
+	return (head);
 }

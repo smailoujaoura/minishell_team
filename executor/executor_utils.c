@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 22:49:29 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/10 15:42:46 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ char	*find_path(char **argv, t_env *env)
 	path = construct_cmd_path(argv, env, -1);
 	if (path == NULL)
 	{
-		ft_dup2(STDERR_FILENO, STDOUT_FILENO);
-		printf("%s: command not found\n", argv[0]);
+		write(2, argv[0], ft_strlen(argv[0]));
+		write(2, ": command not found\n", 21);
 		exit(127);
 	}
 	return (path);

@@ -64,6 +64,7 @@ SRCS =	main.c \
 		./parser/parsing/syntax_validator.c \
 		./parser/parsing/syntax_validator_helper.c \
 		./parser/parsing/ast_tree.c \
+		./parser/heredoc.c \
 		./builtins/cd.c \
 		./builtins/echo.c \
 		./builtins/env.c \
@@ -96,7 +97,7 @@ OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address 
 LIBS = ./utils/libft/libft.a
 
 all: $(NAME)

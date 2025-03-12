@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:30:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/09 21:06:22 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:26:31 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	is_empty_command(char **argv, t_shell *mini)
 	else if (!argv[0][0])
 	{
 		mini->last_exit = 127;
-		printf("minishell: '': not found\n");
+		write(2, "Command '' not found\n", 22);
 		return (1);
 	}
 	return (0);
