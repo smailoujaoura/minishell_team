@@ -74,7 +74,6 @@ SRCS =	main.c \
 		./builtins/unset.c \
 		./builtins/utils_1.c \
 		./builtins/utils_2.c \
-		./builtins/utils_3.c \
 		./expander/expander.c \
 		./expander/expanding_heredoc.c \
 		./expander/expanding_utils_1.c \
@@ -97,7 +96,7 @@ OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address 
 LIBS = ./utils/libft/libft.a
 
 all: $(NAME)

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 12:35:04 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:30:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,19 +151,15 @@ typedef struct s_shell
 }	t_shell;
 
 // General
-void	panic_exit(char *ptr, int place);
-
-// Garbage Collectors
 void	*ft_malloc(size_t size, int flag);
 void	*ft_malloc_bkol(size_t size, int flag);
+void	panic_exit(char *ptr);
 
-// Lexing
+// Parsing
 void	convert_str(char *str, t_chain **list);
 void	tokenize_list(t_chain *list);
 void	handle_quotes(char **start, char target);
 void	handle_redirs(char **start);
-
-// Parser
 t_ast	*parse_line(char *line, t_chain **list, t_shell *mini);
 void	prioritize_list(t_chain *list);
 void	join_redirs(t_chain *list);
@@ -187,8 +183,6 @@ t_chain	*special_redir_case(t_chain *list);
 void	pre_picker(t_chain *list);
 void	post_picker(t_chain *list);
 void	lefts_picker(t_chain *list);
-
-// List utils for parser
 t_chain	*lstnew(char *content);
 t_chain	*lstlast(t_chain *lst);
 void	lstadd_back(t_chain **lst, t_chain *new);
@@ -209,11 +203,6 @@ void	strip_heredoc(t_chain *node, char *delim);
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
-// void	add_new_env(t_env *env, t_env *new_env, const char *line, char *str);
-// void	add_new_env_with_plus(t_env *env, t_env *new_env, const char *str);
-// void	update_env_trunc(t_env *env, t_env *new_env,
-// 			const char *line, const char *str);
-// void	update_env_concat(t_env *env, t_env *new_env, const char *str);
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);

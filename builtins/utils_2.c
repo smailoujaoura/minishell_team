@@ -1,98 +1,59 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_2.c                                          :+:      :+:    :+:   */
+/*   utils_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 12:09:50 by soujaour         ###   ########.fr       */
+/*   Created: 2025/02/26 21:05:20 by bkolani           #+#    #+#             */
+/*   Updated: 2025/03/13 11:44:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-
-t_env	*get_env_var(t_env *env, const char *key)
+t_env	*ft_lstlast_env(t_env *env)
 {
+	t_env	*temp;
+
+	if (!env)
+		return (NULL);
+	temp = env;
+	while (temp->next)
+		temp = temp->next;
+	return (temp);
+}
+
+// Function to add a new env var to the env linked list
+void	ft_lstadd_back_env(t_env **lst, t_env *new)
+{
+	if (lst && *lst)
+		ft_lstlast_env(*lst)->next = new;
+	else
+		*lst = new;
+}
+
+// Function to check if an env_var already existed
+int	check_env(t_env *env, char *key)
+{
+	if (!env)
+		return (0);
 	while (env)
 	{
 		if (ft_strncmp(env->key, key, SIZE_MAX) == 0)
-			return (env);
+			return (1);
+		env = env->next;
+	}
+	return (0);
+}
+
+char	*expand_env_var(t_env *env, char *exp_env)
+{
+	while (env)
+	{
+		if (ft_strncmp(env->key, exp_env, SIZE_MAX) == 0)
+			return (env->value);
 		env = env->next;
 	}
 	return (NULL);
-}
-
-char	**splitter_helper(char *str, int i, int *action, char **array)
-{
-	if (str[i] == '+' && str[i + 1] == '=')
-	{
-		array[0] = ft_substr(str, 0, i, SOUJAOUR);
-		array[1] = ft_substr(str, i + 2, ft_strlen(str) - (i + 2), SOUJAOUR);
-		*action = UPDATE;
-		return (array);
-	}
-	else if (str[i] == '=')
-	{
-		array[0] = ft_substr(str, 0, i, SOUJAOUR);
-		array[1] = ft_substr(str, i + 1, ft_strlen(str) - (i + 1), SOUJAOUR);
-		*action = CREATE;
-		return (array);
-	}
-	else
-	{
-		*action = INVALID;
-		return (NULL);
-	}
-}
-
-char	**splitter(char *str, int *action)
-{
-	int		i;
-	char	**array;
-
-	i = 0;
-	*action = 0;
-	array = ft_malloc(sizeof(char *) * 3, SOUJAOUR);
-	array[2] = NULL;
-	while (str[i])
-	{
-		if ((str[i] == '=' || str[i] == '+'))
-		{
-			return (splitter_helper(str, i, action, array));
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-static t_env	*create_new_env(char *line)
-{
-	char	**splited_line;
-	t_env	*new_env;
-	int		action;
-
-	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
-	splited_line = splitter(line, &action);
-	new_env->key = ft_strdup(splited_line[0], BKOLANI);
-	new_env->value = ft_strdup(splited_line[1], BKOLANI);
-	new_env->next = NULL;
-	return (new_env);
-}
-
-t_env	*handle_env(char **envp)
-{
-	int		i;
-	t_env	*head;
-	t_env	*new;
-
-	i = -1;
-	head = NULL;
-	while (envp[++i])
-	{
-		new = create_new_env(envp[i]);
-		ft_lstadd_back_env(&head, new);
-	}
-	return (head);
 }
