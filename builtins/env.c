@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:10 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 11:49:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:21:39 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	**make_env(char **envp)
 	char	*path;
 
 	env = ft_malloc_bkol((sizeof(char *) * 4), ALLOCATE);
-	if (envp[0])
+	if (envp && envp[0])
 		return (envp);
 	cwd = getcwd(NULL, 0);
 	path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 11:48:25 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:35:04 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,7 +230,7 @@ void	builtin_exit(char **argv, int *status);
 void	builtin_env(t_env *env);
 void	builtin_cd(t_env *env, char **argv, int *status);
 int		builtin_export(t_env *env, char **argv, int flag);
-void	builtin_unset(t_env *env, char **argv);
+void	builtin_unset(t_shell *mini, char **argv);
 
 // Expanding
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini);

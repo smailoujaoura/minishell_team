@@ -84,3 +84,7 @@ export one one one one one
 export order entries in alphabetical order
 ====================================
 cannot unset env 
+==========================
+run minishell in a non existent working dir
+cwd = NULL;
+=========

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 12:05:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:34:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 	if (ft_strncmp("export", argv[0], SIZE_MAX) == 0)
 		mini->last_exit = builtin_export(mini->env, argv, 1);
 	if (ft_strncmp("unset", argv[0], SIZE_MAX) == 0)
-		builtin_unset(mini->env, argv);
+		builtin_unset(mini, argv);
 	if (ft_strncmp("env", argv[0], SIZE_MAX) == 0)
 		builtin_env(mini->env);
 	if (ft_strncmp("exit", argv[0], SIZE_MAX) == 0)
