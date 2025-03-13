@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 12:34:13 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:42:20 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ char	**generate_env_tab(t_env *envp)
 	while (envp)
 	{
 		if (envp->value)
-			env[i++] = ft_strjoin(envp->key, ft_strjoin("=", envp->value, SOUJAOUR), SOUJAOUR);
+			env[i++] = ft_strjoin(envp->key,
+				ft_strjoin("=", envp->value, SOUJAOUR), SOUJAOUR);
 		envp = envp->next;
 	}
 	env[i] = NULL;
@@ -66,7 +67,7 @@ char	*construct_cmd_path(char **argv, t_env *envp, int i)
 	return (NULL);
 }
 
-int	check_buildin(const char *cmd)
+int	check_builtin(const char *cmd)
 {
 	if (ft_strncmp("echo", cmd, SIZE_MAX) == 0
 		|| ft_strncmp("cd", cmd, SIZE_MAX) == 0
@@ -79,7 +80,7 @@ int	check_buildin(const char *cmd)
 	return (0);
 }
 
-void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
+void	execute_builtin(t_ast *tree, char **argv, t_shell *mini)
 {
 	if (assign_fds_builtins(tree, argv[0], 1))
 		return ;
@@ -98,7 +99,7 @@ void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini)
 	if (ft_strncmp("exit", argv[0], SIZE_MAX) == 0)
 	{
 		if (isatty(STDOUT_FILENO) && isatty(STDIN_FILENO) && tree->f == 0)
-			printf("exit\n");
+			write(1, "exit\n", 6);
 		builtin_exit(argv, &mini->last_exit);
 	}
 	assign_fds_builtins(tree, argv[0], 0);

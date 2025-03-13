@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 20:30:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 14:28:01 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:20:19 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,16 @@ int	is_empty_command(char **argv, t_shell *mini)
 	else if (!argv[0][0])
 	{
 		mini->last_exit = 127;
-		write(2, "Command '' not found\n", 22);
+		write(2, "'': command not found\n", 23);
 		return (1);
 	}
 	return (0);
 }
 
-void	panic_exit(char *ptr)
+void	raise_error(char *ptr)
 {
-	perror("Minishell: fatal error");
+	write(2, "Minishell: fatal error: ", 25);
+	write(2, ptr, ft_strlen(ptr));
 	ft_malloc(0, DEALLOCATE);
 	ft_malloc_bkol(0, DEALLOCATE);
 	exit(EXIT_FAILURE);

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 14:30:58 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:36:30 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@
 # define INVALID 92
 
 # define SYNTAXERR "Minishell: syntax error near unexpected token"
-# define ERR "Minishell: syntax error near unexpected token '%s'\n"
 
 typedef struct termios	t_term;
 
@@ -150,10 +149,6 @@ typedef struct s_shell
 	int		num;
 }	t_shell;
 
-// General
-void	*ft_malloc(size_t size, int flag);
-void	*ft_malloc_bkol(size_t size, int flag);
-void	panic_exit(char *ptr);
 
 // Parsing
 void	convert_str(char *str, t_chain **list);
@@ -183,6 +178,11 @@ t_chain	*special_redir_case(t_chain *list);
 void	pre_picker(t_chain *list);
 void	post_picker(t_chain *list);
 void	lefts_picker(t_chain *list);
+
+// Utils
+void	*ft_malloc(size_t size, int flag);
+void	*ft_malloc_bkol(size_t size, int flag);
+void	raise_error(char *ptr);
 t_chain	*lstnew(char *content);
 t_chain	*lstlast(t_chain *lst);
 void	lstadd_back(t_chain **lst, t_chain *new);
@@ -258,8 +258,8 @@ int		assign_fds_builtins(t_ast *tree, char *cmd, int action);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 char	*construct_cmd_path(char **argv, t_env *envp, int i);
 char	**generate_env_tab(t_env *envp);
-int		check_buildin(const char *cmd);
-void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
+int		check_builtin(const char *cmd);
+void	execute_builtin(t_ast *tree, char **argv, t_shell *mini);
 void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 int		ft_dup2(int old, int new);

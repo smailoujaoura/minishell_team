@@ -89,8 +89,7 @@ SRCS =	main.c \
 		./executor/executor_redirs.c \
 		./executor/executor_utils.c \
 		./executor/sys_calls.c \
-		./executor/and_or.c \
-		./executor/utils.c
+		./executor/and_or.c
 
 OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)

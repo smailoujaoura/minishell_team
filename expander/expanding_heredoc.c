@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:56:07 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 13:41:57 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:40:32 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ int	open_files(char *new, int *expand_fd)
 
 	*expand_fd = open(new, O_WRONLY | O_CREAT, 0600);
 	if (*expand_fd == -1)
-		panic_exit(strerror(errno), 9273112);
+		raise_error(strerror(errno));
 	expand_read_fd = open(new, O_RDONLY);
 	if (expand_read_fd == -1)
-		panic_exit(strerror(errno), 982723);
+		raise_error(strerror(errno));
 	unlink(new);
 	return (expand_read_fd);
 }

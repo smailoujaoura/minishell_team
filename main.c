@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 14:21:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:45:05 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	main(int argc, char *argv[], char *envp[])
 	free(pwd);
 	statically_stored_shell(&data, -1);
 	minishell(&data, &initial);
-	write(2, "exit\n", 11);
+	write(2, "exit\n", 6);
 	return (data.last_exit);
 	(void)argv;
 	(void)argc;

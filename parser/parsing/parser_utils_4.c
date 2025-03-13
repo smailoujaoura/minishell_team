@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:43:12 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:36:39 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	count_heredocs(t_chain *list)
 	}
 	if (num_of_heredocs > 16)
 	{
-		panic_exit("bash: maximum here-document count exceeded\n", 2);
+		write(2, "bash: maximum here-document count exceeded\n", 44);
+		exit(2);
 	}
 }
 

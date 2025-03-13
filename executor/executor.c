@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/12 14:59:04 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 15:36:09 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 	if (is_empty_command(argv, mini))
 		return ;
 	envp = generate_env_tab(mini->env);
-	if (check_buildin(argv[0]))
-		buildin_excutor(tree, argv, mini);
+	if (check_builtin(argv[0]))
+		execute_builtin(tree, argv, mini);
 	else
 		external_cmd(tree, argv, envp, mini);
 	if (mini->last_exit == 131)

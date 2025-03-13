@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/12 12:05:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:42:10 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ char	*generate_random_name(void)
 	bytes = ft_strdup("/tmp/.00000000000000000000", SOUJAOUR);
 	fd = open("/dev/random", O_RDONLY);
 	if (fd == -1)
-		panic_exit("Open failed\n", 1337);
+		raise_error(strerror(errno));
 	i = read(fd, bytes + 6, 20);
 	if (i == 0)
 	{
-		panic_exit("Read failed\n", 1337);
+		raise_error(strerror(errno));
 		close(fd);
 	}
 	close(fd);
@@ -110,12 +110,12 @@ int	here_doc(t_chain *data, t_shell *mini)
 	filename = generate_random_name();
 	fd1 = open(filename, O_WRONLY | O_CREAT, 0600);
 	if (fd1 == -1)
-		panic_exit("Open failed\n", 1338);
+		raise_error(strerror(errno));
 	fd2 = open(filename, O_RDONLY);
 	if (fd2 == -1)
 	{
 		close(fd1);
-		panic_exit("Open failed\n", 7232);
+		raise_error(strerror(errno));
 	}
 	unlink(filename);
 	return (more_logic(mini, data, fd1, fd2));

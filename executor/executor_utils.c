@@ -6,20 +6,41 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/10 15:42:46 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:21:59 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+void	is_directory(char *cmd)
+{
+	struct stat	info;
+	int			value;
+
+	value = stat(cmd, &info);
+	if ((ft_strlen(cmd) == 2 && ft_strncmp(cmd, "..", SIZE_MAX) == 0)
+		|| (value == 0 && S_ISDIR(info.st_mode)))
+	{
+		write(2, "minishell: ..: Is a directory\n", 31);
+		exit(126);
+	}
+	// else if (value == 0 && (access(cmd, X_OK) == -1 || !S_ISREG(info.st_mode)))
+	// {
+	// 	write(2, "minishell: ", 12);
+	// 	write(2, cmd, ft_strlen(cmd));
+	// 	write(2, ": ", 3);
+	// 	write(2, strerror(errno), ft_strlen(strerror(errno)));
+	// 	write(2, "\n", 2);
+	// 	exit(126);
+	// }
+	// not needed unless the path is unset and will be handled after then.
+}
+
 char	*find_path(char **argv, t_env *env)
 {
-	int		status;
 	char	*path;
 
-	status = is_a_dir(argv[0]);
-	if (status != 0)
-		exit(status);
+	is_directory(argv[0]);
 	if (ft_strchr(argv[0], '/') || !get_value_wrapper("PATH", env)[0])
 	{
 		return (argv[0]);
@@ -34,35 +55,17 @@ char	*find_path(char **argv, t_env *env)
 	return (path);
 }
 
-char	*get_string(int which)
-{
-	char	*error;
-
-	error = strerror(errno);
-	if (which == 1)
-	{
-		if (ft_strnstr(error, "Bad", SIZE_MAX))
-			return ("");
-		return ("minishell: ");
-	}
-	if (ft_strnstr(error, "Bad", SIZE_MAX))
-		return ("command not found");
-	return (error);
-}
-
-void	ext_proc(t_ast *tree, char **argv, char **envp, t_shell *mini)
+void	external_process(t_ast *tree, char **argv, char **envp, t_shell *mini)
 {
 	char	*path;
 
 	if (open_and_assign(tree->data->adj_f))
-		exit(EXIT_FAILURE);
+		exit(1);
 	if (tree->data->empty)
-		exit(EXIT_SUCCESS);
+		exit(0);
 	path = find_path(argv, mini->env);
 	if (path == NULL)
 		exit(127);
-	if (tree->data->empty)
-		exit(0);
 	if (execve(path, argv, envp) == -1)
 	{
 		if (access(path, X_OK) == 0)
@@ -85,7 +88,7 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	if (pid == 0)
 	{
 		setup_signals(3);
-		ext_proc(tree, argv, envp, mini);
+		external_process(tree, argv, envp, mini);
 	}
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:35:53 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:37:13 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 14:43:36 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_pipe(int *pair)
 {
 	if (pipe(pair) == -1)
 	{
-		panic_exit("pipe failed\n", 0);
+		raise_error(strerror(errno));
 	}
 	return (0);
 }
@@ -25,7 +25,7 @@ int	ft_dup2(int old, int new)
 {
 	if (dup2(old, new) == -1)
 	{
-		panic_exit("dup2 failed", 0);
+		raise_error(strerror(errno));
 	}
 	return (new);
 }
@@ -38,7 +38,7 @@ int	ft_dup(int old)
 	if (new == -1)
 	{
 		close(old);
-		panic_exit("dup failed", 0);
+		raise_error(strerror(errno));
 	}
 	return (new);
 }
@@ -51,7 +51,7 @@ int	ft_fork(void)
 	if (pid == -1)
 	{
 		kill(0, SIGTERM);
-		panic_exit("fork failed", 0);
+		raise_error(strerror(errno));
 		return (-1);
 	}
 	return (pid);
