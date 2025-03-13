@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/12 19:55:43 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 11:48:25 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,6 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
-	char			*full;
 	struct s_env	*next;
 }	t_env;
 
@@ -210,11 +209,11 @@ void	strip_heredoc(t_chain *node, char *delim);
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
-void	add_new_env(t_env *env, t_env *new_env, const char *line, char *str);
-void	add_new_env_with_plus(t_env *env, t_env *new_env, const char *str);
-void	update_env_trunc(t_env *env, t_env *new_env,
-			const char *line, const char *str);
-void	update_env_concat(t_env *env, t_env *new_env, const char *str);
+// void	add_new_env(t_env *env, t_env *new_env, const char *line, char *str);
+// void	add_new_env_with_plus(t_env *env, t_env *new_env, const char *str);
+// void	update_env_trunc(t_env *env, t_env *new_env,
+// 			const char *line, const char *str);
+// void	update_env_concat(t_env *env, t_env *new_env, const char *str);
 t_env	*handle_env(char **envp);
 t_env	*get_env_var(t_env *env, const char *key);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);

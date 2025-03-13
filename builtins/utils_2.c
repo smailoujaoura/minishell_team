@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/12 20:15:58 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:09:50 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,15 @@ char	**splitter_helper(char *str, int i, int *action, char **array)
 {
 	if (str[i] == '+' && str[i + 1] == '=')
 	{
-		array[0] = ft_substr(str, 0, i, BKOLANI);
-		array[1] = ft_substr(str, i + 2, ft_strlen(str) - (i + 2), BKOLANI);
+		array[0] = ft_substr(str, 0, i, SOUJAOUR);
+		array[1] = ft_substr(str, i + 2, ft_strlen(str) - (i + 2), SOUJAOUR);
 		*action = UPDATE;
 		return (array);
 	}
 	else if (str[i] == '=')
 	{
-		array[0] = ft_substr(str, 0, i, BKOLANI);
-		array[1] = ft_substr(str, i + 1, ft_strlen(str) - (i + 1), BKOLANI);
+		array[0] = ft_substr(str, 0, i, SOUJAOUR);
+		array[1] = ft_substr(str, i + 1, ft_strlen(str) - (i + 1), SOUJAOUR);
 		*action = CREATE;
 		return (array);
 	}
@@ -53,6 +53,7 @@ char	**splitter(char *str, int *action)
 	char	**array;
 
 	i = 0;
+	*action = 0;
 	array = ft_malloc(sizeof(char *) * 3, SOUJAOUR);
 	array[2] = NULL;
 	while (str[i])
@@ -76,7 +77,6 @@ static t_env	*create_new_env(char *line)
 	splited_line = splitter(line, &action);
 	new_env->key = ft_strdup(splited_line[0], BKOLANI);
 	new_env->value = ft_strdup(splited_line[1], BKOLANI);
-	new_env->full = ft_strdup(line, BKOLANI);
 	new_env->next = NULL;
 	return (new_env);
 }

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/12 19:55:51 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:05:31 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,17 @@ char	**generate_env_tab(t_env *envp)
 	tmp = envp;
 	while (tmp)
 	{
-		i++;
+		if (tmp->value)
+			i++;
 		tmp = tmp->next;
 	}
 	env = ft_malloc((sizeof(char *) * (i + 1)), ALLOCATE);
 	i = 0;
 	while (envp)
 	{
-		env[i] = ft_strdup(envp->full, SOUJAOUR);
+		if (envp->value)
+			env[i++] = ft_strjoin(envp->key, ft_strjoin("=", envp->value, SOUJAOUR), SOUJAOUR);
 		envp = envp->next;
-		i++;
 	}
 	env[i] = NULL;
 	return (env);
@@ -47,13 +48,13 @@ char	*construct_cmd_path(char **argv, t_env *envp, int i)
 	tmp_cmd = NULL;
 	while (envp)
 	{
-		if (ft_strncmp(envp->full, "PATH=", 5) == 0)
+		if (ft_strncmp(envp->key, "PATH", SIZE_MAX) == 0)
 			break ;
 		envp = envp->next;
 	}
 	if (!envp)
 		return (NULL);
-	path = ft_strdup(envp->full + 5, SOUJAOUR);
+	path = ft_strdup(envp->value, SOUJAOUR);
 	spl_path = ft_split(path, ':', SOUJAOUR);
 	while (spl_path[++i])
 	{

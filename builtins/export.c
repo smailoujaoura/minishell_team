@@ -6,55 +6,25 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/12 21:53:40 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 12:13:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 // Handle export command without args
-static void	export_with_no_args(t_env *env, char *line)
+void	print_keys_values(t_env *env)
 {
-	t_env			*lst_env;
-
-	lst_env = NULL;
-	if (line)
-	{
-		lst_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
-		lst_env->key = ft_strdup(line, BKOLANI);
-		lst_env->value = NULL;
-		lst_env->full = ft_strdup(line, BKOLANI);
-		lst_env->next = NULL;
-		ft_lstadd_back_env(&env, lst_env);
-		return ;
-	}
 	while (env)
 	{
 		if (env->value)
-			printf("declare -x %s=%c%s%c\n", env->key, '"', env->value, '"');
+			printf("declare -x %s=\"%s\"\n", env->key, env->value);
 		else
-			printf("declare -x %s\n", env->full);
+		{
+			printf("declare -x %s\n", env->key);
+		}
 		env = env->next;
 	}
-}
-
-static void	process_env_var(t_env *env, char **str_tab, char *line, int action)
-{
-	t_env	*new_env;
-
-	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
-	if (action == UPDATE)
-		new_env->key = str_tab[0];
-	else
-		new_env->key = ft_strdup(str_tab[0], BKOLANI);
-	if (check_env(env, new_env->key) && action == UPDATE)
-		update_env_concat(env, new_env, str_tab[1]);
-	else if (check_env(env, new_env->key) && action == CREATE)
-		update_env_trunc(env, new_env, line, str_tab[1]);
-	else if (!check_env(env, new_env->key) && action == UPDATE)
-		add_new_env_with_plus(env, new_env, str_tab[1]);
-	else
-		add_new_env(env, new_env, line, str_tab[1]);
 }
 
 int	is_valid_key(char *key)
@@ -73,32 +43,86 @@ int	is_valid_key(char *key)
 	return (1);
 }
 
-int	check_export_env(t_env *env, char *line)
+void	export_without_value(t_env *env, char *key)
 {
-	char	**splited_line;
+	t_env	*ptr;
+	t_env	*new;
+
+	ptr = env;
+	while (ptr)
+	{
+		if (ft_strncmp(ptr->key, key, SIZE_MAX) == 0)
+			return ;
+		ptr = ptr->next;
+	}
+	ptr = env;
+	while (ptr->next)
+		ptr = ptr->next;
+	new = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
+	new->key = ft_strdup(key, BKOLANI);
+	new->next = NULL;
+	new->value = NULL;
+	ptr->next = new;
+}
+
+void	export_with_value(t_env *env, char **key_value, int action, int state)
+{
+	t_env	*ptr;
+	t_env	*new;
+
+	ptr = env;
+	while (ptr)
+	{
+		if (ft_strncmp(key_value[0], ptr->key, SIZE_MAX) == 0)
+		{
+			state = 1;
+			break ;
+		}
+		ptr = ptr->next;
+	}
+	if (action == UPDATE && state == 1)
+	{
+		ptr->value = ft_strjoin(ptr->value, key_value[1], BKOLANI);
+	}
+	else if (state)
+	{
+		ptr->value = ft_strdup(key_value[1], BKOLANI);
+	}
+	else if (action == UPDATE || action == CREATE)
+	{
+		new = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
+		new->next = NULL;
+		new->key = ft_strdup(key_value[0], BKOLANI);
+		new->value = ft_strdup(key_value[1], BKOLANI);
+		ft_lstadd_back_env(&env, new);
+	}
+}
+
+int	check_args(t_env *env, char *line)
+{
+	char	**key_value;
 	int		action;
 
 	if (!*line || !ft_strchr(VAR, line[0]))
 	{
-		printf("minishell: export: `%s': not a valid identifier\n", line);
+		printf("minishell: export: `%s': not a valid identifier\n", line); // CHANGE to WRITE!
 		return (1);
 	}
-	if (is_valid_key(line) && !ft_strchr(line, '='))
-		export_with_no_args(env, line);
-	action = 0;
-	splited_line = splitter(line, &action);
-	if (splited_line == NULL)
-	{
-		if (!is_valid_key(line))
-			printf("minishell: export: `%s': not a valid identifier\n", line);
-		return (!is_valid_key(line));
-	}
-	if (!is_valid_key(splited_line[0]) || action == 0 || action == INVALID)
+	key_value = splitter(line, &action);
+	if (key_value == NULL && !is_valid_key(line))
 	{
 		printf("minishell: export: `%s': not a valid identifier\n", line);
 		return (1);
 	}
-	process_env_var(env, splited_line, line, action);
+	else if (key_value == NULL)
+		export_without_value(env, line);
+	else if (!is_valid_key(key_value[0]) || action == 0 || action == INVALID)
+	{
+		printf("minishell: export: `%s': not a valid identifier\n", line);
+		return (1);
+	}
+	else
+		export_with_value(env, key_value, action, 0);
 	return (0);
 }
 
@@ -111,11 +135,11 @@ int	builtin_export(t_env *env, char **argv, int flag)
 	status = 0;
 	if (!argv[1] && flag)
 	{
-		export_with_no_args(env, NULL);
+		print_keys_values(env);
 		return (status);
 	}
 	i = 0;
 	while (argv[++i])
-		status = check_export_env(env, argv[i]);
+		status = check_args(env, argv[i]);
 	return (status);
 }

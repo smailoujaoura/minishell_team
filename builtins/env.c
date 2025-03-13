@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:10 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/12 19:55:24 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 11:49:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	builtin_env(t_env *env)
 		return ;
 	while (env)
 	{
-		printf("%s\n", env->full);
+		if (env->value)
+			printf("%s=%s\n", env->key, env->value);
 		env = env->next;
 	}
 }
