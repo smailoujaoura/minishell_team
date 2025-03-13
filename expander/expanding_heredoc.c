@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:56:07 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/12 10:25:37 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 13:41:57 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,29 +54,26 @@ char	*get_var_key(char *key, int *i)
 }
 
 // copies parts of lines and joins them with others expanded or literals 
-char	*just_copy_until(char *line, t_shell *mini, int i, int start)
+char	*just_copy_until(char *line, t_shell *mini, int i)
 {
-	char	*key;
 	char	*value;
 	char	*new_line;
+	int		singles;
+	int		doubles;
 
+	singles = 0;
+	doubles = 0;
 	new_line = NULL;
 	while (line[i])
 	{
-		if (check_var_existence(line[i], line[i + 1]))
+		if (line[i] == '$' && is_var('$', line[i + 1], STRT))
 		{
-			i++;
-			key = get_var_key(line, &i);
-			value = get_value_wrapper(key, mini->env);
+			value = get_value(line, &i, mini, is_var('$', line[i + 1], STRT));
 			new_line = ft_strjoin(new_line, value, SOUJAOUR);
 		}
 		else
 		{
-			start = i;
-			i++;
-			while (line[i] && !check_var_existence(line[i], line[i + 1]))
-				i++;
-			value = ft_substr(&line[start], 0, i - start, SOUJAOUR);
+			value = just_copy(line, &i, &singles, &doubles);
 			new_line = ft_strjoin(new_line, value, SOUJAOUR);
 		}
 	}
@@ -98,7 +95,7 @@ void	expand_heredoc(t_chain *ptr, t_shell *mini, char *new, int source_fd)
 		line = get_next_line(source_fd);
 		while (line)
 		{
-			new_line = just_copy_until(line, mini, 0, 0);
+			new_line = just_copy_until(line, mini, 0);
 			write(expand_fd, new_line, ft_strlen(new_line));
 			free(line);
 			line = get_next_line(source_fd);

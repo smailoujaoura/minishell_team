@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 12:51:50 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/13 13:41:03 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	main(int argc, char *argv[], char *envp[])
 	t_shell			data;
 	char			*pwd;
 
-	envp = NULL;
+	// envp = NULL;
 	if (!isatty(STDIN_FILENO))
 		exit(1);
 	if (!isatty(STDOUT_FILENO))
