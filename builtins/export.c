@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 12:13:45 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:04:51 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,44 @@
 // Handle export command without args
 void	print_keys_values(t_env *env)
 {
+	int		i;
+	int		size;
+	int		swap;
+	char	*temp;
+	t_env	*current;
+	t_env	**sorted;
+
+	size = ft_lstsize_env(env);
+	if (size == 0)
+		return ;
+	sorted = ft_malloc(sizeof(t_env *) * (size + 1), ALLOCATE);
+	sorted[size] = NULL;
+	i = 0;
+	current = env;
+	while (i < size)
+	{
+		sorted[i] = current;
+		current = current->next;
+		i++;
+	}
+	swap = 1;
+	while (swap)
+	{
+		swap = 0;
+		i = 0;
+		while (i < size - 1)
+		{
+			if (ft_strncmp(sorted[i]->key, sorted[i + 1]->key, SIZE_MAX) > 0)
+			{
+				swap = 1;
+				temp = sorted[i]->key;
+				sorted[i]->key = sorted[i + 1]->key;
+				sorted[i + 1]->key = temp;
+			}
+			i++;
+		}
+	}
+
 	while (env)
 	{
 		if (env->value)

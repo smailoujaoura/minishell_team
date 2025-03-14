@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 11:39:30 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:57:12 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,7 @@ void	ft_lstadd_back_env(t_env **lst, t_env *new);
 int		check_env(t_env *env, char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
 char	**make_env(char **envp);
+int		ft_lstsize_env(t_env *env);
 
 // Builtins
 char	**splitter(char *str, int *action);

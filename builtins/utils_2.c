@@ -1,16 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_3.c                                          :+:      :+:    :+:   */
+/*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:05:20 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 11:44:58 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:56:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	ft_lstsize_env(t_env *env)
+{
+	int	size;
+
+	size = 0;
+	while (env)
+	{
+		env = env->next;
+		size++;
+	}
+	return (size);
+}
 
 t_env	*ft_lstlast_env(t_env *env)
 {
