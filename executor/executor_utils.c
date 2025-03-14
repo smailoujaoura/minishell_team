@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 17:21:59 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 08:54:23 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,11 @@ void	is_directory(char *cmd)
 	if ((ft_strlen(cmd) == 2 && ft_strncmp(cmd, "..", SIZE_MAX) == 0)
 		|| (value == 0 && S_ISDIR(info.st_mode)))
 	{
-		write(2, "minishell: ..: Is a directory\n", 31);
+		write(2, "minishell: ", 12);
+		write(2, cmd, ft_strlen(cmd));
+		write(2, ": Is a directory\n", 18);
 		exit(126);
 	}
-	// else if (value == 0 && (access(cmd, X_OK) == -1 || !S_ISREG(info.st_mode)))
-	// {
-	// 	write(2, "minishell: ", 12);
-	// 	write(2, cmd, ft_strlen(cmd));
-	// 	write(2, ": ", 3);
-	// 	write(2, strerror(errno), ft_strlen(strerror(errno)));
-	// 	write(2, "\n", 2);
-	// 	exit(126);
-	// }
-	// not needed unless the path is unset and will be handled after then.
 }
 
 char	*find_path(char **argv, t_env *env)

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:10 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 12:21:39 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 08:51:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,25 @@ char	**make_env(char **envp)
 	env[3] = NULL;
 	free(cwd);
 	return (env);
+}
+
+void	init_shell(char **envp, t_shell *mini)
+{
+	char			*pwd;
+
+	envp = make_env(envp);
+	mini->env = handle_env(envp);
+	mini->last_exit = 0;
+	mini->volatile_exit = 0;
+	mini->flag = 0;
+	mini->num = 1;
+	pwd = getcwd(NULL, 0);
+	if (pwd)
+		store_pwd(ft_strdup(pwd, BKOLANI), -1);
+	else
+		perror("shell-init: error retrieving current directory: getcwd: \
+cannot access parent directories");
+	free(pwd);
 }
 
 // Print env vars

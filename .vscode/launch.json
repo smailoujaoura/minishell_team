@@ -19,15 +19,15 @@
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
-                },
-                {
-                    "description": "Follow child process after fork",
-                    "text": "-gdb-set follow-fork-mode child"
-                },
-                {
-                    "description": "Do not detach from parent after fork",
-                    "text": "-gdb-set detach-on-fork off"
                 }
+                // {
+                //     "description": "Follow child process after fork",
+                //     "text": "-gdb-set follow-fork-mode child"
+                // },
+                // {
+                //     "description": "Do not detach from parent after fork",
+                //     "text": "-gdb-set detach-on-fork off"
+                // }
             ],
             "preLaunchTask": "build",
             "miDebuggerPath": "/usr/bin/gdb",

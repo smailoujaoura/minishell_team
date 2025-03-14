@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 20:42:25 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:45:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 08:27:46 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,8 @@ t_chain	*special_redir_case(t_chain *list)
 	else if (end->type != WORD)
 	{
 		new = lstnew(ft_strdup("EMPTY CMD", SOUJAOUR));
+		new->empty = 1;
+		new->type = WORD;
 		new->adj_f = start;
 		end->back->next = NULL;
 		end->back = new;

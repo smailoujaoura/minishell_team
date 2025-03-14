@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 15:36:30 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 08:51:05 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,6 +198,7 @@ char	*generate_random_name(void);
 int		here_doc(t_chain *data, t_shell *mini);
 void	count_heredocs(t_chain *list);
 void	strip_heredoc(t_chain *node, char *delim);
+void	init_shell(char **envp, t_shell *mini);
 
 // Env functions and their utils
 t_env	*handle_env(char **envp);
