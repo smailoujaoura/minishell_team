@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:25:13 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 11:09:53 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:04:47 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	construct_flags(char *str, char flag, char **flags)
 		*flags = ft_strjoin(*flags, new_flag, SOUJAOUR);
 }
 
-int	var_to_var(char *key)
+int	var_to_var(char *key, char *flags)
 {
 	int	i;
 
@@ -70,19 +70,19 @@ int	var_to_var(char *key)
 		i++;
 	}
 	i--;
-	if (i > 0 && key[i] == '=')
+	if (i > 0 && key[i] == '=' && flags[i] == LITERAL)
 		return (1);
 	return (0);
 }
 
 // splits a variable contents based on spaces and joins but with flags
-char	*handle_var_values(char *value, char *new, char **flags, int two)
+char	*handle_var_values(char *value, char *new, char **flags, t_shell *mini)
 {
 	char	**var_values;
 	int		i;
 
 	i = 0;
-	if (two || (new && var_to_var(new)))
+	if (mini->doubles || (new && var_to_var(new, *flags) && mini->export))
 	{
 		new = ft_strjoin(new, value, SOUJAOUR);
 		construct_flags(value, FROM_VAR, flags);

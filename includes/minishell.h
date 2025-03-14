@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 10:01:51 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 11:39:30 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,7 @@ typedef struct s_shell
 	int		volatile_exit;
 	int		singles;
 	int		doubles;
+	int		export;
 	int		flag;
 	int		num;
 }	t_shell;
@@ -233,7 +234,7 @@ char	**ultimate_split(char *str, char *flags, char sep, t_list *list);
 char	*wild_shell(char *sources, char *quotes, char *str);
 int		is_var(char current, char next, char *set);
 char	*get_value(char *str, int *i, t_shell *mini, int type);
-char	*handle_var_values(char *value, char *new, char **flags, int two);
+char	*handle_var_values(char *value, char *new, char **flags, t_shell *mini);
 char	*just_copy(char *str, int *i, int *singles, int *doubles);
 void	construct_flags(char *str, char flag, char **flags);
 void	expand_wildcard(t_list **list, char *pattern, char *is_wild);
@@ -255,7 +256,6 @@ void	executor(t_ast *tree, t_shell *mini);
 void	run_and(t_ast *tree, t_shell *mini);
 void	run_or(t_ast *tree, t_shell *mini);
 int		is_empty_command(char **argv, t_shell *mini);
-void	buildin_excutor(t_ast *tree, char **argv, t_shell *mini);
 int		assign_fds_builtins(t_ast *tree, char *cmd, int action);
 void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini);
 char	*construct_cmd_path(char **argv, t_env *envp, int i);
@@ -269,6 +269,5 @@ int		ft_fork(void);
 int		ft_dup(int old);
 int		ft_dup2(int old, int new);
 int		ft_pipe(int *pair);
-int		is_a_dir(const char *cmd);
 
 #endif

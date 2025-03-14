@@ -6,20 +6,33 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 10:17:47 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 12:23:44 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	is_directory(char *cmd)
+void	is_directory(char *cmd, t_env *env, int value)
 {
 	struct stat	info;
-	int			value;
 
 	value = stat(cmd, &info);
-	if ((ft_strlen(cmd) == 2 && ft_strncmp(cmd, "..", SIZE_MAX) == 0)
-		|| (value == 0 && S_ISDIR(info.st_mode)))
+	if (ft_strlen(cmd) == 2 && ft_strncmp(cmd, "..", SIZE_MAX) == 0)
+	{
+		if (expand_env_var(env, "PATH") == NULL || expand_env_var(env, "PATH")[0] == '\0')
+		{
+			write(2, "minishell: ", 12);
+			write(2, cmd, ft_strlen(cmd));
+			write(2, ": Is a directory\n", 18);
+			exit(126);
+		}
+		else
+		{
+			write(2, "..: command not found\n", 23);
+			exit(127);
+		}
+	}
+	else if (value == 0 && S_ISDIR(info.st_mode))
 	{
 		write(2, "minishell: ", 12);
 		write(2, cmd, ft_strlen(cmd));
@@ -32,7 +45,7 @@ char	*find_path(char **argv, t_env *env)
 {
 	char	*path;
 
-	is_directory(argv[0]);
+	is_directory(argv[0], env, 0);
 	if (ft_strchr(argv[0], '/') || !get_value_wrapper("PATH", env)[0])
 	{
 		return (argv[0]);

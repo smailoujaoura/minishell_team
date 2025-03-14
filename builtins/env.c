@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:10 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 08:51:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 11:44:59 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ void	init_shell(char **envp, t_shell *mini)
 	mini->last_exit = 0;
 	mini->volatile_exit = 0;
 	mini->flag = 0;
+	mini->export = 0;
+	mini->doubles = 0;
+	mini->singles = 0;
 	mini->num = 1;
 	pwd = getcwd(NULL, 0);
 	if (pwd)

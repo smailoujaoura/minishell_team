@@ -6,11 +6,21 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 10:50:55 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 11:55:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	check_export(t_shell *mini, char *new)
+{
+	if (new == NULL)
+		return ;
+	if (ft_strncmp("export ", new, 7) == 0)
+		mini->export = 1;
+	if (ft_strncmp("export", new, 6) == 0 && ft_strlen(new) == 6)
+		mini->export = 1;
+}
 
 // copies part of a string that is not part of a variable and joins it
 // to the other parts that might have been expanded
@@ -26,12 +36,13 @@ char	*expand_str(char *str, int i, char **flags, t_shell *mini)
 	doubles = 0;
 	while (str[i])
 	{
+		check_export(mini, new);
 		if (!singles && str[i] == '$' && is_var('$', str[i + 1], STRT))
 		{
 			mini->doubles = doubles;
 			mini->singles = singles;
 			value = get_value(str, &i, mini, is_var('$', str[i + 1], STRT));
-			new = handle_var_values(value, new, flags, doubles);
+			new = handle_var_values(value, new, flags, mini);
 		}
 		else
 		{
@@ -51,7 +62,9 @@ char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini)
 	char	*actual;
 
 	flags = NULL;
+	mini->export = 0;
 	actual = expand_str(cmd->content, 0, &flags, mini);
+	check_export(mini, actual);
 	while (args)
 	{
 		flags = ft_strjoin(flags, "s", SOUJAOUR);
