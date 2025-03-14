@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 10:49:35 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:47:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,16 +106,13 @@ int	check_paren(t_chain *prev, t_chain *next, int paren)
 			return (1);
 		}
 	}
-	if (paren == R_PAREN)
+	if (paren == R_PAREN && next->type == L_PAREN)
 	{
-		if (next->type == L_PAREN)
-		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
-			write(2, " `", 2);
-			write(2, next->content, ft_strlen(next->content));
-			write(2, "'\n", 2);
-			return (1);
-		}
+		write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+		write(2, " `", 2);
+		write(2, next->content, ft_strlen(next->content));
+		write(2, "'\n", 2);
+		return (1);
 	}
 	(void)prev;
 	return (0);

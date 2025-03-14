@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 15:42:20 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:34:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	**generate_env_tab(t_env *envp)
 	{
 		if (envp->value)
 			env[i++] = ft_strjoin(envp->key,
-				ft_strjoin("=", envp->value, SOUJAOUR), SOUJAOUR);
+					ft_strjoin("=", envp->value, SOUJAOUR), SOUJAOUR);
 		envp = envp->next;
 	}
 	env[i] = NULL;

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 11:55:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:39:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ char	*expand_str(char *str, int i, char **flags, t_shell *mini)
 	doubles = 0;
 	while (str[i])
 	{
-		check_export(mini, new);
 		if (!singles && str[i] == '$' && is_var('$', str[i + 1], STRT))
 		{
 			mini->doubles = doubles;

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 12:57:12 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:46:06 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ typedef struct s_shell
 	int		num;
 }	t_shell;
 
+// General
+void	minishell(t_shell *mini, struct termios *initial);
 
 // Parsing
 void	convert_str(char *str, t_chain **list);
@@ -166,7 +168,7 @@ void	remove_if(t_chain *list);
 void	delete_any(t_chain *ptr, int i);
 char	*remove_occurences(char *str, int i, int singles, int doubles);
 t_ast	*build_tree(t_chain *post);
-int 	store_line(char *new, int flag);
+int		store_line(char *new, int flag);
 int		is_redir(t_chain *ptr, int f);
 void	delete_any(t_chain *ptr, int i);
 void	remove_if(t_chain *list);
@@ -217,6 +219,8 @@ int		ft_lstsize_env(t_env *env);
 // Builtins
 char	**splitter(char *str, int *action);
 char	*store_pwd(char *store_it, int flag);
+int		is_valid_key(char *key);
+void	print_keys_values(t_env *env);
 void	builtin_pwd(t_shell *mini);
 void	builtin_echo(char **argv, int *status);
 void	builtin_exit(char **argv, int *status);
@@ -242,6 +246,7 @@ void	expand_wildcard(t_list **list, char *pattern, char *is_wild);
 char	*get_value_wrapper(char *var, t_env *env);
 int		find_split(char *flags, int i);
 char	**ft_split_custom(char const *s, char *set, int f);
+void	check_export(t_shell *mini, char *new);
 
 // Signals
 void	setup_signals(int action);
@@ -250,6 +255,7 @@ void	first_handler(int signum);
 void	second_handler(int signum);
 void	third_handler(int signum);
 void	statically_stored_shell(t_shell *mini, int action);
+void	return_status(int signum);
 
 // Executor
 int		open_and_assign(t_chain *redirs);

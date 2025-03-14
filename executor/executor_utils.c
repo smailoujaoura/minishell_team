@@ -6,20 +6,19 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 12:23:44 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:41:46 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	is_directory(char *cmd, t_env *env, int value)
+void	is_directory(char *cmd, t_env *env, int value, struct stat info)
 {
-	struct stat	info;
-
 	value = stat(cmd, &info);
 	if (ft_strlen(cmd) == 2 && ft_strncmp(cmd, "..", SIZE_MAX) == 0)
 	{
-		if (expand_env_var(env, "PATH") == NULL || expand_env_var(env, "PATH")[0] == '\0')
+		if (expand_env_var(env, "PATH") == NULL
+			|| expand_env_var(env, "PATH")[0] == '\0')
 		{
 			write(2, "minishell: ", 12);
 			write(2, cmd, ft_strlen(cmd));
@@ -43,9 +42,12 @@ void	is_directory(char *cmd, t_env *env, int value)
 
 char	*find_path(char **argv, t_env *env)
 {
-	char	*path;
+	char		*path;
+	struct stat	info;
+	int			value;
 
-	is_directory(argv[0], env, 0);
+	value = stat(argv[0], &info);
+	is_directory(argv[0], env, value, info);
 	if (ft_strchr(argv[0], '/') || !get_value_wrapper("PATH", env)[0])
 	{
 		return (argv[0]);

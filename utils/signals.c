@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 15:59:36 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:48:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,9 @@ void	setup_signals(int action)
 
 	signal(SIGQUIT, SIG_IGN);
 	if (action == 1)
-	{
 		signal(SIGINT, first_handler);
-	}
 	else if (action == 2)
-	{
 		signal(SIGINT, second_handler);
-	}
 	else if (action == 3)
 	{
 		signal(SIGQUIT, SIG_DFL);
@@ -50,4 +46,11 @@ void	setup_signals(int action)
 		ft_dup2(saved_fd, STDIN_FILENO);
 		close(saved_fd);
 	}
+}
+
+void	return_status(int signum)
+{
+	(void)signum;
+	write(1, "\n", 1);
+	exit(EXIT_FAILURE);
 }

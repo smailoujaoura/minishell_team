@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:50:59 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 10:10:52 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:25:46 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 
 void	builtin_exit(char **argv, int *status)
 {
-	int	error;
-	int	num;
+	static int	error = 0;
+	int			num;
 
-	error = 0;
 	if (!argv[1])
 		exit(*status = 0);
 	else if (argv[1])

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:25:13 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 12:04:47 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:39:16 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ char	*handle_var_values(char *value, char *new, char **flags, t_shell *mini)
 	int		i;
 
 	i = 0;
+	check_export(mini, new);
 	if (mini->doubles || (new && var_to_var(new, *flags) && mini->export))
 	{
 		new = ft_strjoin(new, value, SOUJAOUR);

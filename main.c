@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 11:52:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:21:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,33 +55,6 @@ void	first_handler(int signum)
 	g_sig_number = SIGINT;
 	statically_stored_shell(NULL, SIGINT);
 	handle_interrupt();
-}
-
-void	minishell(t_shell *mini, struct termios *initial)
-{
-	t_chain			*list;
-	t_ast			*root;
-	char			*line;
-
-	while (1337)
-	{
-		list = NULL;
-		setup_signals(1);
-		line = readline("Minishell:$ ");
-		if (line == NULL)
-			break ;
-		root = parse_line(line, &list, mini);
-		free(line);
-		line = NULL;
-		setup_signals(2);
-		executor(root, mini);
-		ft_malloc(0, DEALLOCATE);
-		mini->num++;
-		mini->volatile_exit = 0;
-		if (tcsetattr(STDIN_FILENO, TCSANOW, initial) < 0)
-			return ;
-	}
-	ft_malloc_bkol(0, DEALLOCATE);
 }
 
 int	main(int argc, char *argv[], char *envp[])

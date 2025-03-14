@@ -74,6 +74,7 @@ SRCS =	main.c \
 		./builtins/unset.c \
 		./builtins/utils_1.c \
 		./builtins/utils_2.c \
+		./builtins/export_utils.c \
 		./expander/expander.c \
 		./expander/expanding_heredoc.c \
 		./expander/expanding_utils_1.c \

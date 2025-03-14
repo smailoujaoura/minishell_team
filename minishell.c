@@ -6,14 +6,14 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 10:05:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:22:30 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes/minishell.h"
 
 // adds a line to the history of readline history library as needed
-int store_line(char *new, int flag)
+int	store_line(char *new, int flag)
 {
 	static char	*store;
 
@@ -84,4 +84,31 @@ t_ast	*parse_line(char *line, t_chain **list, t_shell *mini)
 		return (parse_line(rest, list, mini));
 	post = convert_infix(*list, NULL, NULL);
 	return (build_tree(post));
+}
+
+void	minishell(t_shell *mini, struct termios *initial)
+{
+	t_chain			*list;
+	t_ast			*root;
+	char			*line;
+
+	while (1337)
+	{
+		list = NULL;
+		setup_signals(1);
+		line = readline("Minishell:$ ");
+		if (line == NULL)
+			break ;
+		root = parse_line(line, &list, mini);
+		free(line);
+		line = NULL;
+		setup_signals(2);
+		executor(root, mini);
+		ft_malloc(0, DEALLOCATE);
+		mini->num++;
+		mini->volatile_exit = 0;
+		if (tcsetattr(STDIN_FILENO, TCSANOW, initial) < 0)
+			return ;
+	}
+	ft_malloc_bkol(0, DEALLOCATE);
 }
