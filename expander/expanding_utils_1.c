@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 16:25:13 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/06 20:35:58 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 11:09:53 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 // change togglers for single quotes and double quotes
 void	singles_doubles(int *singles, int *doubles, char c)
 {
+	if (*doubles == 30)
+		return ;
 	if (c == '\'' && !*singles && !*doubles)
 	{
 		*singles = 1;

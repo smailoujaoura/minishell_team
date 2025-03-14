@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:38 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/12 16:50:01 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:57:09 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,3 @@ void	builtin_pwd(t_shell *mini)
 	printf("%s\n", path);
 	free(path);
 }
-
-
-// Minishell:$ cd 1/2/3/4/
-// Minishell:$ pwd
-// /home/soujaour/intra-uuid-f888ae00-4167-4221-b82b-55d615b58e2b-6428636-soujaour/1/2/3/4
-// Minishell:$ pwd
-// /home/soujaour/intra-uuid-f888ae00-4167-4221-b82b-55d615b58e2b-6428636-soujaour/1/2/3/4
-// Minishell:$ unset PWD OLDPWD
-// Minishell:$ pwd

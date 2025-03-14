@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/28 15:56:07 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 14:40:32 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 11:09:23 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,11 @@ char	*just_copy_until(char *line, t_shell *mini, int i)
 	int		singles;
 	int		doubles;
 
-	singles = 0;
-	doubles = 0;
 	new_line = NULL;
 	while (line[i])
 	{
+		doubles = 30;
+		singles = 0;
 		if (line[i] == '$' && is_var('$', line[i + 1], STRT))
 		{
 			value = get_value(line, &i, mini, is_var('$', line[i + 1], STRT));

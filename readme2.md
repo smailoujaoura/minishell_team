@@ -9,7 +9,7 @@ Minishell:$ pwd
 Minishell:$ unset PWD OLDPWD
 Minishell:$ pwd
 AddressSanitizer:DEADLYSIGNAL
-=================================================================
+================================================================= DONE
 ==1123774==ERROR: AddressSanitizer: SEGV on unknown address 0x000000000004 (pc 0x0000004ae6c0 bp 0x7fff7083d7c0 sp 0x7fff7083cf38 T0)
 ==1123774==The signal is caused by a READ memory access.
 ==1123774==Hint: address points to the zero page.
@@ -27,20 +27,20 @@ AddressSanitizer:DEADLYSIGNAL
     #11 0x41f3e4 in _start (/home/soujaour/intra-uuid-f888ae00-4167-4221-b82b-55d615b58e2b-6428636-soujaour/minishell+0x41f3e4)
 
 
-=======================
+======================= DONE
 export problems 
-============================ RELATED
+============================ RELATED======================= DONE
 export var="a b c"
 export $var=$var 
-========================
+=============================================== DONE
 cat and kill it from a different palce
-=======================
+============================================== DONE
 istty set attr etc...
-===========================
+================================================== DONE
 ..
-=============================
+==================================================== DONE
 rl_outstream = stderr;
-============================
+=================================================== DONE
 soujaour@e1r1p3:~$ ..
 ..: command not found
 soujaour@e1r1p3:~$ unset PATH
@@ -54,12 +54,12 @@ bash: .: filename argument required
 soujaour@e1r1p3:~$ . ls
 bash: ls: No such file or directory
 soujaour@e1r1p3:~$ 
-=================================
+======================================================== DONE
 export | wc
 bash: wc: No such file or directory
-==================================
+========================================================= DONE
 if there is path and if there is not path how to deal with "parser" etc. is a dir etc.. 
-=================================
+======================================================== DONE
 Minishell:$ cd ..
 cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
 Minishell:$ pwd
@@ -68,23 +68,34 @@ Minishell:$ cd ..pwd
 cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
 Minishell:$ cd ..pwd
 Minishell:$ pwd
-===========================================
+================================================================== DONE
 cd .
-==========================================
+================================================================= DONE
 .
 ..
-=============================================
-export $a=$a
-===============================================
+=================================================================================== DONE
 cat << 1
 $? did not expand
-========================================
+================================================================= DONE
 export one one one one one 
-======================================
-export order entries in alphabetical order
-====================================
+==================================== ===================================== DONE
 cannot unset env 
-==========================
+
+
+
+
+============================================= STILLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 run minishell in a non existent working dir
 cwd = NULL;
-=========
+============================================= STILLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+export $a=$a
+============================================= STILLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL; maybe should be handled
+export order entries in alphabetical order
+
+
+
+
+============================================= STILLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL; DONT this time
+STILL RECHABLE MEMORY BLOCKS 
+============================================= STILLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL; DONT this time
+SHOULD NOT EXIT WHEN SOME SYS CALLS FAIL 
