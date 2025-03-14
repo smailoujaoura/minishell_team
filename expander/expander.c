@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 12:44:57 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 08:30:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:50:55 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ char	*expand_str(char *str, int i, char **flags, t_shell *mini)
 	doubles = 0;
 	while (str[i])
 	{
-		printf("[%s]\n", &str[i]);
 		if (!singles && str[i] == '$' && is_var('$', str[i + 1], STRT))
 		{
 			mini->doubles = doubles;
@@ -92,21 +91,23 @@ void	expand_redirs(t_chain *ptr, t_shell *mini)
 
 	while (ptr)
 	{
-		if (ptr->type != HEREDOC)
+		if (ptr->type == HEREDOC)
+		{
+			new_name = generate_random_name();
+			expand_heredoc(ptr, mini, new_name, ptr->fd);
+		}
+		else if (is_redir(ptr, IN + OR + OUT))
 		{
 			result = expand_files(ptr, mini);
 			if (result == NULL || result[1] != NULL)
 			{
-				printf("minishell: %s: ambiguous redirect\n", ptr->file);
+				write(2, "minishell: ", 11);
+				write(2, ptr->file, ft_strlen(ptr->file));
+				write(2, ": ambiguous redirect\n", 21);
 				ptr->ambiguous = 1;
 				return ;
 			}
 			ptr->file = result[0];
-		}
-		else
-		{
-			new_name = generate_random_name();
-			expand_heredoc(ptr, mini, new_name, ptr->fd);
 		}
 		ptr = ptr->next;
 	}

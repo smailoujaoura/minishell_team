@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 08:51:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:01:51 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ t_chain	*special_redir_case(t_chain *list);
 void	pre_picker(t_chain *list);
 void	post_picker(t_chain *list);
 void	lefts_picker(t_chain *list);
+t_chain	*create_empty(t_chain *start);
 
 // Utils
 void	*ft_malloc(size_t size, int flag);

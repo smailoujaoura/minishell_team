@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 08:54:23 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:17:47 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,15 @@ void	external_process(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	if (execve(path, argv, envp) == -1)
 	{
 		if (access(path, X_OK) == 0)
-		{
 			exit(EXIT_SUCCESS);
-		}
 		else
 		{
-			printf("minishell: %s: %s\n", path, strerror(errno));
+			write(2, "minishell: ", 12);
+			write(2, path, ft_strlen(path));
+			write(2, ": ", 2);
+			path = strerror(errno);
+			write(2, path, ft_strlen(path));
+			write(2, "\n", 2);
 			exit(EXIT_FAILURE);
 		}
 	}

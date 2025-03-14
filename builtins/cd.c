@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/12 19:33:46 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:09:09 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,17 @@ static int	handle_err(t_env *env)
 
 static int	cd_executor(char *cd_arg, char *path, int *status)
 {
+	char	*err_msg;
+
 	if (chdir(cd_arg) == -1)
 	{
 		free(path);
-		printf("minishell: cd: %s: %s\n", cd_arg, strerror(errno));
+		write(2, "minishell: cd: ", 16);
+		write(2, cd_arg, ft_strlen(cd_arg));
+		write(2, ": ", 3);
+		err_msg = strerror(errno);
+		write(2, err_msg, ft_strlen(err_msg));
+		write(2, "\n", 2);
 		*status = 1;
 		return (1);
 	}

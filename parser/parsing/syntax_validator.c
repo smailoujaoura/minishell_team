@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 19:58:41 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:48:49 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ int	one_token(t_chain *list)
 {
 	if (!(list->type == WORD))
 	{
-		printf("%s `%s'\n", SYNTAXERR, list->content);
+		write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+		write(2, " `", 2);
+		write(2, list->content, ft_strlen(list->content));
+		write(2, "'\n", 2);
 		return (1);
 	}
 	return (0);
@@ -86,9 +89,9 @@ int	check_syntax(t_chain *list, char *line, int l_paren, int r_paren)
 	if (l_paren != r_paren || check_quotes(line))
 	{
 		if (l_paren != r_paren)
-			printf("minishell: syntax error: unclosed parenthesis\n");
+			write(2, "minishell: syntax error: unclosed parenthesis\n", 47);
 		else
-			printf("minishell: syntax error: unquoted string\n");
+			write(2, "minishell: syntax error: unquoted string\n", 41);
 		return (-1);
 	}
 	return (0);

@@ -12,6 +12,7 @@
             // "cwd": "${workspaceFolder}",
             "envFile": "${workspaceFolder}/.env",
             "environment": [],
+            "console": "integratedTerminal",
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [
@@ -19,10 +20,18 @@
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
-                }
+                },
                 // {
-                //     "description": "Follow child process after fork",
+                //     "description": "Follow parent after fork",
+                //     "text": "-gdb-set follow-fork-mode parent"
+                // },
+                // {
+                //     "description": "Follow child after fork",
                 //     "text": "-gdb-set follow-fork-mode child"
+                // },
+                // {
+                //     "description": "Allow switching between parent and child",
+                //     "text": "-gdb-set detach-on-fork off"
                 // },
                 // {
                 //     "description": "Do not detach from parent after fork",
@@ -40,6 +49,14 @@
     ]
 }
 
+// {
+//     "description": "Follow child process after fork",
+//     "text": "-gdb-set follow-fork-mode child"
+// },
+// {
+//     "description": "Do not detach from parent after fork",
+//     "text": "-gdb-set detach-on-fork off"
+// }
 
 // "args": [
 //     "-i",

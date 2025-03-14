@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 20:42:25 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 08:27:46 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:01:24 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,7 @@ void	lefts_picker(t_chain *list)
 			ptr = ptr->next;
 		if (ptr != list)
 		{
-			new = ft_calloc(1, sizeof(t_chain), SOUJAOUR);
-			new->type = WORD;
-			new->content = "Empty CMD";
-			new->empty = 1;
+			new = create_empty(list);
 			new->next = ptr;
 			new->back = list->back;
 			list->back = NULL;
@@ -88,8 +85,9 @@ t_chain	*create_empty(t_chain *start)
 {
 	t_chain	*new;
 
-	new = lstnew(ft_strdup("EMPTY CMD!", SOUJAOUR));
+	new = lstnew(ft_strdup("Empty", SOUJAOUR));
 	new->type = WORD;
+	new->lvl = VIP;
 	new->empty = 1;
 	new->adj_f = start;
 	return (new);
@@ -109,9 +107,7 @@ t_chain	*special_redir_case(t_chain *list)
 		return (create_empty(start));
 	else if (end->type != WORD)
 	{
-		new = lstnew(ft_strdup("EMPTY CMD", SOUJAOUR));
-		new->empty = 1;
-		new->type = WORD;
+		new = create_empty(start);
 		new->adj_f = start;
 		end->back->next = NULL;
 		end->back = new;

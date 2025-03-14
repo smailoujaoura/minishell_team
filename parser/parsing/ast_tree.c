@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/02 22:20:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 08:23:36 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:51:15 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,7 @@ t_ast	*construct_tree(t_chain **node)
 		return (make_tree_node(node, OR));
 	else if ((*node)->type == R_PAREN)
 		return (make_tree_node(node, SUB));
-	else
-	{
-		printf("Why do we have more node types than we expect\n");
-		return (NULL);
-	}
+	return (NULL);
 }
 
 // checks the type of the token in list and creates nodes if necessary:

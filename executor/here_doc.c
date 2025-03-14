@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 14:42:10 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:51:29 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,22 @@ void	return_status(int signum)
 	exit(EXIT_FAILURE);
 }
 
-void	prompt_here_doc(const char *limiter, int fd, t_shell *mini)
+void	print_warning(t_shell *mini, char *limiter)
+{
+	char	*number;
+
+	number = ft_itoa(mini->num);
+	write(2, WARNA, ft_strlen(WARNA));
+	write(2, " ", 2);
+	write(2, number, ft_strlen(number));
+	free(number);
+	write(2, " ", 2);
+	write(2, WARNB, ft_strlen(WARNB));
+	write(2, limiter, ft_strlen(limiter));
+	write(2, "')\n", 4);
+}
+
+void	prompt_here_doc(char *limiter, int fd, t_shell *mini)
 {
 	char	*line;
 	char	*save;
@@ -61,12 +76,14 @@ void	prompt_here_doc(const char *limiter, int fd, t_shell *mini)
 		line = readline("> ");
 		if (!line)
 		{
-			printf("%s %d %s%s')\n", WARNA, mini->num, WARNB, limiter);
+			print_warning(mini, limiter);
+			close(fd);
 			break ;
 		}
 		if (ft_strncmp(line, limiter, SIZE_MAX) == 0)
 		{
 			free(line);
+			close(fd);
 			break ;
 		}
 		save = ft_strjoin(line, ft_strdup("\n", SOUJAOUR), SOUJAOUR);

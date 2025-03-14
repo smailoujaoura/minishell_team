@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:50:59 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/04 11:53:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/14 10:10:52 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ void	builtin_exit(char **argv, int *status)
 		num = ft_atoi(argv[1], &error);
 		if (error)
 		{
-			printf("minishell: exit: %s: numeric argument required\n", argv[1]);
+			write(2, "minishell: exit: ", 18);
+			write(2, argv[1], ft_strlen(argv[1]));
+			write(2, ": numeric argument required\n", 29);
 			*status = 2;
 			exit(2);
 		}

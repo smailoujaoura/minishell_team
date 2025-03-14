@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_validator_helper.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/03 14:27:28 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/14 10:49:35 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,22 @@ int	check_pipe(t_chain *prev, t_chain *next)
 	if (next->type == PIPE || next->type == AND || next->type == OR || !prev)
 	{
 		if (!next)
-			printf("%s '%s'\n", SYNTAXERR, "newline");
+		{
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " 'newline'\n", 12);
+		}
 		else if (!prev)
-			printf("%s `|'\n", SYNTAXERR);
+		{
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " `|'\n", 4);
+		}
 		else
-			printf("%s ```%s'\n", SYNTAXERR, next->content);
+		{
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " ```", 4);
+			write(2, next->content, ft_strlen(next->content));
+			write(2, "'\n", 2);
+		}
 		return (1);
 	}
 	return (0);
@@ -36,9 +47,19 @@ int	check_logicals(t_chain *prev, t_chain *next)
 	if (next->type == PIPE || next->type == AND || next->type == OR)
 	{
 		if (!next)
-			printf("%s `%s'\n", SYNTAXERR, "newline");
+		{
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " `", 2);
+			write(2, "newline", 7);
+			write(2, "'\n", 2);
+		}
 		else
-			printf("%s `%s'\n", SYNTAXERR, next->content);
+		{
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " `", 2);
+			write(2, next->content, ft_strlen(next->content));
+			write(2, "'\n", 2);
+		}
 		return (1);
 	}
 	(void)prev;
@@ -50,9 +71,19 @@ int	check_redirs(t_chain *prev, t_chain *next)
 	if (!next || next->type != WORD)
 	{
 		if (!next)
-			printf("%s `%s'\n", SYNTAXERR, "newline");
+		{
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " `", 2);
+			write(2, "newline", 7);
+			write(2, "'\n", 2);
+		}
 		else
-			printf("%s `%s'\n", SYNTAXERR, next->content);
+		{
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " `", 2);
+			write(2, next->content, ft_strlen(next->content));
+			write(2, "'\n", 2);
+		}
 		return (1);
 	}
 	(void)prev;
@@ -68,7 +99,10 @@ int	check_paren(t_chain *prev, t_chain *next, int paren)
 		if (next->type == R_PAREN || next->type == AND
 			|| next->type == OR || next->type == PIPE)
 		{
-			printf("%s `%s'\n", SYNTAXERR, next->content);
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " `", 2);
+			write(2, next->content, ft_strlen(next->content));
+			write(2, "'\n", 2);
 			return (1);
 		}
 	}
@@ -76,7 +110,10 @@ int	check_paren(t_chain *prev, t_chain *next, int paren)
 	{
 		if (next->type == L_PAREN)
 		{
-			printf("%s `%s'\n", SYNTAXERR, next->content);
+			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, " `", 2);
+			write(2, next->content, ft_strlen(next->content));
+			write(2, "'\n", 2);
 			return (1);
 		}
 	}
