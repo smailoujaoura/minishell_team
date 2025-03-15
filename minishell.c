@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 13:22:30 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/15 15:01:32 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	store_line(char *new, int flag)
 	static char	*store;
 
 	store = ft_strjoin(store, new, SOUJAOUR);
-	if (flag)
+	if (flag == 1)
 	{
 		if (store[0])
 			add_history(store);
@@ -73,14 +73,15 @@ t_ast	*parse_line(char *line, t_chain **list, t_shell *mini)
 	{
 		if (error == -1)
 			mini->last_exit = 2;
-		add_history(line);
+		store_line(line, 0);
+		store_line(NULL, 1);
 		return (NULL);
 	}
 	prioritize_list(*list);
 	join_redirs(*list);
 	join_commands(*list, NULL, NULL);
 	*list = assign_inputs(*list);
-	if (complete_line(mini, lstlast(*list), line, &rest))
+	if (complete_line(mini, lstlast(*list), line, &rest) && mini->flag != 1)
 		return (parse_line(rest, list, mini));
 	post = convert_infix(*list, NULL, NULL);
 	return (build_tree(post));
@@ -94,6 +95,7 @@ void	minishell(t_shell *mini, struct termios *initial)
 
 	while (1337)
 	{
+		mini->flag = 0;
 		list = NULL;
 		setup_signals(1);
 		line = readline("Minishell:$ ");
@@ -103,7 +105,8 @@ void	minishell(t_shell *mini, struct termios *initial)
 		free(line);
 		line = NULL;
 		setup_signals(2);
-		executor(root, mini);
+		if (!mini->flag)
+			executor(root, mini);
 		ft_malloc(0, DEALLOCATE);
 		mini->num++;
 		mini->volatile_exit = 0;
