@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/10 15:41:16 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/15 12:50:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	open_redir(t_chain *redir)
 	if (redir->type == REDIR_IN)
 		redir->fd = open(redir->file, O_RDONLY);
 	if (redir->type == REDIR_OUT)
-		redir->fd = open(redir->file, O_WRONLY | O_CREAT, 0644);
+		redir->fd = open(redir->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (redir->type == REDIR_APPEND)
 		redir->fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (redir->fd == -1)
