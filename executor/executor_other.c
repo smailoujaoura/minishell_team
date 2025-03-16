@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_other.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 13:34:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 16:13:59 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	execute_builtin(t_ast *tree, char **argv, t_shell *mini)
 		builtin_env(mini->env);
 	if (ft_strncmp("exit", argv[0], SIZE_MAX) == 0)
 	{
-		if (isatty(STDOUT_FILENO) && isatty(STDIN_FILENO) && tree->f == 0)
+		if (isatty(STDOUT_FILENO) && isatty(STDIN_FILENO) && tree->sub == 0)
 			write(1, "exit\n", 6);
 		builtin_exit(argv, &mini->last_exit);
 	}

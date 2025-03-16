@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/16 15:58:38 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/16 16:14:10 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ typedef struct s_chain
 typedef struct s_ast
 {
 	int				type;
-	int				f;
+	int				sub;
 	struct s_chain	*data;
 	struct s_ast	*left;
 	struct s_ast	*right;

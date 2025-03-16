@@ -6,11 +6,23 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 15:54:38 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/16 16:17:38 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	close_heredoc(t_chain *files)
+{
+	while (files)
+	{
+		if (files->ambiguous)
+			break ;
+		if (files->type == HEREDOC)
+			close(files->fd);
+		files = files->next;
+	}
+}
 
 int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 {
@@ -20,7 +32,7 @@ int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 	{
 		if (open_and_assign(tree->data->adj_f))
 			exit(1);
-		tree->left->f = 1;
+		tree->left->sub = 1;
 		executor(tree->left, mini);
 		exit(mini->last_exit);
 	}
@@ -59,30 +71,13 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		mini->last_exit = WEXITSTATUS(mini->last_exit);
 	else if (WIFSIGNALED(mini->last_exit))
 		mini->last_exit = WTERMSIG(mini->last_exit) + 128;
-	t_chain	*files = tree->left->data->adj_f;
-	while (files)
-	{
-		if (files->ambiguous)
-			break ;
-		if (files->type == HEREDOC)
-			close(files->fd);
-		files = files->next;
-	}
-	files = tree->right->data->adj_f;
-	while (files)
-	{
-		if (files->ambiguous)
-			break ;
-		if (files->type == HEREDOC)
-			close(files->fd);
-		files = files->next;
-	}
+	close_heredoc(tree->left->data->adj_f);
+	close_heredoc(tree->right->data->adj_f);
 }
 
 void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 {
 	char		**envp;
-	t_chain		*ptr;
 
 	if (is_empty_command(argv, mini))
 		return ;
@@ -95,15 +90,7 @@ void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
 		write(2, "Quit (core dumped)\n", 20);
 	if (mini->last_exit == 130)
 		write(1, "\n", 1);
-	ptr = tree->data->adj_f;
-	while (ptr)
-	{
-		if (ptr->ambiguous)
-			break ;
-		if (ptr->type == HEREDOC)
-			close(ptr->fd);
-		ptr = ptr->next;
-	}
+	close_heredoc(tree->data->adj_f);
 }
 
 void	executor(t_ast *tree, t_shell *mini)
