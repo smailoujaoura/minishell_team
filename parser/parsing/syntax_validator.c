@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 10:48:49 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 14:40:35 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 int	multiple_tokens(t_chain *prev, t_chain *token, t_chain *next)
 {
 	if (token->type == PIPE)
-		return (check_pipe(prev, next));
+		return (check_pipe(prev, token, next));
 	if (token->type == AND || token->type == OR)
-		return (check_logicals(prev, next));
+		return (check_logicals(prev, token, next));
 	if (token->type == HEREDOC || is_redir(token, OUT + OR + IN))
 		return (check_redirs(prev, next));
 	if (token->type == L_PAREN || token->type == R_PAREN)

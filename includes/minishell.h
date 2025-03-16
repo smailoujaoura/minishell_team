@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/15 14:59:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 14:40:25 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,8 +174,8 @@ void	delete_any(t_chain *ptr, int i);
 void	remove_if(t_chain *list);
 int		check_paren(t_chain *prev, t_chain *next, int paren);
 int		check_redirs(t_chain *prev, t_chain *next);
-int		check_logicals(t_chain *prev, t_chain *next);
-int		check_pipe(t_chain *prev, t_chain *next);
+int		check_logicals(t_chain *prev, t_chain *current, t_chain *next);
+int		check_pipe(t_chain *prev, t_chain *current, t_chain *next);
 int		check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
 t_chain	*special_redir_case(t_chain *list);
 void	pre_picker(t_chain *list);
