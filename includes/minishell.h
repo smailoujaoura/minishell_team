@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/16 14:40:25 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 15:58:38 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,6 +228,8 @@ void	builtin_env(t_env *env);
 void	builtin_cd(t_env *env, char **argv, int *status);
 int		builtin_export(t_env *env, char **argv, int flag);
 void	builtin_unset(t_shell *mini, char **argv);
+void	ft_update_oldpwd(t_env *env, char *path);
+void	ft_update_pwd(t_env *env, char *path);
 
 // Expanding
 char	**expand_cmd(t_chain *cmd, t_argv *args, t_shell *mini);

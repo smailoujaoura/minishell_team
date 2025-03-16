@@ -3,42 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 14:24:13 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 15:50:19 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int	handle_err(t_env *env)
+static int	handle_err(char **av, t_env *env, char *path)
 {
-	char	*path;
-	char	**argv;
-
-	chdir("..");
+	if (!ft_strncmp(av[1], "..", SIZE_MAX))
+		chdir("..");
 	path = getcwd(NULL, 0);
 	if (!path)
 	{
-		store_pwd("../", -2);
+		if (!ft_strncmp(av[1], "..", SIZE_MAX))
+		{
+			if (get_env_var(env, "PWD"))
+				ft_update_oldpwd(env, get_env_var(env, "PWD")->value);
+			store_pwd("/..", -2);
+		}
+		else if (!ft_strncmp(av[1], ".", SIZE_MAX))
+		{
+			if (get_env_var(env, "PWD"))
+				ft_update_oldpwd(env, get_env_var(env, "PWD")->value);
+			store_pwd("/.", -2);
+		}
 		write(2, "cd: error retrieving current directory: "
 			"getcwd: cannot access parent directories: "
 			"No such file or directory\n", 108);
-		argv = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
-		argv[0] = ft_strdup("export", BKOLANI);
-		argv[1] = ft_strdup(ft_strjoin("PWD=", store_pwd(NULL, 2), BKOLANI), BKOLANI);
-		argv[2] = NULL;
-		builtin_export(env, argv, 0);
+		if (get_env_var(env, "PWD"))
+			ft_update_pwd(env, store_pwd(NULL, 2));
 	}
 	free(path);
 	return (1);
 }
 
-static int	cd_executor(char *cd_arg, char *path, int *status)
+static int	cd_executor(t_env *env, char *cd_arg, int *status)
 {
 	char	*err_msg;
+	char	*path;
 
+	path = getcwd(NULL, 0);
 	if (chdir(cd_arg) == -1)
 	{
 		free(path);
@@ -51,6 +59,8 @@ static int	cd_executor(char *cd_arg, char *path, int *status)
 		*status = 1;
 		return (1);
 	}
+	if (get_env_var(env, "OLDPWD"))
+		ft_update_oldpwd(env, path);
 	store_pwd(cd_arg, -3);
 	free(path);
 	path = NULL;
@@ -58,58 +68,41 @@ static int	cd_executor(char *cd_arg, char *path, int *status)
 	return (0);
 }
 
-static void	cd_with_no_args(t_env *env, int *status, char **old_pwd, char **pwd)
+static void	cd_with_no_args(t_env *env, int *status)
 {
 	t_env	*home;
 	char	*path;
 
-	old_pwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
-	pwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 	home = get_env_var(env, "HOME");
 	if (!home)
 	{
 		write(2, "minishell: cd: HOME not set\n", 29);
 		return ;
 	}
-	path = getcwd(NULL, 0);
-	old_pwd[0] = ft_strdup("export", BKOLANI);
-	old_pwd[1] = ft_strjoin("OLDPWD=", path, BKOLANI);
-	old_pwd[2] = NULL;
-	builtin_export(env, old_pwd, 0);
-	if (cd_executor(home->value, path, status))
+	if (cd_executor(env, home->value, status))
 		return ;
 	path = getcwd(NULL, 0);
-	pwd[0] = ft_strdup("export", BKOLANI);
-	pwd[1] = ft_strjoin("PWD=", path, BKOLANI);
-	pwd[2] = NULL;
-	builtin_export(env, pwd, 0);
+	if (get_env_var(env, "PWD"))
+		ft_update_pwd(env, path);
 	free(path);
 }
 
 static void	cd_with_args(t_env *env, char **argv, int *status)
 {
 	char	*path;
-	char	**updated_oldpwd;
-	char	**updated_pwd;
 
-	updated_oldpwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
-	updated_pwd = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
-	path = getcwd(NULL, 0);
-	if (!path && !ft_strncmp(argv[1], "..", 2) && handle_err(env))
+	path = NULL;
+	if (!path && (!ft_strncmp(argv[1], "..", SIZE_MAX)
+			|| !ft_strncmp(argv[1], ".", SIZE_MAX))
+		&& handle_err(argv, env, NULL))
 		return ;
-	updated_oldpwd[0] = ft_strdup("export", BKOLANI);
-	updated_oldpwd[1] = ft_strjoin("OLDPWD=", path, BKOLANI);
-	updated_oldpwd[2] = NULL;
-	builtin_export(env, updated_oldpwd, 0);
-	if (cd_executor(argv[1], path, status))
+	if (cd_executor(env, argv[1], status))
 		return ;
 	path = getcwd(NULL, 0);
-	if (!path && handle_err(env))
+	if (!path && handle_err(argv, env, NULL))
 		return ;
-	updated_pwd[0] = ft_strdup("export", BKOLANI);
-	updated_pwd[1] = ft_strjoin("PWD=", path, BKOLANI);
-	updated_pwd[2] = NULL;
-	builtin_export(env, updated_pwd, 0);
+	if (get_env_var(env, "PWD"))
+		ft_update_pwd(env, path);
 	free(path);
 }
 
@@ -119,7 +112,7 @@ void	builtin_cd(t_env *env, char **argv, int *status)
 
 	if (argv[1] == NULL)
 	{
-		cd_with_no_args(env, status, NULL, NULL);
+		cd_with_no_args(env, status);
 		pwd = getcwd(NULL, 0);
 		store_pwd(pwd, -1);
 		free(pwd);

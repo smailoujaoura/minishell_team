@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 13:41:46 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 15:55:11 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,19 @@ char	*find_path(char **argv, t_env *env)
 	int			value;
 
 	value = stat(argv[0], &info);
+	// if (!ft_strncmp(argv[0], ".", SIZE_MAX))
+	// {
+	// 	write(2, "minishell: .: filename argument required\n", 41);
+	// 	write(2, ".: usage: . filename [arguments]\n", 33);
+	// 	exit(2);
+	// }
 	is_directory(argv[0], env, value, info);
 	if (ft_strchr(argv[0], '/') || !get_value_wrapper("PATH", env)[0])
-	{
 		return (argv[0]);
+	if (!ft_strncmp(get_value_wrapper("PATH", env), ".", SIZE_MAX))
+	{
+		if (access(argv[0], F_OK) == 0)
+			return (ft_strjoin("./", argv[0], BKOLANI));
 	}
 	path = construct_cmd_path(argv, env, -1);
 	if (path == NULL)
@@ -75,18 +84,16 @@ void	external_process(t_ast *tree, char **argv, char **envp, t_shell *mini)
 		exit(127);
 	if (execve(path, argv, envp) == -1)
 	{
-		if (access(path, X_OK) == 0)
-			exit(EXIT_SUCCESS);
-		else
-		{
-			write(2, "minishell: ", 12);
-			write(2, path, ft_strlen(path));
-			write(2, ": ", 2);
-			path = strerror(errno);
-			write(2, path, ft_strlen(path));
-			write(2, "\n", 2);
-			exit(EXIT_FAILURE);
-		}
+		write(2, "minishell: ", 12);
+		write(2, path, ft_strlen(path));
+		write(2, ": ", 2);
+		path = strerror(errno);
+		write(2, path, ft_strlen(path));
+		write(2, "\n", 2);
+		if (errno == ENOENT)
+			exit(127);
+		else if (errno == EACCES)
+			exit(126);
 	}
 }
 

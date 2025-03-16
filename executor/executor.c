@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 10:20:07 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 15:54:38 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,24 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		mini->last_exit = WEXITSTATUS(mini->last_exit);
 	else if (WIFSIGNALED(mini->last_exit))
 		mini->last_exit = WTERMSIG(mini->last_exit) + 128;
+	t_chain	*files = tree->left->data->adj_f;
+	while (files)
+	{
+		if (files->ambiguous)
+			break ;
+		if (files->type == HEREDOC)
+			close(files->fd);
+		files = files->next;
+	}
+	files = tree->right->data->adj_f;
+	while (files)
+	{
+		if (files->ambiguous)
+			break ;
+		if (files->type == HEREDOC)
+			close(files->fd);
+		files = files->next;
+	}
 }
 
 void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
