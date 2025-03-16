@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 15:55:11 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/16 18:05:29 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ char	*find_path(char **argv, t_env *env)
 	// 	exit(2);
 	// }
 	is_directory(argv[0], env, value, info);
-	if (ft_strchr(argv[0], '/') || !get_value_wrapper("PATH", env)[0])
+	if (ft_strchr(argv[0], '/') 
+		|| !get_value_wrapper("PATH", env)
+		|| !get_value_wrapper("PATH", env)[0])
 		return (argv[0]);
 	if (!ft_strncmp(get_value_wrapper("PATH", env), ".", SIZE_MAX))
 	{
