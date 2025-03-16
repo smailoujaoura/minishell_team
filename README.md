@@ -1,12 +1,10 @@
 --------------------------------------------------------------------------------- STILL
-fix segfault in expanding: export a, > $a
---------------------------------------------------------------------------------- STILL
 memory manangemnet issues in child processes
---------------------------------------------------------------------------------- STILL
+--------------------------------------------------------------------------------- STILL NEEDS MORE ATTENTION
 still reachable memory at program exit
 -------------------------------------------------------------------------------- STILL
 why do we fork 4 times to execute just one command
---------------------------------------------------------------------------------- STILL
+--------------------------------------------------------------------------------- STILL NEEDS MORE ATTENTION
 - unset PWD "chdir" check the OLDPW
 - usnet OLDPWD echo $ should not print when chdir should print
 - c^ echo $? not display for first time. ???
@@ -14,6 +12,8 @@ why do we fork 4 times to execute just one command
 - ulimit -u 3 limit number of forks.
 --------------------------------------------------------------------------------- STILL
 pipe file descriptors leaks when fork fails or something like that
+--------------------------------------------------------------------------------- DONE
+fix segfault in expanding: export a, > $a
 -------------------------------------------------------------------------------- DONE
 fix command execution flow: PATH=NULL, PATH=".", PATH="/usr/bin", etc.
 https://www.tldraw.com/f/e50Yo2cLlUrxL2mAjjEnm?d=v-403.146.3459.2028.page

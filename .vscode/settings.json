@@ -31,6 +31,8 @@
 		"system_error": "c",
 		"string_view": "c",
 		"initializer_list": "c",
-		"*.tcc": "c"
+		"*.tcc": "c",
+		"ioctl.h": "c",
+		"ttydefaults.h": "c"
 	}
 }
