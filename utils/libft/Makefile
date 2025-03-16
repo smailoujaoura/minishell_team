@@ -54,7 +54,12 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror 
+
+# -g -fsanitize=address
+# -fsanitize=address
+# -O3
+
 LIB = ar rcs
 
 all : $(NAME)

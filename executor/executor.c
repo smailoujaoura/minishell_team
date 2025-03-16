@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 16:17:38 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/16 23:23:09 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,10 @@ int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 			exit(1);
 		tree->left->sub = 1;
 		executor(tree->left, mini);
-		exit(mini->last_exit);
+		ft_exit(mini->last_exit);
+		// exit(mini->last_exit);
 	}
-	while (files)
-	{
-		if (files->ambiguous)
-			break ;
-		if (files->type == HEREDOC)
-			close(files->fd);
-		files = files->next;
-	}
+	close_heredoc(files);
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
 		return (WEXITSTATUS(mini->last_exit));

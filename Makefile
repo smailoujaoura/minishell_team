@@ -96,7 +96,12 @@ OBJS =  $(SRCS:.c=.o)
 DEPENS = $(SRCS:.c=.d)
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror
+
+# -g -fsanitize=address
+# -fsanitize=address
+# -O3
+
 LIBS = ./utils/libft/libft.a
 
 all: $(NAME)

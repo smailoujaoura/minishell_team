@@ -1,7 +1,3 @@
---------------------------------------------------------------------------------- STILL
-memory manangemnet issues in child processes
---------------------------------------------------------------------------------- STILL NEEDS MORE ATTENTION
-still reachable memory at program exit
 -------------------------------------------------------------------------------- STILL
 why do we fork 4 times to execute just one command
 --------------------------------------------------------------------------------- STILL NEEDS MORE ATTENTION
@@ -10,8 +6,12 @@ why do we fork 4 times to execute just one command
 - c^ echo $? not display for first time. ???
 - should not inherit OLDPWD AND PWD 
 - ulimit -u 3 limit number of forks.
---------------------------------------------------------------------------------- STILL
+--------------------------------------------------------------------------------- STILL MAYBE NOT REAL
 pipe file descriptors leaks when fork fails or something like that
+--------------------------------------------------------------------------------- DONE
+memory manangemnet issues in child processes
+--------------------------------------------------------------------------------- DONE 
+still reachable memory at program exit
 --------------------------------------------------------------------------------- DONE
 fix segfault in expanding: export a, > $a
 -------------------------------------------------------------------------------- DONE

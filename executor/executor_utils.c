@@ -3,14 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   executor_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 18:05:29 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/16 23:21:54 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	ft_exit(int status)
+{
+	ft_malloc_bkol(0, DEALLOCATE);
+	ft_malloc(0, DEALLOCATE);
+	exit(status);
+}
 
 void	is_directory(char *cmd, t_env *env, int value, struct stat info)
 {
@@ -23,12 +30,14 @@ void	is_directory(char *cmd, t_env *env, int value, struct stat info)
 			write(2, "minishell: ", 12);
 			write(2, cmd, ft_strlen(cmd));
 			write(2, ": Is a directory\n", 18);
-			exit(126);
+			ft_exit(126);
+			// exit(126);
 		}
 		else
 		{
 			write(2, "..: command not found\n", 23);
-			exit(127);
+			ft_exit(127);
+			// exit(127);
 		}
 	}
 	else if (value == 0 && S_ISDIR(info.st_mode))
@@ -36,7 +45,8 @@ void	is_directory(char *cmd, t_env *env, int value, struct stat info)
 		write(2, "minishell: ", 12);
 		write(2, cmd, ft_strlen(cmd));
 		write(2, ": Is a directory\n", 18);
-		exit(126);
+		ft_exit(126);
+		// exit(126);
 	}
 }
 
@@ -68,7 +78,8 @@ char	*find_path(char **argv, t_env *env)
 	{
 		write(2, argv[0], ft_strlen(argv[0]));
 		write(2, ": command not found\n", 21);
-		exit(127);
+		ft_exit(127);
+		// exit(127);
 	}
 	return (path);
 }
@@ -78,12 +89,15 @@ void	external_process(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	char	*path;
 
 	if (open_and_assign(tree->data->adj_f))
-		exit(1);
+		ft_exit(1);
+		// exit(1);
 	if (tree->data->empty)
-		exit(0);
+		ft_exit(0);
+		// exit(0);
 	path = find_path(argv, mini->env);
 	if (path == NULL)
-		exit(127);
+		ft_exit(127);
+		// exit(127);
 	if (execve(path, argv, envp) == -1)
 	{
 		write(2, "minishell: ", 12);
@@ -93,9 +107,11 @@ void	external_process(t_ast *tree, char **argv, char **envp, t_shell *mini)
 		write(2, path, ft_strlen(path));
 		write(2, "\n", 2);
 		if (errno == ENOENT)
-			exit(127);
+			ft_exit(127);
+			// exit(127);
 		else if (errno == EACCES)
-			exit(126);
+			ft_exit(126);
+			// exit(126);
 	}
 }
 
@@ -108,6 +124,8 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	{
 		setup_signals(3);
 		external_process(tree, argv, envp, mini);
+		ft_malloc(0, DEALLOCATE);
+		ft_malloc_bkol(0, DEALLOCATE);
 	}
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
@@ -125,7 +143,8 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 		close(pipe_fd[1]);
 		executor(tree->left, mini);
 		wait(NULL);
-		exit(mini->last_exit);
+		ft_exit(mini->last_exit);
+		// exit(mini->last_exit);
 	}
 	else
 	{
@@ -134,6 +153,7 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 		close(pipe_fd[0]);
 		executor(tree->right, mini);
 		wait(NULL);
-		exit(mini->last_exit);
+		ft_exit(mini->last_exit);
+		// exit(mini->last_exit);
 	}
 }
