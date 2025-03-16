@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 13:24:16 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 14:24:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ static int	handle_err(t_env *env)
 			"No such file or directory\n", 108);
 		argv = ft_malloc_bkol(sizeof(char *) * 3, ALLOCATE);
 		argv[0] = ft_strdup("export", BKOLANI);
-		argv[1] = ft_strdup(ft_strjoin("PWD=",
-					store_pwd(NULL, 2), BKOLANI), BKOLANI);
+		argv[1] = ft_strdup(ft_strjoin("PWD=", store_pwd(NULL, 2), BKOLANI), BKOLANI);
 		argv[2] = NULL;
 		builtin_export(env, argv, 0);
 	}
