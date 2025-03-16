@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 15:50:19 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/16 17:08:18 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ static int	handle_err(char **av, t_env *env, char *path)
 	{
 		if (!ft_strncmp(av[1], "..", SIZE_MAX))
 		{
-			if (get_env_var(env, "PWD"))
+			if (get_env_var(env, "PWD") && get_env_var(env, "OLDPWD"))
 				ft_update_oldpwd(env, get_env_var(env, "PWD")->value);
 			store_pwd("/..", -2);
 		}
 		else if (!ft_strncmp(av[1], ".", SIZE_MAX))
 		{
-			if (get_env_var(env, "PWD"))
+			if (get_env_var(env, "PWD") && get_env_var(env, "OLDPWD"))
 				ft_update_oldpwd(env, get_env_var(env, "PWD")->value);
 			store_pwd("/.", -2);
 		}
@@ -92,10 +92,6 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	char	*path;
 
 	path = NULL;
-	if (!path && (!ft_strncmp(argv[1], "..", SIZE_MAX)
-			|| !ft_strncmp(argv[1], ".", SIZE_MAX))
-		&& handle_err(argv, env, NULL))
-		return ;
 	if (cd_executor(env, argv[1], status))
 		return ;
 	path = getcwd(NULL, 0);

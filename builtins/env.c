@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:10 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 11:44:59 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/16 16:28:25 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,10 @@ void	init_shell(char **envp, t_shell *mini)
 	if (pwd)
 		store_pwd(ft_strdup(pwd, BKOLANI), -1);
 	else
+	{
 		perror("shell-init: error retrieving current directory: getcwd: \
 cannot access parent directories");
+	}
 	free(pwd);
 }
 
