@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 17:08:18 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/16 17:37:01 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,13 @@ static void	cd_with_no_args(t_env *env, int *status)
 	char	*path;
 
 	home = get_env_var(env, "HOME");
-	if (!home)
+	if (!home || !home->value)
 	{
 		write(2, "minishell: cd: HOME not set\n", 29);
 		return ;
 	}
+	if (!*home->value)
+		return ;
 	if (cd_executor(env, home->value, status))
 		return ;
 	path = getcwd(NULL, 0);
@@ -91,7 +93,6 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 {
 	char	*path;
 
-	path = NULL;
 	if (cd_executor(env, argv[1], status))
 		return ;
 	path = getcwd(NULL, 0);
