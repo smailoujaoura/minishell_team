@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 10:32:52 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 21:22:53 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ int		is_valid_key(char *key);
 void	print_keys_values(t_env *env);
 void	builtin_pwd(t_shell *mini);
 void	builtin_echo(char **argv, int *status);
-void	builtin_exit(char **argv, int *status);
+void	builtin_exit(char **argv, int *status, t_shell *mini);
 void	builtin_env(t_env *env);
 void	builtin_cd(t_env *env, char **argv, int *status);
 int		builtin_export(t_env *env, char **argv, int flag);

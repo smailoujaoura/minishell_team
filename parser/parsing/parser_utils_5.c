@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 20:42:25 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 10:01:24 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 21:55:11 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@ void	lefts_picker(t_chain *list)
 		if (ptr != list)
 		{
 			new = create_empty(list);
+			new->adj_f = list;
+			if (list->back)
+				list->back->next = new;
+			if (ptr)
+				ptr->back = new;
 			new->next = ptr;
 			new->back = list->back;
 			list->back = NULL;
-			new->adj_f = list;
-			new->back->next = new;
-			list = new;
 		}
 		list = list->next;
 	}
@@ -67,6 +69,8 @@ void	pre_picker(t_chain *list)
 {
 	t_chain	*start;
 	t_chain	*end;
+	t_chain	*before;
+	t_chain	*after;
 
 	if (!list->back || !is_redir(list->back, IN + OR + OUT))
 		return ;
@@ -76,9 +80,17 @@ void	pre_picker(t_chain *list)
 	{
 		list = list->back;
 	}
+	before = list->back;
+	after = end->next;
+	if (before)
+		before->next = after;
+	if (after)
+	{
+		after->back = before;
+		after->adj_f = list;
+	}
 	start->back = NULL;
 	end->next = NULL;
-	list->adj_f = start;
 }
 
 t_chain	*create_empty(t_chain *start)
