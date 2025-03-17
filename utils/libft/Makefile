@@ -54,11 +54,7 @@ CC = cc
 
 RM = rm -f
 
-CFLAGS = -Wall -Wextra -Werror  -g -fsanitize=address
-
-# -g -fsanitize=address
-# -fsanitize=address
-# -O3
+CFLAGS = -Wall -Wextra -Werror
 
 LIB = ar rcs
 

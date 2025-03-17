@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 15:24:14 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/17 15:59:55 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,10 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	path = getcwd(NULL, 0);
 	if (!path && handle_err(argv, env, NULL))
 		return ;
+	free(path);
 	if (cd_executor(env, argv[1], status))
 		return ;
+	path = getcwd(NULL, 0);
 	ft_update_pwd(env, path);
 	free(path);
 }
