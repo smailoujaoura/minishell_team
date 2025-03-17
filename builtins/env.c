@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:10 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 16:28:25 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/17 10:22:08 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,19 @@ char	**make_env(char **envp)
 	char	*cwd;
 	char	*path;
 
+	path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	env = ft_malloc_bkol((sizeof(char *) * 4), ALLOCATE);
 	if (envp && envp[0])
 		return (envp);
 	cwd = getcwd(NULL, 0);
-	path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-	env[0] = ft_strjoin("PWD=", ft_strdup(cwd, BKOLANI), BKOLANI);
+	if (cwd)
+	{
+		env[0] = ft_strjoin("PWD=", ft_strdup(cwd, BKOLANI), BKOLANI);
+		env[2] = ft_strjoin("OLDPWD=", ft_strdup(cwd, BKOLANI), BKOLANI);
+		free(cwd);
+	}
 	env[1] = ft_strjoin("PATH=", path, BKOLANI);
-	env[2] = ft_strjoin("OLDPWD=", ft_strdup(cwd, BKOLANI), BKOLANI);
 	env[3] = NULL;
-	free(cwd);
 	return (env);
 }
 
@@ -37,7 +40,7 @@ void	init_shell(char **envp, t_shell *mini)
 	char			*pwd;
 
 	envp = make_env(envp);
-	mini->env = handle_env(envp);
+	mini->env = handle_env(envp, -1);
 	mini->last_exit = 0;
 	mini->volatile_exit = 0;
 	mini->flag = 0;
