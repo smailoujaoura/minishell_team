@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 23:21:54 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:45:16 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,11 @@ void	is_directory(char *cmd, t_env *env, int value, struct stat info)
 			write(2, cmd, ft_strlen(cmd));
 			write(2, ": Is a directory\n", 18);
 			ft_exit(126);
-			// exit(126);
 		}
 		else
 		{
 			write(2, "..: command not found\n", 23);
 			ft_exit(127);
-			// exit(127);
 		}
 	}
 	else if (value == 0 && S_ISDIR(info.st_mode))
@@ -46,7 +44,6 @@ void	is_directory(char *cmd, t_env *env, int value, struct stat info)
 		write(2, cmd, ft_strlen(cmd));
 		write(2, ": Is a directory\n", 18);
 		ft_exit(126);
-		// exit(126);
 	}
 }
 
@@ -57,12 +54,6 @@ char	*find_path(char **argv, t_env *env)
 	int			value;
 
 	value = stat(argv[0], &info);
-	// if (!ft_strncmp(argv[0], ".", SIZE_MAX))
-	// {
-	// 	write(2, "minishell: .: filename argument required\n", 41);
-	// 	write(2, ".: usage: . filename [arguments]\n", 33);
-	// 	exit(2);
-	// }
 	is_directory(argv[0], env, value, info);
 	if (ft_strchr(argv[0], '/') 
 		|| !get_value_wrapper("PATH", env)
@@ -79,7 +70,6 @@ char	*find_path(char **argv, t_env *env)
 		write(2, argv[0], ft_strlen(argv[0]));
 		write(2, ": command not found\n", 21);
 		ft_exit(127);
-		// exit(127);
 	}
 	return (path);
 }
@@ -90,14 +80,11 @@ void	external_process(t_ast *tree, char **argv, char **envp, t_shell *mini)
 
 	if (open_and_assign(tree->data->adj_f))
 		ft_exit(1);
-		// exit(1);
 	if (tree->data->empty)
 		ft_exit(0);
-		// exit(0);
 	path = find_path(argv, mini->env);
 	if (path == NULL)
 		ft_exit(127);
-		// exit(127);
 	if (execve(path, argv, envp) == -1)
 	{
 		write(2, "minishell: ", 12);
@@ -108,10 +95,8 @@ void	external_process(t_ast *tree, char **argv, char **envp, t_shell *mini)
 		write(2, "\n", 2);
 		if (errno == ENOENT)
 			ft_exit(127);
-			// exit(127);
 		else if (errno == EACCES)
 			ft_exit(126);
-			// exit(126);
 	}
 }
 
@@ -144,7 +129,6 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 		executor(tree->left, mini);
 		wait(NULL);
 		ft_exit(mini->last_exit);
-		// exit(mini->last_exit);
 	}
 	else
 	{
@@ -154,6 +138,5 @@ void	pipe_child(t_ast *tree, t_shell *mini, int *pipe_fd, int flag)
 		executor(tree->right, mini);
 		wait(NULL);
 		ft_exit(mini->last_exit);
-		// exit(mini->last_exit);
 	}
 }

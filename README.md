@@ -1,12 +1,15 @@
---------------------------------------------------------------------------------- STILL NEEDS MORE ATTENTION
-- unset PWD "chdir" check the OLDPW
----------------------------------------------------------------------------------
-- unset OLDPWD echo $ should not print when chdir should print
-- c^ echo $? not display for first time. ???
+--------------------------------------------------------------------------------- STILL 
 - should not inherit OLDPWD AND PWD 
+-------------------------------------------------------------------------------- STILL
 - ulimit -u 3 limit number of forks.
 -------------------------------------------------------------------------------- STILL
 why do we fork 4 times to execute just one command
+--------------------------------------------------------------------------------- STILL
+- unset PWD "chdir" check the OLDPW
+--------------------------------------------------------------------------------- STILL
+- unset OLDPWD echo $ should not print when chdir should print
+--------------------------------------------------------------------------------- DONE
+- c^ echo $? not display for first time. ???
 --------------------------------------------------------------------------------- STILL MAYBE NOT REAL
 pipe file descriptors leaks when fork fails or something like that
 --------------------------------------------------------------------------------- DONE
