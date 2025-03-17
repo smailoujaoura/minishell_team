@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/16 19:57:34 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 08:43:04 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	statically_stored_shell(t_shell *mini, int action)
 	else
 	{
 		ptr->last_exit = g_sig_number + 128;
-		ptr->flag = 1;
 	}
 }
 

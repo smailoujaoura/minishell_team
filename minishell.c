@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/16 14:30:42 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 08:48:27 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,16 @@ t_ast	*parse_line(char *line, t_chain **list, t_shell *mini)
 {
 	t_chain	*post;
 	char	*rest;
-	int		error;
 
 	rest = NULL;
 	convert_str(line, list);
 	if (*list == NULL)
 		return (NULL);
 	tokenize_list(*list);
-	error = check_syntax(*list, line, 0, 0);
-	if (open_heredocs(*list, mini) || error == -1)
+	mini->error = check_syntax(*list, line, 0, 0);
+	if (open_heredocs(*list, mini) || mini->error == -1)
 	{
-		if (error == -1)
+		if (mini->error == -1)
 			mini->last_exit = 2;
 		store_line(line, 0);
 		store_line(NULL, 1);
@@ -95,15 +94,15 @@ void	minishell(t_shell *mini, struct termios *initial)
 
 	while (1337)
 	{
-		mini->flag = 0;
 		list = NULL;
+		mini->flag = 0; 
+		mini->error = 0;
 		setup_signals(1);
 		line = readline("Minishell:$ ");
 		if (line == NULL)
 			break ;
 		root = parse_line(line, &list, mini);
 		free(line);
-		line = NULL;
 		setup_signals(2);
 		if (!mini->flag)
 			executor(root, mini);

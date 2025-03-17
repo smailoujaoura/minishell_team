@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 23:23:09 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 08:49:31 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		mini->last_exit = WEXITSTATUS(mini->last_exit);
 	else if (WIFSIGNALED(mini->last_exit))
 		mini->last_exit = WTERMSIG(mini->last_exit) + 128;
-	close_heredoc(tree->left->data->adj_f);
+	if (tree->left)
+		close_heredoc(tree->left->data->adj_f);
+	if (tree->right)
 	close_heredoc(tree->right->data->adj_f);
 }
 

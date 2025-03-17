@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/16 23:23:50 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 08:45:47 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,11 +143,12 @@ typedef struct s_shell
 	t_env	*env;
 	int		last_exit;
 	int		volatile_exit;
-	int		singles;
-	int		doubles;
 	int		export;
 	int		flag;
+	int		error;
 	int		num;
+	int		singles;
+	int		doubles;
 }	t_shell;
 
 // General
