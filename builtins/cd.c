@@ -6,7 +6,7 @@
 /*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 13:24:53 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/17 15:24:14 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ static void	cd_with_no_args(t_env *env, int *status)
 	if (!home || !home->value)
 	{
 		write(2, "minishell: cd: HOME not set\n", 29);
+		*status = 1;
 		return ;
 	}
 	if (!*home->value)
