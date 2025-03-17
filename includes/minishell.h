@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 10:21:44 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:32:52 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ void	strip_heredoc(t_chain *node, char *delim);
 void	init_shell(char **envp, t_shell *mini);
 
 // Env functions and their utils
-t_env	*handle_env(char **envp, int i);
+t_env	*handle_env(char **envp, int i, char *cwd);
 t_env	*get_env_var(t_env *env, const char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
 t_env	*get_env_var(t_env *env, const char *key);

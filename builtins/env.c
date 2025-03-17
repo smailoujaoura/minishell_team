@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:10 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 10:22:08 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:33:02 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	init_shell(char **envp, t_shell *mini)
 	char			*pwd;
 
 	envp = make_env(envp);
-	mini->env = handle_env(envp, -1);
+	mini->env = handle_env(envp, -1, NULL);
 	mini->last_exit = 0;
 	mini->volatile_exit = 0;
 	mini->flag = 0;

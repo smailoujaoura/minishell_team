@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 17:37:01 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/17 10:31:06 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ static int	handle_err(char **av, t_env *env, char *path)
 		write(2, "cd: error retrieving current directory: "
 			"getcwd: cannot access parent directories: "
 			"No such file or directory\n", 108);
-		if (get_env_var(env, "PWD"))
-			ft_update_pwd(env, store_pwd(NULL, 2));
+		ft_update_pwd(env, store_pwd(NULL, 2));
 	}
 	free(path);
 	return (1);
@@ -59,7 +58,7 @@ static int	cd_executor(t_env *env, char *cd_arg, int *status)
 		*status = 1;
 		return (1);
 	}
-	if (get_env_var(env, "OLDPWD"))
+	// if (get_env_var(env, "OLDPWD"))
 		ft_update_oldpwd(env, path);
 	store_pwd(cd_arg, -3);
 	free(path);
@@ -84,8 +83,7 @@ static void	cd_with_no_args(t_env *env, int *status)
 	if (cd_executor(env, home->value, status))
 		return ;
 	path = getcwd(NULL, 0);
-	if (get_env_var(env, "PWD"))
-		ft_update_pwd(env, path);
+	ft_update_pwd(env, path);
 	free(path);
 }
 
@@ -98,8 +96,7 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	path = getcwd(NULL, 0);
 	if (!path && handle_err(argv, env, NULL))
 		return ;
-	if (get_env_var(env, "PWD"))
-		ft_update_pwd(env, path);
+	ft_update_pwd(env, path);
 	free(path);
 }
 

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 10:23:19 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:32:44 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,17 +80,17 @@ static t_env	*create_new_env(char *line)
 	return (new_env);
 }
 
-t_env	*handle_env(char **envp, int i)
+t_env	*handle_env(char **envp, int i, char *cwd)
 {
 	t_env	*head;
 	t_env	*new;
-	char	*cwd;
 
 	head = NULL;
 	cwd = getcwd(NULL, 0);
 	while (envp[++i])
 	{
-		if (ft_strncmp("PWD=", envp[i], 4) == 0 || ft_strncmp("OLDPWD=", envp[i], 4) == 0)
+		if (ft_strncmp("PWD=", envp[i], 5) == 0
+			|| ft_strncmp("OLDPWD=", envp[i], 8) == 0)
 		{
 			if (cwd)
 			{
