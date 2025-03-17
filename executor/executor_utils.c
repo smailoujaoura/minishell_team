@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 09:58:06 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 11:02:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ void	external_process(t_ast *tree, char **argv, char **envp, t_shell *mini)
 			ft_exit(127);
 		else if (errno == EACCES)
 			ft_exit(126);
+		else
+			ft_exit(1);
 	}
 }
 
@@ -102,8 +104,6 @@ void	external_cmd(t_ast *tree, char **argv, char **envp, t_shell *mini)
 	{
 		setup_signals(3);
 		external_process(tree, argv, envp, mini);
-		ft_malloc(0, DEALLOCATE);
-		ft_malloc_bkol(0, DEALLOCATE);
 	}
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
