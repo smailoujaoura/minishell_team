@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 08:48:27 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:50:30 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	minishell(t_shell *mini, struct termios *initial)
 	while (1337)
 	{
 		list = NULL;
-		mini->flag = 0; 
+		mini->flag = 0;
 		mini->error = 0;
 		setup_signals(1);
 		line = readline("Minishell:$ ");

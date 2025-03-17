@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 08:49:31 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:53:02 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 		tree->left->sub = 1;
 		executor(tree->left, mini);
 		ft_exit(mini->last_exit);
-		// exit(mini->last_exit);
 	}
 	close_heredoc(files);
 	waitpid(pid, &mini->last_exit, WUNTRACED);
@@ -68,7 +67,7 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 	if (tree->left)
 		close_heredoc(tree->left->data->adj_f);
 	if (tree->right)
-	close_heredoc(tree->right->data->adj_f);
+		close_heredoc(tree->right->data->adj_f);
 }
 
 void	run_cmd(t_ast *tree, t_shell *mini, char **argv)

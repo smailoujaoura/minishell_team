@@ -6,11 +6,23 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/16 14:40:52 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:09:12 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	write_four_strings(char *s1, char *s2, char *s3, char *s4)
+{
+	if (s1)
+		write(2, s1, ft_strlen(s1));
+	if (s2)
+		write(2, s2, ft_strlen(s2));
+	if (s3)
+		write(2, s3, ft_strlen(s3));
+	if (s4)
+		write(2, s4, ft_strlen(s4));
+}
 
 int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 {
@@ -18,10 +30,7 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 		return (0);
 	if (prev == NULL || prev->type != WORD)
 	{
-		write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
-		write(2, " `", 3);
-		write(2, current->content, ft_strlen(current->content));
-		write(2, "\n", 2);
+		write_four_strings(SYNTAXERR, " `", current->content, "\n");
 		return (1);
 	}
 	if (next->type == PIPE || next->type == AND || next->type == OR || !prev)
@@ -37,12 +46,7 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 			write(2, " `|'\n", 4);
 		}
 		else
-		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
-			write(2, " ```", 4);
-			write(2, next->content, ft_strlen(next->content));
-			write(2, "'\n", 2);
-		}
+			write_four_strings(SYNTAXERR, " ```", next->content, "'\n");
 		return (1);
 	}
 	return (0);
@@ -54,27 +58,18 @@ int	check_logicals(t_chain *prev, t_chain *current, t_chain *next)
 		return (0);
 	if (prev == NULL || prev->type != WORD)
 	{
-		write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
-		write(2, " `", 3);
-		write(2, current->content, ft_strlen(current->content));
-		write(2, "\n", 2);
+		write_four_strings(SYNTAXERR, " `", current->content, "\n");
 		return (1);
 	}
 	if (next->type == PIPE || next->type == AND || next->type == OR)
 	{
 		if (!next)
 		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
-			write(2, " `", 3);
-			write(2, "newline", 8);
-			write(2, "'\n", 3);
+			write_four_strings(SYNTAXERR, " `", "newline", "'\n");
 		}
 		else
 		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
-			write(2, " `", 2);
-			write(2, next->content, ft_strlen(next->content));
-			write(2, "'\n", 2);
+			write_four_strings(SYNTAXERR, " `", next->content, "'\n");
 		}
 		return (1);
 	}

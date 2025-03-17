@@ -6,18 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 16:05:37 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 09:45:16 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:58:06 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-void	ft_exit(int status)
-{
-	ft_malloc_bkol(0, DEALLOCATE);
-	ft_malloc(0, DEALLOCATE);
-	exit(status);
-}
 
 void	is_directory(char *cmd, t_env *env, int value, struct stat info)
 {
@@ -55,7 +48,7 @@ char	*find_path(char **argv, t_env *env)
 
 	value = stat(argv[0], &info);
 	is_directory(argv[0], env, value, info);
-	if (ft_strchr(argv[0], '/') 
+	if (ft_strchr(argv[0], '/')
 		|| !get_value_wrapper("PATH", env)
 		|| !get_value_wrapper("PATH", env)[0])
 		return (argv[0]);

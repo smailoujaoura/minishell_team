@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:38 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/16 17:06:56 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/17 09:51:51 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@ char	*store_pwd(char *store_it, int flag)
 	if (cur)
 	{
 		pwd = ft_strdup(cur, BKOLANI);
-		free(cur);
-		return (pwd);
+		return (free(cur), pwd);
 	}
 	if (flag == -1)
 		pwd = ft_strdup(store_it, BKOLANI);

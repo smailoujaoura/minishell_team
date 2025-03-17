@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 09:44:35 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 10:04:34 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,11 +151,8 @@ typedef struct s_shell
 	int		doubles;
 }	t_shell;
 
-// General
-void	minishell(t_shell *mini, struct termios *initial);
-void	ft_exit(int status);
-
 // Parsing
+void	minishell(t_shell *mini, struct termios *initial);
 void	convert_str(char *str, t_chain **list);
 void	tokenize_list(t_chain *list);
 void	handle_quotes(char **start, char target);
@@ -280,5 +277,6 @@ int		ft_fork(void);
 int		ft_dup(int old);
 int		ft_dup2(int old, int new);
 int		ft_pipe(int *pair);
+void	ft_exit(int status);
 
 #endif

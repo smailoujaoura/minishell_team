@@ -6,11 +6,18 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 11:35:53 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 13:38:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 09:58:36 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+void	ft_exit(int status)
+{
+	ft_malloc_bkol(0, DEALLOCATE);
+	ft_malloc(0, DEALLOCATE);
+	exit(status);
+}
 
 int	ft_pipe(int *pair)
 {
