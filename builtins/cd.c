@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 10:31:06 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 13:24:53 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,7 @@ static int	cd_executor(t_env *env, char *cd_arg, int *status)
 		*status = 1;
 		return (1);
 	}
-	// if (get_env_var(env, "OLDPWD"))
-		ft_update_oldpwd(env, path);
+	ft_update_oldpwd(env, path);
 	store_pwd(cd_arg, -3);
 	free(path);
 	path = NULL;
@@ -91,10 +90,10 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 {
 	char	*path;
 
-	if (cd_executor(env, argv[1], status))
-		return ;
 	path = getcwd(NULL, 0);
 	if (!path && handle_err(argv, env, NULL))
+		return ;
+	if (cd_executor(env, argv[1], status))
 		return ;
 	ft_update_pwd(env, path);
 	free(path);
