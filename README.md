@@ -1,6 +1,9 @@
 - exit(*status)
 - segv
 - compile error in some compilers
+- protect everything
+- run the code through codepilots to deroot any hidden memory issues
+- do not give the static variabe store_pwd a directory when all options are consumed
 
 
 

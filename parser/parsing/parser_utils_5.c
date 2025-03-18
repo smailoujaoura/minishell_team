@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 20:42:25 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 21:55:11 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/17 21:56:10 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	lefts_picker(t_chain *list)
 			new->next = ptr;
 			new->back = list->back;
 			list->back = NULL;
+			if (ptr)
+				ptr->back->next = NULL;
 		}
 		list = list->next;
 	}
