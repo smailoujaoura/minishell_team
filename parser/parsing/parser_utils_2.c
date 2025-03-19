@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:31 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/09 20:39:49 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:47:45 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_chain	*assign_inputs(t_chain *list)
 		}
 		list = list->next;
 	}
-	lefts_picker(saved);
+	lefts_picker(saved, NULL, NULL);
 	return (saved);
 }
 

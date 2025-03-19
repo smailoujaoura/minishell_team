@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 09:50:30 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 07:55:04 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,9 @@ void	minishell(t_shell *mini, struct termios *initial)
 		setup_signals(2);
 		if (!mini->flag)
 			executor(root, mini);
-		ft_malloc(0, DEALLOCATE);
 		mini->num++;
 		mini->volatile_exit = 0;
+		ft_malloc(0, DEALLOCATE);
 		if (tcsetattr(STDIN_FILENO, TCSANOW, initial) < 0)
 			return ;
 	}

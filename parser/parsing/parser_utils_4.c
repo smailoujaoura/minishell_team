@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:12:39 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/13 14:36:39 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:48:53 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,12 @@ void	remove_if(t_chain *list)
 		if (tmp->type == REMOVE || tmp->removable == REMOVE)
 			delete_any(tmp, 0);
 	}
+}
+
+void	disconnect_redir_list(t_chain *redirs_until)
+{
+	while (redirs_until && is_redir(redirs_until, IN + OR + OUT))
+		redirs_until = redirs_until->next;
+	if (redirs_until)
+		redirs_until->next = NULL;
 }

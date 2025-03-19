@@ -1,11 +1,15 @@
-- exit(*status)
-- segv
-- compile error in some compilers
-- protect everything
 - run the code through codepilots to deroot any hidden memory issues
-- do not give the static variabe store_pwd a directory when all options are consumed
+- protect everything
+- compile error in some compilers
+- segvs
+- segv                                                                               ---- DONE
+- exit(*status)                                                                      ---- DONE
+- do not give the static variabe store_pwd a directory when all options are consumed ---- DONE
+- ^CMinishell:$ wc | wc | ls                                                         ---- DONE
 
 
+TESTS: 
+- ( > output.txt)
 
 
 

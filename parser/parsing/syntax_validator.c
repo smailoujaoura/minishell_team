@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/16 14:40:35 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 08:42:49 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	one_token(t_chain *list)
 {
 	if (!(list->type == WORD))
 	{
-		write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+		write(2, SYNTAX, ft_strlen(SYNTAX));
 		write(2, " `", 2);
 		write(2, list->content, ft_strlen(list->content));
 		write(2, "'\n", 2);

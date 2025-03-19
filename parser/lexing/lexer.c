@@ -6,28 +6,11 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:51 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/02 19:55:18 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:07:34 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-// looks into the next character if it is in a set of tokens
-int	peek(char *s, char *tokens)
-{
-	char	*tok;
-
-	tok = tokens;
-	while (*tok)
-	{
-		if (*s == *tok)
-			return (1);
-		tok++;
-	}
-	if (*s == '&' && s + 1 && *(s + 1) == '&')
-		return (1);
-	return (0);
-}
 
 // tokenize the list depending on the first one/two characters > << ( || ..
 void	tokenize_list(t_chain *list)
@@ -58,20 +41,30 @@ void	tokenize_list(t_chain *list)
 	}
 }
 
-// keeps incrementing the start until a space or real operator is found
+// keeps incrementing the start until a space or real operator is found || ft_strchr("|<>()", **start)
 void	handle_words(char **start)
 {
 	if (**start == '\0' || ft_strchr(WHITESPACE, **start)
-		|| peek(*start, "|<>()") || (**start == '&' && *(*start + 1) == '&'))
+		|| ft_strchr("|<>()", **start) || (**start == '&' && *(*start + 1) == '&'))
+	{
 		return ;
+	}
 	else if (**start == '"')
+	{
 		handle_quotes(start, '"');
+	}
 	else if (**start == '\'')
+	{
 		handle_quotes(start, '\'');
+	}
 	else
+	{
 		while (!ft_strchr(WHITESPACE, **start) && !ft_strchr(SYMBOLS, **start)
 			&& !(**start == '&' && *(*start + 1) == '&'))
+		{
 			(*start)++;
+		}
+	}
 	handle_words(start);
 }
 

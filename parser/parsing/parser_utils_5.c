@@ -6,17 +6,14 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 20:42:25 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 21:56:10 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:48:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	lefts_picker(t_chain *list)
+void	lefts_picker(t_chain *list, t_chain *new, t_chain *ptr)
 {
-	t_chain	*ptr;
-	t_chain	*new;
-
 	while (list)
 	{
 		ptr = list;
@@ -26,15 +23,18 @@ void	lefts_picker(t_chain *list)
 		{
 			new = create_empty(list);
 			new->adj_f = list;
-			if (list->back)
-				list->back->next = new;
-			if (ptr)
-				ptr->back = new;
 			new->next = ptr;
 			new->back = list->back;
+			if (list->back)
+				list->back->next = new;
 			list->back = NULL;
 			if (ptr)
+			{
+				ptr->back = new;
 				ptr->back->next = NULL;
+			}
+			disconnect_redir_list(new->adj_f);
+			list = new;
 		}
 		list = list->next;
 	}

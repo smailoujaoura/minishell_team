@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 10:09:12 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:12:25 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,23 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 		return (0);
 	if (prev == NULL || prev->type != WORD)
 	{
-		write_four_strings(SYNTAXERR, " `", current->content, "\n");
+		write_four_strings(SYNTAX, " `", current->content, "\n");
 		return (1);
 	}
 	if (next->type == PIPE || next->type == AND || next->type == OR || !prev)
 	{
 		if (!next)
 		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, SYNTAX, ft_strlen(SYNTAX));
 			write(2, " 'newline'\n", 12);
 		}
 		else if (!prev)
 		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, SYNTAX, ft_strlen(SYNTAX));
 			write(2, " `|'\n", 4);
 		}
 		else
-			write_four_strings(SYNTAXERR, " ```", next->content, "'\n");
+			write_four_strings(SYNTAX, " ```", next->content, "'\n");
 		return (1);
 	}
 	return (0);
@@ -58,18 +58,18 @@ int	check_logicals(t_chain *prev, t_chain *current, t_chain *next)
 		return (0);
 	if (prev == NULL || prev->type != WORD)
 	{
-		write_four_strings(SYNTAXERR, " `", current->content, "\n");
+		write_four_strings(SYNTAX, " `", current->content, "\n");
 		return (1);
 	}
 	if (next->type == PIPE || next->type == AND || next->type == OR)
 	{
 		if (!next)
 		{
-			write_four_strings(SYNTAXERR, " `", "newline", "'\n");
+			write_four_strings(SYNTAX, " `", "newline", "'\n");
 		}
 		else
 		{
-			write_four_strings(SYNTAXERR, " `", next->content, "'\n");
+			write_four_strings(SYNTAX, " `", next->content, "'\n");
 		}
 		return (1);
 	}
@@ -82,14 +82,14 @@ int	check_redirs(t_chain *prev, t_chain *next)
 	{
 		if (!next)
 		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, SYNTAX, ft_strlen(SYNTAX));
 			write(2, " `", 2);
 			write(2, "newline", 7);
 			write(2, "'\n", 2);
 		}
 		else
 		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
+			write(2, SYNTAX, ft_strlen(SYNTAX));
 			write(2, " `", 2);
 			write(2, next->content, ft_strlen(next->content));
 			write(2, "'\n", 2);
@@ -106,24 +106,17 @@ int	check_paren(t_chain *prev, t_chain *next, int paren)
 		return (0);
 	if (paren == L_PAREN)
 	{
+		if (prev && (prev->type != WORD || prev->type != OR
+			|| prev->type != AND || prev->type != PIPE))
+			return (write_four_strings(SYNTAX, "` ", next->content, "'\n"), 1);
 		if (next->type == R_PAREN || next->type == AND
 			|| next->type == OR || next->type == PIPE)
-		{
-			write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
-			write(2, " `", 2);
-			write(2, next->content, ft_strlen(next->content));
-			write(2, "'\n", 2);
-			return (1);
-		}
+			return (write_four_strings(SYNTAX, " `", next->content, "'\n"), 1);
 	}
-	if (paren == R_PAREN && next->type == L_PAREN)
+	if (paren == R_PAREN)
 	{
-		write(2, SYNTAXERR, ft_strlen(SYNTAXERR));
-		write(2, " `", 2);
-		write(2, next->content, ft_strlen(next->content));
-		write(2, "'\n", 2);
-		return (1);
+		if (next->type == WORD || next->type == L_PAREN)
+			return (write_four_strings(SYNTAX, " `", next->content, "'\n"), 1);
 	}
-	(void)prev;
 	return (0);
 }

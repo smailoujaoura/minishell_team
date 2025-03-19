@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:38 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 13:12:38 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/19 08:04:42 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*store_pwd(char *store_it, int flag)
 	if (pwd)
 		return (pwd);
 	else
-		return (ft_strdup("/home/soujaour", BKOLANI));
+		return (NULL);
 }
 
 void	builtin_pwd(t_shell *mini)
@@ -73,7 +73,9 @@ void	builtin_pwd(t_shell *mini)
 	if (!path)
 	{
 		pwd_str = get_env_var(mini->env, "PWD");
-		if (pwd_str == NULL)
+		if (pwd_str == NULL && store_pwd(NULL, 2) == NULL)
+			printf("pwd: error tetrieving current directory: getcwd: %s\n", strerror(errno));
+		else if (pwd_str == NULL)
 			printf("%s\n", store_pwd(NULL, 2));
 		else if (pwd_str)
 			printf("%s\n", pwd_str->value);

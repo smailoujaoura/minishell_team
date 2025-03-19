@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 21:22:53 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 09:49:02 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@
 # define CREATE 46
 # define INVALID 92
 
-# define SYNTAXERR "Minishell: syntax error near unexpected token"
+# define SYNTAX "Minishell: syntax error near unexpected token"
 
 typedef struct termios	t_term;
 
@@ -179,7 +179,8 @@ int		check_syntax(t_chain *list, char *line, int l_paren, int r_paren);
 t_chain	*special_redir_case(t_chain *list);
 void	pre_picker(t_chain *list);
 void	post_picker(t_chain *list);
-void	lefts_picker(t_chain *list);
+void	disconnect_redir_list(t_chain *redirs_until);
+void	lefts_picker(t_chain *list, t_chain *new, t_chain *ptr);
 t_chain	*create_empty(t_chain *start);
 
 // Utils

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/17 08:43:04 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 07:53:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	second_handler(int signum)
 {
 	(void)signum;
 	g_sig_number = SIGINT;
+	write(1, "\n", 2);
 	statically_stored_shell(NULL, SIGINT);
 }
 
