@@ -11,8 +11,43 @@
 TESTS: 
 - ( > output.txt)
 
+"
+❯ env -i .././minishell
+shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+Minishell:$ env
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ 
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ 
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ 
+Minishell:$ pwd
+pwd: error tetrieving current directory: getcwd: No such file or directory
+Minishell:$ export
+Minishell:$ env
+Minishell:$ echo $PATH
 
+Minishell:$ export
+Minishell:$ export a b
+e[1]    320815 segmentation fault (core dumped)  env -i .././minishell
+"
 
+" ask | "
 
 --------------------------------------------------------------------------------- STILL 
 - should not inherit OLDPWD AND PWD 

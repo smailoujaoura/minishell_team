@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 19:26:22 by soujaour          #+#    #+#             */
-/*   Updated: 2025/02/10 09:59:57 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 21:15:39 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*ft_strdup(const char *s1, int f)
 	size_t	i;
 
 	i = 0;
+	if (s1 == NULL)
+		return (NULL);
 	while (s1[i])
 		i++;
 	ptr = check_collectors((i + 1), f);

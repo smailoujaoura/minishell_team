@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/19 16:08:44 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 21:54:54 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@ void	write_four_strings(char *s1, char *s2, char *s3, char *s4)
 
 int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 {
+	(void)current;
 	if (next == NULL)
 		return (0);
 	if (prev == NULL || prev->type != WORD)
 	{
-		write_four_strings(SYNTAX, " `", current->content, "\n");
+		write_four_strings(SYNTAX, " `|'\n", NULL, NULL);
 		return (1);
 	}
 	if (next->type == PIPE || next->type == AND || next->type == OR || !prev)
@@ -38,12 +39,12 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 		if (!next)
 		{
 			write(2, SYNTAX, ft_strlen(SYNTAX));
-			write(2, " 'newline'\n", 12);
+			write(2, " 'newline'\n", 11);
 		}
 		else if (!prev)
 		{
 			write(2, SYNTAX, ft_strlen(SYNTAX));
-			write(2, " `|'\n", 4);
+			write(2, " `|'\n", 5);
 		}
 		else
 			write_four_strings(SYNTAX, " ```", next->content, "'\n");

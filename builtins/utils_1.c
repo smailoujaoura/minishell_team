@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 10:32:44 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/19 21:53:04 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,19 @@ static t_env	*create_new_env(char *line)
 	int		action;
 
 	new_env = ft_malloc_bkol(sizeof(t_env), ALLOCATE);
+	if (line == NULL)
+		return (NULL);
 	splited_line = splitter(line, &action);
-	new_env->key = ft_strdup(splited_line[0], BKOLANI);
-	new_env->value = ft_strdup(splited_line[1], BKOLANI);
+	if (splited_line == NULL)
+		return (NULL);
+	if (splited_line[0])
+		new_env->key = ft_strdup(splited_line[0], BKOLANI);
+	else
+		new_env->key = splited_line[0];
+	if (splited_line[1])
+		new_env->value = ft_strdup(splited_line[1], BKOLANI);
+	else
+		new_env->value = splited_line[1];
 	new_env->next = NULL;
 	return (new_env);
 }
@@ -84,27 +94,32 @@ t_env	*handle_env(char **envp, int i, char *cwd)
 {
 	t_env	*head;
 	t_env	*new;
+	char	*path;
 
 	head = NULL;
-	cwd = getcwd(NULL, 0);
-	while (envp[++i])
+	path = "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+	if (envp == NULL || envp[0] == NULL)
 	{
-		if (ft_strncmp("PWD=", envp[i], 5) == 0
-			|| ft_strncmp("OLDPWD=", envp[i], 8) == 0)
-		{
-			if (cwd)
-			{
-				new = create_new_env(ft_strjoin("PWD=", cwd, BKOLANI));
-				ft_lstadd_back_env(&head, new);
-				new = create_new_env(ft_strjoin("OLDPWD=", cwd, BKOLANI));
-				ft_lstadd_back_env(&head, new);
-			}
-			continue ;
-		}
-		new = create_new_env(envp[i]);
+		new = create_new_env(path);
 		ft_lstadd_back_env(&head, new);
+		new = create_new_env("OLDPWD");
+		ft_lstadd_back_env(&head, new);
+		// builtin_export(head)
 	}
+	else
+	{
+		while (envp && envp[++i])
+		{
+			new = create_new_env(envp[i]);
+			ft_lstadd_back_env(&head, new);
+		}
+	}
+	cwd = getcwd(NULL, 0);
 	if (cwd)
+	{
+		ft_update_pwd(head, cwd);
+		// ft_update_oldpwd(head, cwd);
 		free(cwd);
+	}
 	return (head);
 }

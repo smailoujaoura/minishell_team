@@ -127,4 +127,7 @@ fclean: clean
 
 re: fclean all
 
+tidy:
+	$(CLANG_TIDY) *.c -- -I.
+
 .PHONY: clean
