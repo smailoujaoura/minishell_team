@@ -1,7 +1,7 @@
 - run the code through codepilots to deroot any hidden memory issues
 - protect everything
-- compile error in some compilers
 - segvs
+- compile error in some compilers                                                    ---- DONE
 - segv                                                                               ---- DONE
 - exit(*status)                                                                      ---- DONE
 - do not give the static variabe store_pwd a directory when all options are consumed ---- DONE
