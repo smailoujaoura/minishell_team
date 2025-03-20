@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:56:00 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 13:44:59 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:22:10 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,14 @@ int	check_args(t_env *env, char *line)
 	key_value = splitter(line, &action);
 	if (key_value == NULL && !is_valid_key(line))
 	{
-		write(2, "minishell: export: `", 21);
-		write(2, line, strlen(line));
-		write(2, "': not a valid identifier\n", 27);
+		write_four_strings("minishell: export: `", line, INVALID_ID, NULL);
 		return (1);
 	}
 	else if (key_value == NULL)
 		export_without_value(env, line);
 	else if (!is_valid_key(key_value[0]) || action == 0 || action == INVALID)
 	{
-		write(2, "minishell: export: `", 21);
-		write(2, line, strlen(line));
-		write(2, "': not a valid identifier\n", 27);
+		write_four_strings("minishell: export: `", line, INVALID_ID, NULL);
 		return (1);
 	}
 	else
@@ -105,8 +101,10 @@ int	builtin_export(t_env *env, char **argv, int flag)
 {
 	int	i;
 	int	status;
+	int	last;
 
 	status = 0;
+	last = 0;
 	if (!argv[1] && flag)
 	{
 		print_keys_values(env);
@@ -114,6 +112,10 @@ int	builtin_export(t_env *env, char **argv, int flag)
 	}
 	i = 0;
 	while (argv[++i])
+	{
 		status = check_args(env, argv[i]);
-	return (status);
+		if (status == 1)
+			last = status;
+	}
+	return (last);
 }

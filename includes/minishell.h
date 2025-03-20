@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 15:40:28 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:19:30 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@
 # define STRT "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_?"
 # define MID "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
 # define VAR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+# define INVALID_ID "': not a valid identifier\n"
 
 # define REMOV 'r'
 # define HANDLE 'h'
@@ -152,6 +153,7 @@ typedef struct s_shell
 }	t_shell;
 
 // Parsing
+void	write_four_strings(char *s1, char *s2, char *s3, char *s4);
 void	minishell(t_shell *mini, struct termios *initial);
 void	convert_str(char *str, t_chain **list);
 void	tokenize_list(t_chain *list);
