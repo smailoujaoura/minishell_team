@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/20 09:46:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:19:55 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,23 @@ static void	cd_with_no_args(t_env *env, int *status)
 static void	cd_with_args(t_env *env, char **argv, int *status)
 {
 	char	*path;
+	char	*new;
+	int		i;
 
 	path = getcwd(NULL, 0);
-	if (!ft_strchr(argv[1], '/') && !path && handle_err(argv, env, NULL))
+	i = chdir(argv[1]);
+	new = getcwd(NULL, 0);
+	if (i != -1 && !new && !path && handle_err(argv, env, NULL))
 		return ;
 	free(path);
-	if (cd_executor(env, argv[1], status))
-		return ;
+	free(new);
+	if (i == 0)
+		cd_executor(env, ".", status);
+	else
+	{
+		if (cd_executor(env, argv[1], status))
+			return ;
+	}
 	path = getcwd(NULL, 0);
 	ft_update_pwd(env, path);
 	free(path);
