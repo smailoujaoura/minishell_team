@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 15:59:55 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 09:46:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,26 @@
 
 static int	handle_err(char **av, t_env *env, char *path)
 {
+	char	*stored;
+
 	if (!ft_strncmp(av[1], "..", SIZE_MAX))
 		chdir("..");
 	path = getcwd(NULL, 0);
 	if (!path)
 	{
+		stored = store_pwd(NULL, RETRIEVE);
 		if (!ft_strncmp(av[1], "..", SIZE_MAX))
-		{
-			if (get_env_var(env, "PWD") && get_env_var(env, "OLDPWD"))
-				ft_update_oldpwd(env, get_env_var(env, "PWD")->value);
-			store_pwd("/..", -2);
-		}
+			store_pwd("/..", STORE);
 		else if (!ft_strncmp(av[1], ".", SIZE_MAX))
-		{
-			if (get_env_var(env, "PWD") && get_env_var(env, "OLDPWD"))
-				ft_update_oldpwd(env, get_env_var(env, "PWD")->value);
-			store_pwd("/.", -2);
-		}
+			store_pwd("/.", STORE);
 		write(2, "cd: error retrieving current directory: "
 			"getcwd: cannot access parent directories: "
 			"No such file or directory\n", 108);
-		ft_update_pwd(env, store_pwd(NULL, 2));
+		if (stored)
+			ft_update_oldpwd(env, stored);
+		stored = store_pwd(NULL, RETRIEVE);
+		if (stored)
+			ft_update_pwd(env, stored);
 	}
 	free(path);
 	return (1);
@@ -84,6 +83,7 @@ static void	cd_with_no_args(t_env *env, int *status)
 		return ;
 	path = getcwd(NULL, 0);
 	ft_update_pwd(env, path);
+	// and old pwd won't get updated?! 
 	free(path);
 }
 
@@ -92,7 +92,7 @@ static void	cd_with_args(t_env *env, char **argv, int *status)
 	char	*path;
 
 	path = getcwd(NULL, 0);
-	if (!path && handle_err(argv, env, NULL))
+	if (!ft_strchr(argv[1], '/') && !path && handle_err(argv, env, NULL))
 		return ;
 	free(path);
 	if (cd_executor(env, argv[1], status))

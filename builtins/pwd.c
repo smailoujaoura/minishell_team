@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:38 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/19 08:04:42 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 09:44:58 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,51 +34,42 @@ void	ft_update_pwd(t_env *env, char *path)
 	builtin_export(env, updated_pwd, 0);
 }
 
-char	*store_pwd(char *store_it, int flag)
+char	*store_pwd(char *appendage, int flag)
 {
 	static char	*pwd;
-	char		*cur;
+	char		*cwd;
 
-	cur = getcwd(NULL, 0);
-	if (cur)
+	cwd = getcwd(NULL, 0);
+	if (cwd != NULL)
 	{
-		pwd = ft_strdup(cur, BKOLANI);
-		return (free(cur), pwd);
-	}
-	if (flag == -1)
-		pwd = ft_strdup(store_it, BKOLANI);
-	else if (flag == -2)
-		pwd = ft_strjoin(pwd, store_it, BKOLANI);
-	else if (flag == -3)
-	{
-		if (store_it[ft_strlen(store_it) - 1] == '/')
-			store_it = ft_substr(store_it, 0,
-					(ft_strlen(store_it) - 1), BKOLANI);
-		if (store_it[0] != '/')
-			pwd = ft_strjoin(pwd, ft_strjoin("/", store_it, BKOLANI), BKOLANI);
-	}
-	if (pwd)
+		pwd = ft_strdup(cwd, BKOLANI);
+		free(cwd);
 		return (pwd);
+	}
+	else if (flag == STORE)
+	{
+		pwd = ft_strjoin(pwd, appendage, BKOLANI);
+		return (pwd);
+	}
 	else
-		return (NULL);
+		return (pwd);
 }
 
 void	builtin_pwd(t_shell *mini)
 {
 	char	*path;
-	t_env	*pwd_str;
 
 	path = getcwd(NULL, 0);
-	pwd_str = NULL;
-	if (!path)
+	if (path == NULL)
 	{
-		pwd_str = get_env_var(mini->env, "PWD");
-		if (pwd_str == NULL && store_pwd(NULL, 2) == NULL)
-			printf("pwd: error tetrieving current directory: getcwd: %s\n", strerror(errno));
-		else if (pwd_str == NULL)
+		if (store_pwd(NULL, 2) == NULL)
+		{
+			printf("pwd: error retrieving current directory: getcwd: \
+cannot access parent directories: %s\n", strerror(errno));
+			mini->last_exit = 1;
+		}
+		else
 			printf("%s\n", store_pwd(NULL, 2));
-		else if (pwd_str)
-			printf("%s\n", pwd_str->value);
 		return ;
 	}
 	printf("%s\n", path);

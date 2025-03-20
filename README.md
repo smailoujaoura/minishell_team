@@ -49,6 +49,46 @@ e[1]    320815 segmentation fault (core dumped)  env -i .././minishell
 
 " ask | "
 
+
+-----------------------
+env -i bash
+shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+soujaour@e2r12p2:.$ pwd
+pwd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+soujaour@e2r12p2:.$ export
+declare -x LC_COLLATE="C"
+declare -x OLDPWD
+declare -x SHLVL="1"
+soujaour@e2r12p2:.$ cd .
+chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+soujaour@e2r12p2:.$ pwd
+.
+soujaour@e2r12p2:.$ cd .
+soujaour@e2r12p2:.$ pwd
+.
+soujaour@e2r12p2:.$ cd .
+soujaour@e2r12p2:.$ pwd
+.
+soujaour@e2r12p2:.$ 
+soujaour@e2r12p2:.$ pwd
+.
+soujaour@e2r12p2:.$ cd ..
+soujaour@e2r12p2:..$ pwd
+..
+soujaour@e2r12p2:..$ 
+soujaour@e2r12p2:..$ pwd
+..
+soujaour@e2r12p2:..$ cd ..
+soujaour@e2r12p2:../..$ pwd
+../..
+soujaour@e2r12p2:../..$ cd ..
+soujaour@e2r12p2:../../..$ pwd
+../../..
+soujaour@e2r12p2:../../..$ 
+soujaour@e2r12p2:../../..$ pwd
+../../..
+soujaour@e2r12p2:../../..$ cd
+
 --------------------------------------------------------------------------------- STILL 
 - should not inherit OLDPWD AND PWD 
 -------------------------------------------------------------------------------- STILL

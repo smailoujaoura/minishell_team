@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:58:05 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/13 12:48:32 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:03:38 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,10 @@ void	builtin_unset(t_shell *mini, char **argv)
 			position = mini->env;
 			while (position && position->next != target)
 				position = position->next;
-			position->next = target->next;
+			if (position)
+				position->next = target->next;
 		}
-		else if (target == mini->env)
+		else if (target != NULL && target == mini->env)
 		{
 			mini->env = target->next;
 		}

@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:51 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/19 09:07:34 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 09:46:23 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void	tokenize_list(t_chain *list)
 	}
 }
 
-// keeps incrementing the start until a space or real operator is found || ft_strchr("|<>()", **start)
+// keeps incrementing the start until a space or real operator is found
 void	handle_words(char **start)
 {
-	if (**start == '\0' || ft_strchr(WHITESPACE, **start)
-		|| ft_strchr("|<>()", **start) || (**start == '&' && *(*start + 1) == '&'))
+	if (**start == '\0' || ft_strchr(WHITESPACE, **start) || ft_strchr("|<>()",
+			**start) || (**start == '&' && *(*start + 1) == '&'))
 	{
 		return ;
 	}

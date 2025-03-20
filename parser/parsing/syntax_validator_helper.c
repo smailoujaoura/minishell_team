@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/19 21:54:54 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:41:52 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,10 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 
 int	check_logicals(t_chain *prev, t_chain *current, t_chain *next)
 {
+	(void)prev;
+	(void)current;
 	if (next == NULL)
 		return (0);
-	if (prev == NULL || prev->type != WORD)
-	{
-		write_four_strings(SYNTAX, " `", current->content, "\n");
-		return (1);
-	}
 	if (next->type == PIPE || next->type == AND || next->type == OR)
 	{
 		if (!next)

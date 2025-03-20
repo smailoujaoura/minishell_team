@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:07:14 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/19 21:53:04 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 09:59:17 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,36 +90,30 @@ static t_env	*create_new_env(char *line)
 	return (new_env);
 }
 
-t_env	*handle_env(char **envp, int i, char *cwd)
+t_env	*handle_env(char **envp, int i, char *cwd, t_shell *mini)
 {
-	t_env	*head;
-	t_env	*new;
-	char	*path;
+	static char	*argv1[3] = {"export", "OLDPWD", NULL};
+	static char	*argv2[3] = {"unset", "OLDPWD", NULL};
+	t_env		*head;
+	char		*path;
 
 	head = NULL;
+	mini->env = head;
 	path = "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	if (envp == NULL || envp[0] == NULL)
-	{
-		new = create_new_env(path);
-		ft_lstadd_back_env(&head, new);
-		new = create_new_env("OLDPWD");
-		ft_lstadd_back_env(&head, new);
-		// builtin_export(head)
-	}
+		ft_lstadd_back_env(&head, create_new_env(path));
 	else
 	{
 		while (envp && envp[++i])
-		{
-			new = create_new_env(envp[i]);
-			ft_lstadd_back_env(&head, new);
-		}
+			ft_lstadd_back_env(&head, create_new_env(envp[i]));
 	}
 	cwd = getcwd(NULL, 0);
 	if (cwd)
 	{
 		ft_update_pwd(head, cwd);
-		// ft_update_oldpwd(head, cwd);
 		free(cwd);
 	}
+	builtin_unset(mini, argv2);
+	builtin_export(head, argv1, 0);
 	return (head);
 }

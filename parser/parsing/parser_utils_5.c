@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 20:42:25 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/19 09:48:42 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 10:26:14 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,7 @@ void	lefts_picker(t_chain *list, t_chain *new, t_chain *ptr)
 				list->back->next = new;
 			list->back = NULL;
 			if (ptr)
-			{
 				ptr->back = new;
-				ptr->back->next = NULL;
-			}
 			disconnect_redir_list(new->adj_f);
 			list = new;
 		}

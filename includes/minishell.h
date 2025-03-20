@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/19 21:06:22 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 09:54:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,14 +205,13 @@ void	strip_heredoc(t_chain *node, char *delim);
 void	init_shell(char **envp, t_shell *mini);
 
 // Env functions and their utils
-t_env	*handle_env(char **envp, int i, char *cwd);
+t_env	*handle_env(char **envp, int i, char *cwd, t_shell *mini);
 t_env	*get_env_var(t_env *env, const char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
 t_env	*get_env_var(t_env *env, const char *key);
 void	ft_lstadd_back_env(t_env **lst, t_env *new);
 int		check_env(t_env *env, char *key);
 char	*expand_env_var(t_env *env, char *exp_env);
-char	**make_env(char **envp);
 int		ft_lstsize_env(t_env *env);
 
 // Builtins
