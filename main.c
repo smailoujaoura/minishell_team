@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:21 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 18:36:50 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 21:15:12 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int	g_sig_number;
 
-void	statically_stored_shell(t_shell *mini, int action)
+t_shell	*statically_stored_shell(t_shell *mini, int action)
 {
 	static t_shell	*ptr;
 
@@ -28,6 +28,7 @@ void	statically_stored_shell(t_shell *mini, int action)
 	{
 		ptr->last_exit = g_sig_number + 128;
 	}
+	return (ptr);
 }
 
 void	third_handler(int signum)

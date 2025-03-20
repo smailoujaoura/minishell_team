@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_validator_helper.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 20:18:53 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/20 20:57:24 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 	if (next == NULL)
 		return (0);
 	if (prev == NULL || (prev->type != WORD && prev->type != R_PAREN
-		&& !is_redir(prev, IN + OR + OUT)))
+			&& !is_redir(prev, IN + OR + OUT)))
 	{
 		write_four_strings(SYNTAX, " `", current->content, "'\n");
 		return (1);
@@ -41,7 +41,7 @@ int	check_logicals(t_chain *prev, t_chain *current, t_chain *next)
 	if (next == NULL)
 		return (0);
 	if (prev == NULL || (prev->type != WORD && prev->type != R_PAREN
-		&& !is_redir(prev, IN + OR + OUT)))
+			&& !is_redir(prev, IN + OR + OUT)))
 	{
 		write_four_strings(SYNTAX, " `", current->content, "'\n");
 		return (1);
@@ -101,7 +101,7 @@ int	check_l_paren(t_chain *token)
 		return (1);
 	}
 	if (next && (next->type == R_PAREN || next->type == AND
-		|| next->type == OR || next->type == PIPE))
+			|| next->type == OR || next->type == PIPE))
 	{
 		write_four_strings(SYNTAX, " `", next->content, "'\n");
 		return (1);

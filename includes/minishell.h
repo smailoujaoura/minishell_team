@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 20:19:35 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/20 21:15:03 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,11 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <errno.h>
-# include <stddef.h>
 # include <dirent.h>
 # include <sys/wait.h>
-# include <sys/types.h>
-# include <stdbool.h>
 # include <termios.h>
 # include <signal.h>
+# include <sys/types.h>
 # include <sys/stat.h>
 
 # define L_PAREN 1001
@@ -252,14 +250,13 @@ char	**ft_split_custom(char const *s, char *set, int f);
 void	check_export(t_shell *mini, char *new);
 
 // Signals
-void	runner(int signum);
 void	setup_signals(int action);
 void	handle_interrupt(void);
 void	first_handler(int signum);
 void	second_handler(int signum);
 void	third_handler(int signum);
-void	statically_stored_shell(t_shell *mini, int action);
 void	return_status(int signum);
+t_shell	*statically_stored_shell(t_shell *mini, int action);
 
 // Executor
 int		open_and_assign(t_chain *redirs);

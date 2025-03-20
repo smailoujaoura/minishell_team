@@ -1,0 +1,16 @@
+archive.zip
+bash
+builtins
+executor
+expander
+f1
+includes
+main.c
+main.o
+Makefile
+minishell
+minishell.c
+minishell.o
+parser
+README.md
+utils

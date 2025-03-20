@@ -35,6 +35,7 @@
 		"ioctl.h": "c",
 		"ttydefaults.h": "c",
 		"chrono": "c",
-		"compare": "c"
+		"compare": "c",
+		"stddef.h": "c"
 	}
 }
