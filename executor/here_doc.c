@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 21:56:09 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/14 13:38:19 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:14:51 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,9 @@ int	more_logic(t_shell *mini, t_chain *data, int fd1, int fd2)
 	heredoc_proc = ft_fork();
 	if (heredoc_proc == 0)
 	{
+		close(fd2);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, return_status);
-		close(fd2);
 		prompt_here_doc(data->delim, fd1, mini);
 	}
 	else

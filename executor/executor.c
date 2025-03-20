@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 09:53:02 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:44:27 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,19 @@ void	close_heredoc(t_chain *files)
 	{
 		if (files->ambiguous)
 			break ;
-		if (files->type == HEREDOC)
+		if (files->type == HEREDOC && files->fd != -1)
+		{
 			close(files->fd);
+			files->fd = -1;
+		}
 		files = files->next;
 	}
 }
 
-int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
+int	run_sub(t_ast *tree, t_shell *mini)
 {
+	pid_t	pid;
+
 	expand_redirs(tree->data->adj_f, mini);
 	pid = ft_fork();
 	if (pid == 0)
@@ -36,7 +41,7 @@ int	run_sub(t_ast *tree, t_shell *mini, t_chain *files, pid_t pid)
 		executor(tree->left, mini);
 		ft_exit(mini->last_exit);
 	}
-	close_heredoc(files);
+	close_heredoc(tree->data->adj_f);
 	waitpid(pid, &mini->last_exit, WUNTRACED);
 	if (WIFEXITED(mini->last_exit))
 		return (WEXITSTATUS(mini->last_exit));
@@ -70,13 +75,15 @@ void	run_pipe(t_ast *tree, t_shell *mini)
 		close_heredoc(tree->right->data->adj_f);
 }
 
-void	run_cmd(t_ast *tree, t_shell *mini, char **argv)
+void	run_cmd(t_ast *tree, t_shell *mini)
 {
 	char		**envp;
+	char		**argv;
 
+	envp = generate_env_tab(mini->env);
+	argv = expand_cmd(tree->data, tree->data->argv, mini);
 	if (is_empty_command(argv, mini))
 		return ;
-	envp = generate_env_tab(mini->env);
 	if (check_builtin(argv[0]))
 		execute_builtin(tree, argv, mini);
 	else
@@ -95,7 +102,7 @@ void	executor(t_ast *tree, t_shell *mini)
 	else if (tree->type == CMD)
 	{
 		expand_redirs(tree->data->adj_f, mini);
-		run_cmd(tree, mini, expand_cmd(tree->data, tree->data->argv, mini));
+		run_cmd(tree, mini);
 		mini->volatile_exit = mini->last_exit;
 	}
 	else if (tree->type == PIPE)
@@ -105,7 +112,7 @@ void	executor(t_ast *tree, t_shell *mini)
 	}
 	else if (tree->type == SUB)
 	{
-		mini->last_exit = run_sub(tree, mini, tree->data->adj_f, -2);
+		mini->last_exit = run_sub(tree, mini);
 		mini->volatile_exit = mini->last_exit;
 	}
 	else if (tree->type == OR)

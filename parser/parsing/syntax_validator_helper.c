@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 10:41:52 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 11:11:24 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	check_paren(t_chain *prev, t_chain *next, int paren)
 	{
 		if (prev && (prev->type == R_PAREN || prev->type == WORD))
 		{
-			return (write_four_strings(SYNTAX, "` ", next->content, "'\n"), 1);
+			return (write_four_strings(SYNTAX, " `", next->content, "'\n"), 1);
 		}
 		if (next->type == R_PAREN || next->type == AND
 			|| next->type == OR || next->type == PIPE)

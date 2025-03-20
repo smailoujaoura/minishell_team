@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/19 07:55:04 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:55:36 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,20 @@ t_ast	*parse_line(char *line, t_chain **list, t_shell *mini)
 	return (build_tree(post));
 }
 
+void	close_heredoc(t_chain *files);
+
+void	traverse_and_close_heredocs(t_ast *tree)
+{
+	if (tree == NULL)
+		return ;
+	else if (tree->type == CMD || tree->type == SUB)
+	{
+		close_heredoc(tree->data->adj_f);
+		traverse_and_close_heredocs(tree->right);
+		traverse_and_close_heredocs(tree->left);
+	}
+}
+
 void	minishell(t_shell *mini, struct termios *initial)
 {
 	t_chain			*list;
@@ -105,7 +119,7 @@ void	minishell(t_shell *mini, struct termios *initial)
 		free(line);
 		setup_signals(2);
 		if (!mini->flag)
-			executor(root, mini);
+			executor(root, mini), traverse_and_close_heredocs(root);
 		mini->num++;
 		mini->volatile_exit = 0;
 		ft_malloc(0, DEALLOCATE);
