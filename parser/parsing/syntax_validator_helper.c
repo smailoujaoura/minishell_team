@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 18:31:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:37:03 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	check_r_paren(t_chain *token, int left, int right)
 		prev = token->back;
 		next = token->next;
 	}
-	if (left != right)
+	if (right > left)
 	{
 		write_four_strings(SYNTAX, "`)'\n", NULL, NULL);
 		return (1);

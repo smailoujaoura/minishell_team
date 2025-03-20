@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 15:52:19 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:27:48 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,12 @@ void	traverse_and_close_heredocs(t_ast *tree)
 {
 	if (tree == NULL)
 		return ;
-	else if (tree->type == CMD || tree->type == SUB)
+	if (tree->type == CMD || tree->type == SUB)
 	{
 		close_heredoc(tree->data->adj_f);
-		traverse_and_close_heredocs(tree->right);
-		traverse_and_close_heredocs(tree->left);
 	}
+	traverse_and_close_heredocs(tree->right);
+	traverse_and_close_heredocs(tree->left);
 }
 
 void	minishell(t_shell *mini, struct termios *initial)
