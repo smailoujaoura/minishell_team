@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:38 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/20 09:44:58 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 20:12:53 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,6 @@ cannot access parent directories: %s\n", strerror(errno));
 		return ;
 	}
 	printf("%s\n", path);
+	mini->last_exit = 0;
 	free(path);
 }

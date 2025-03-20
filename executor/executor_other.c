@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/17 21:23:38 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 20:09:49 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,10 @@ int	check_builtin(const char *cmd)
 void	execute_builtin(t_ast *tree, char **argv, t_shell *mini)
 {
 	if (assign_fds_builtins(tree, argv[0], 1))
+	{
+		mini->last_exit = 1;
 		return ;
+	}
 	if (ft_strncmp("echo", argv[0], SIZE_MAX) == 0)
 		builtin_echo(argv, &mini->last_exit);
 	if (ft_strncmp("cd", argv[0], SIZE_MAX) == 0)
