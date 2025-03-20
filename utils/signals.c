@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 15:42:33 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:30:13 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	setup_signals(int action)
 	static int	saved_fd;
 
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGSEGV, runner);
+	// signal(SIGSEGV, runner);
 	if (action == 1)
 		signal(SIGINT, first_handler);
 	else if (action == 2)

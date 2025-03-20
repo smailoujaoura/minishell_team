@@ -6,35 +6,23 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 15:41:30 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:58:10 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	write_four_strings(char *s1, char *s2, char *s3, char *s4)
-{
-	if (s1)
-		write(2, s1, ft_strlen(s1));
-	if (s2)
-		write(2, s2, ft_strlen(s2));
-	if (s3)
-		write(2, s3, ft_strlen(s3));
-	if (s4)
-		write(2, s4, ft_strlen(s4));
-}
-
 int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 {
-	(void)current;
 	if (next == NULL)
 		return (0);
 	if (prev == NULL || (prev->type != WORD && prev->type != R_PAREN))
 	{
-		write_four_strings(SYNTAX, " `|'\n", NULL, NULL);
+		write_four_strings(SYNTAX, " `", current->content, "'\n");
 		return (1);
 	}
-	if (next->type == PIPE || next->type == AND || next->type == OR || next->type == R_PAREN)
+	if (next->type == PIPE || next->type == AND || next->type == OR
+		|| next->type == R_PAREN)
 	{
 		if (!next)
 		{
@@ -55,11 +43,15 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 
 int	check_logicals(t_chain *prev, t_chain *current, t_chain *next)
 {
-	(void)prev;
-	(void)current;
 	if (next == NULL)
 		return (0);
-	if (next->type == PIPE || next->type == AND || next->type == OR || next->type == R_PAREN)
+	if (prev == NULL || (prev->type != WORD && prev->type != R_PAREN))
+	{
+		write_four_strings(SYNTAX, " `", current->content, "'\n");
+		return (1);
+	}
+	if (next->type == PIPE || next->type == AND || next->type == OR
+		|| next->type == R_PAREN)
 	{
 		if (!next)
 		{
@@ -98,28 +90,61 @@ int	check_redirs(t_chain *prev, t_chain *next)
 	return (0);
 }
 
-int	check_paren(t_chain *prev, t_chain *next, int paren)
+int	check_l_paren(t_chain *token, int left __attribute__((unused)), int right __attribute__((unused)))
 {
-	if (!next)
-		return (0);
-	if (paren == L_PAREN)
+	t_chain	*prev;
+	t_chain	*next;
+
+	if (token)
 	{
-		if (prev && (prev->type == R_PAREN || prev->type == WORD))
-		{
-			return (write_four_strings(SYNTAX, " `", next->content, "'\n"), 1);
-		}
-		if (next->type == R_PAREN || next->type == AND
-			|| next->type == OR || next->type == PIPE)
-		{
-			return (write_four_strings(SYNTAX, " `", next->content, "'\n"), 1);
-		}
+		prev = token->back;
+		next = token->next;
 	}
-	if (paren == R_PAREN)
+	if (next == NULL)
 	{
-		if (next->type == WORD || next->type == L_PAREN)
-		{
-			return (write_four_strings(SYNTAX, " `", next->content, "'\n"), 1);
-		}
+		write_four_strings(SYNTAX, "`('\n", NULL, NULL);
+		return (1);
+	}
+	if (prev && (prev->type == R_PAREN || prev->type == WORD))
+	{
+		write_four_strings(SYNTAX, " `", next->content, "'\n");
+		return (1);
+	}
+	if (next && (next->type == R_PAREN || next->type == AND
+		|| next->type == OR || next->type == PIPE))
+	{
+		write_four_strings(SYNTAX, " `", next->content, "'\n");
+		return (1);
+	}
+	return (0);
+}
+
+int	check_r_paren(t_chain *token, int left, int right)
+{
+	t_chain	*prev;
+	t_chain	*next;
+
+	if (token)
+	{
+		prev = token->back;
+		next = token->next;
+	}
+	if (left != right)
+	{
+		write_four_strings(SYNTAX, "`)'\n", NULL, NULL);
+		return (1);
+	}
+	if (next == NULL)
+		return (0);
+	if (prev == NULL)
+	{
+		write_four_strings(SYNTAX, "`)'\n", NULL, NULL);
+		return (1);
+	}
+	if (next && (next->type == WORD || next->type == L_PAREN))
+	{
+		write_four_strings(SYNTAX, " `", next->content, "'\n");
+		return (1);
 	}
 	return (0);
 }

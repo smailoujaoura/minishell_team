@@ -33,6 +33,8 @@
 		"initializer_list": "c",
 		"*.tcc": "c",
 		"ioctl.h": "c",
-		"ttydefaults.h": "c"
+		"ttydefaults.h": "c",
+		"chrono": "c",
+		"compare": "c"
 	}
 }

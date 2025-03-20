@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 17:19:30 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:54:50 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,8 @@ int		store_line(char *new, int flag);
 int		is_redir(t_chain *ptr, int f);
 void	delete_any(t_chain *ptr, int i);
 void	remove_if(t_chain *list);
-int		check_paren(t_chain *prev, t_chain *next, int paren);
+int		check_l_paren(t_chain *token, int left, int right);
+int		check_r_paren(t_chain *token, int left, int right);
 int		check_redirs(t_chain *prev, t_chain *next);
 int		check_logicals(t_chain *prev, t_chain *current, t_chain *next);
 int		check_pipe(t_chain *prev, t_chain *current, t_chain *next);

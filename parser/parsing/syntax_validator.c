@@ -6,23 +6,45 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/19 08:42:49 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 17:46:18 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// calls the function to do the syntax checking based on token's type
-int	multiple_tokens(t_chain *prev, t_chain *token, t_chain *next)
+void	write_four_strings(char *s1, char *s2, char *s3, char *s4)
 {
+	if (s1)
+		write(2, s1, ft_strlen(s1));
+	if (s2)
+		write(2, s2, ft_strlen(s2));
+	if (s3)
+		write(2, s3, ft_strlen(s3));
+	if (s4)
+		write(2, s4, ft_strlen(s4));
+}
+
+// calls the function to do the syntax checking based on token's type
+int	multiple_tokens(t_chain *token, int left, int right)
+{
+	t_chain	*prev;
+	t_chain	*next;
+
+	if (token)
+	{
+		prev = token->back;
+		next = token->next;
+	}
 	if (token->type == PIPE)
 		return (check_pipe(prev, token, next));
 	if (token->type == AND || token->type == OR)
 		return (check_logicals(prev, token, next));
 	if (token->type == HEREDOC || is_redir(token, OUT + OR + IN))
 		return (check_redirs(prev, next));
-	if (token->type == L_PAREN || token->type == R_PAREN)
-		return (check_paren(prev, next, token->type));
+	if (token->type == L_PAREN)
+		return (check_l_paren(token, left, right));
+	if (token->type == R_PAREN)
+		return (check_r_paren(token, left, right));
 	return (0);
 }
 
@@ -81,7 +103,7 @@ int	check_syntax(t_chain *list, char *line, int l_paren, int r_paren)
 				l_paren++;
 			else if (list->type == R_PAREN)
 				r_paren++;
-			if (multiple_tokens(list->back, list, list->next))
+			if (multiple_tokens(list, l_paren, r_paren))
 				return (list->error = -1);
 			list = list->next;
 		}
