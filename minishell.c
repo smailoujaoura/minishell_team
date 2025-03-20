@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 14:55:36 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:56:59 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void	minishell(t_shell *mini, struct termios *initial)
 		free(line);
 		setup_signals(2);
 		if (!mini->flag)
-			executor(root, mini), traverse_and_close_heredocs(root);
+			(executor(root, mini), traverse_and_close_heredocs(root));
 		mini->num++;
 		mini->volatile_exit = 0;
 		ft_malloc(0, DEALLOCATE);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/20 13:19:55 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/20 14:58:37 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ static void	cd_with_no_args(t_env *env, int *status)
 		return ;
 	path = getcwd(NULL, 0);
 	ft_update_pwd(env, path);
-	// and old pwd won't get updated?! 
 	free(path);
 }
 
