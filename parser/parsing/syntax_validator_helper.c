@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 11:11:24 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:41:30 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 	(void)current;
 	if (next == NULL)
 		return (0);
-	if (prev == NULL || prev->type != WORD)
+	if (prev == NULL || (prev->type != WORD && prev->type != R_PAREN))
 	{
 		write_four_strings(SYNTAX, " `|'\n", NULL, NULL);
 		return (1);
 	}
-	if (next->type == PIPE || next->type == AND || next->type == OR || !prev)
+	if (next->type == PIPE || next->type == AND || next->type == OR || next->type == R_PAREN)
 	{
 		if (!next)
 		{
@@ -47,7 +47,7 @@ int	check_pipe(t_chain *prev, t_chain *current, t_chain *next)
 			write(2, " `|'\n", 5);
 		}
 		else
-			write_four_strings(SYNTAX, " ```", next->content, "'\n");
+			write_four_strings(SYNTAX, " `", next->content, "'\n");
 		return (1);
 	}
 	return (0);
@@ -59,7 +59,7 @@ int	check_logicals(t_chain *prev, t_chain *current, t_chain *next)
 	(void)current;
 	if (next == NULL)
 		return (0);
-	if (next->type == PIPE || next->type == AND || next->type == OR)
+	if (next->type == PIPE || next->type == AND || next->type == OR || next->type == R_PAREN)
 	{
 		if (!next)
 		{

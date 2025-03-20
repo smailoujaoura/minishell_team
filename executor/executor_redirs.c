@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executor_redirs.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:02:47 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/16 15:50:45 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/20 15:58:05 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,7 @@ int	assign_fds_builtins(t_ast *tree, char *cmd, int action)
 		original_out = ft_dup(STDOUT_FILENO);
 		if (open_and_assign(tree->data->adj_f))
 		{
-			close(original_in);
-			close(original_out);
+			reset_orig_fds(original_in, original_out);
 			return (1);
 		}
 	}

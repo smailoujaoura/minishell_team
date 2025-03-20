@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 15:28:44 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/20 14:44:27 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 16:03:00 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	run_cmd(t_ast *tree, t_shell *mini)
 	argv = expand_cmd(tree->data, tree->data->argv, mini);
 	if (is_empty_command(argv, mini))
 		return ;
+	expand_redirs(tree->data->adj_f, mini);
 	if (check_builtin(argv[0]))
 		execute_builtin(tree, argv, mini);
 	else
@@ -101,7 +102,6 @@ void	executor(t_ast *tree, t_shell *mini)
 		return ;
 	else if (tree->type == CMD)
 	{
-		expand_redirs(tree->data->adj_f, mini);
 		run_cmd(tree, mini);
 		mini->volatile_exit = mini->last_exit;
 	}

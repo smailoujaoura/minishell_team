@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
+/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:52:26 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/06 14:07:23 by bkolani          ###   ########.fr       */
+/*   Updated: 2025/03/20 16:55:09 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,29 @@ static void	check_option(char *argv, int *option_n, int *stop_check_opt)
 		*stop_check_opt = 1;
 }
 
+int	ft_write(char **argv, int stop_check_opt, int *gl_stat, int i)
+{
+	if (stop_check_opt)
+	{
+		if (write(STDOUT_FILENO, argv[i], ft_strlen(argv[i])) == -1)
+		{
+			perror("minishell: echo: write error");
+			*gl_stat = 1;
+			return (1);
+		}
+	}
+	if (stop_check_opt && argv[i + 1])
+	{
+		if (write(STDOUT_FILENO, " ", 1) == -1)
+		{
+			perror("minishell: echo: write error");
+			*gl_stat = 1;
+			return (1);
+		}
+	}
+	return (0);
+}
+
 void	builtin_echo(char **argv, int *gl_stat)
 {
 	int	option_n;
@@ -42,13 +65,18 @@ void	builtin_echo(char **argv, int *gl_stat)
 	while (argv[i])
 	{
 		check_option(argv[i], &option_n, &stop_check_opt);
-		if (stop_check_opt)
-			write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
-		if (stop_check_opt && argv[i + 1])
-			write(STDOUT_FILENO, " ", 1);
+		if (ft_write(argv, stop_check_opt, gl_stat, i))
+			return ;
 		i++;
 	}
 	if (!option_n)
-		write(STDOUT_FILENO, "\n", 1);
+	{
+		if (write(STDOUT_FILENO, "\n", 1) == -1)
+		{
+			perror("minishell: echo: write error");
+			*gl_stat = 1;
+			return ;
+		}
+	}
 	*gl_stat = 0;
 }

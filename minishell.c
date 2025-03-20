@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 11:11:10 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 14:56:59 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:52:19 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	complete_line(t_shell *mini, t_chain *last, char *line, char **rest)
 		{
 			write(2, "minishell: syntax error: unexpected end of file\n", 49);
 			write(2, "exit\n", 6);
-			exit(1);
+			exit(2);
 		}
 		*rest = ft_strjoin(" ", *rest, SOUJAOUR);
 		*rest = ft_strjoin(*rest, temp, SOUJAOUR);

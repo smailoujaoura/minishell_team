@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 10:22:08 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 09:54:48 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:40:28 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,6 +249,7 @@ char	**ft_split_custom(char const *s, char *set, int f);
 void	check_export(t_shell *mini, char *new);
 
 // Signals
+void	runner(int signum);
 void	setup_signals(int action);
 void	handle_interrupt(void);
 void	first_handler(int signum);

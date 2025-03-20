@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/02 09:00:58 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/14 13:48:13 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 15:42:33 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	setup_signals(int action)
 	static int	saved_fd;
 
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGSEGV, runner);
 	if (action == 1)
 		signal(SIGINT, first_handler);
 	else if (action == 2)
@@ -48,9 +49,18 @@ void	setup_signals(int action)
 	}
 }
 
+
 void	return_status(int signum)
 {
 	(void)signum;
 	write(1, "\n", 1);
 	exit(EXIT_FAILURE);
+}
+
+void	runner(int signum)
+{
+	(void)signum;
+	write(2, "ATTENTION: SEGV\n", 16);
+	write(2, "Minishell: syntax error\n", 24);
+	exit(2);
 }
