@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_validator_helper.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 19:59:05 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 20:18:53 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,18 +86,13 @@ int	check_redirs(t_chain *prev, t_chain *next)
 	return (0);
 }
 
-int	check_l_paren(t_chain *token, int left, int right)
+int	check_l_paren(t_chain *token)
 {
 	t_chain	*prev;
 	t_chain	*next;
 
-	(void)left;
-	(void)right;
-	if (token)
-	{
-		prev = token->back;
-		next = token->next;
-	}
+	prev = token->back;
+	next = token->next;
 	if (next == NULL)
 		return (write_four_strings(SYNTAX, "`('\n", NULL, NULL), 1);
 	if (prev && (prev->type == R_PAREN || prev->type == WORD))

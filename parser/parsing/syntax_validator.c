@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_validator.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bkolani <bkolani@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 12:41:27 by soujaour          #+#    #+#             */
-/*   Updated: 2025/03/20 18:27:15 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 20:19:52 by bkolani          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	multiple_tokens(t_chain *token, int left, int right)
 	if (token->type == HEREDOC || is_redir(token, OUT + OR + IN))
 		return (check_redirs(prev, next));
 	if (token->type == L_PAREN)
-		return (check_l_paren(token, left, right));
+		return (check_l_paren(token));
 	if (token->type == R_PAREN)
 		return (check_r_paren(token, left, right));
 	return (0);
