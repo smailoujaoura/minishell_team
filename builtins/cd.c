@@ -6,7 +6,7 @@
 /*   By: soujaour <soujaour@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 20:53:02 by bkolani           #+#    #+#             */
-/*   Updated: 2025/03/20 14:58:37 by soujaour         ###   ########.fr       */
+/*   Updated: 2025/03/20 20:42:12 by soujaour         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@ static int	handle_err(char **av, t_env *env, char *path)
 {
 	char	*stored;
 
-	if (!ft_strncmp(av[1], "..", SIZE_MAX))
-		chdir("..");
 	path = getcwd(NULL, 0);
 	if (!path)
 	{
