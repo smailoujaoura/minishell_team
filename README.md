@@ -213,6 +213,18 @@ It is an end-to-end exercise in building a language runtime from first principle
 
 ---
 
+## Teamwork and Peer Learning (1337 / 42)
+
+This project was built in a strong peer-learning culture where progress came from collective problem solving, not isolated coding.
+
+- We treated bugs as shared incidents: reproduce together, isolate root cause, assign focused fix tasks, then merge and retest.
+- During blockers (FD leaks, signal behavior, exit-code mismatches), we ran short debugging sessions to compare hypotheses and validate quickly.
+- Code reviews were practical and frequent: challenge assumptions, simplify logic, and align behavior against bash semantics.
+- We maintained momentum by communicating clearly on priorities, splitting work by modules, and helping each other unblock fast.
+- The result was better reliability, faster iteration, and a stronger engineering mindset around collaboration under pressure.
+
+---
+
 ## Build and Run
 
 ```bash
